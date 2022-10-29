@@ -1,0 +1,71 @@
+.player-buttons {
+  display: flex;
+}
+
+.player-buttons button {
+  all: unset;
+  cursor: pointer;
+}
+
+.player-buttons img {
+  height: 36px;
+}
+
+.player-buttons > div:last-child {
+  margin-left: auto;
+}
+
+.player-controls {
+  bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  justify-content: center;
+  position: absolute;
+  width: calc(100% - 34px);
+}
+
+.player-controls progress[value] {
+  appearance: none;
+  border: solid 1px #0c1324;
+  cursor: pointer;
+  height: 8px;
+  width: 100%;
+}
+
+.player-controls progress[value]::-webkit-progress-bar {
+  background-color: #0f172a;
+}
+
+.player-controls progress[value]::-webkit-progress-value {
+  background-color: #1d4ed8;
+}
+
+.player-file {
+  height: 100%;
+  width: 100%;
+}
+
+.player-file img {
+  height: 100%;
+  opacity: 0.2;
+  position: absolute;
+  width: 100%;
+}
+
+.player-file input {
+  cursor: pointer;
+  height: 100%;
+  opacity: 0;
+  width: 100%;
+}
+
+.player-video {
+  background-color: #0f172a;
+  border: solid 1px #0c1324;
+  display: flex;
+  height: calc(100% - 70px - 34px);
+  justify-content: center;
+  position: absolute;
+  width: calc(100% - 34px);
+}

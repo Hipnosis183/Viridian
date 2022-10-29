@@ -1,0 +1,31 @@
+<div class="player-video">
+  <div [style]="playerFile ? 'display:flex;' : 'display:none;'">
+    <video id="playerVideo" [muted]="true" [src]="playerFile" (loadedmetadata)="playerLoadedMetadata()"
+      (timeupdate)="playerProgressUpdate()"></video>
+  </div>
+  <div *ngIf="!playerFile" class="player-file">
+    <img [src]="'/assets/open.svg'">
+    <input type="file" (change)="playerFileOpen($event)" />
+  </div>
+</div>
+<div class="player-controls">
+  <div class="player-buttons">
+    <div>
+      <button [disabled]="!playerFile" (click)="playerPlayPause()">
+        <img [src]="playerVideo.paused || playerVideo.ended ? '/assets/play.svg' : '/assets/pause.svg'">
+      </button>
+      <button [disabled]="!playerFile" (click)="playerStop()">
+        <img [src]="'/assets/stop.svg'">
+      </button>
+      <button [disabled]="!playerFile" (click)="playerMute()">
+        <img [src]="playerVideo.muted || playerVideo.volume == 0 ? '/assets/mute.svg' : '/assets/volume.svg'">
+      </button>
+    </div>
+    <div>
+      <button [disabled]="!playerFile" (click)="playerFileClose()">
+        <img [src]="'/assets/close.svg'">
+      </button>
+    </div>
+  </div>
+  <progress id="playerProgress" min="0" value="0" (mouseup)="playerProgressChange($event)"></progress>
+</div>

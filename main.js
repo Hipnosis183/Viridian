@@ -11,7 +11,7 @@ const createWindow = () => {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      spellcheck: false
+      webSecurity: false
     }
   });
   // Manage fullscreen state.
