@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IpcService } from 'src/app/services/ipc.service';
 
 @Component({
   selector: 'video-player',
@@ -8,19 +9,47 @@ import { Component } from '@angular/core';
 
 export class VideoPlayerComponent {
 
-  playerFile: any;
+  constructor(private ipcRenderer: IpcService) { }
+
   playerProgress: any;
   playerVideo: any;
 
-  playerFileOpen(event: any): void {
-    const file = event.target.files && event.target.files[0];
+  ngAfterContentInit(): void {
+    this.playerProgress = document.getElementById('playerProgress');
+    this.playerVideo = document.getElementById('playerVideo');
+  }
+
+  playerFile: any = {
+    filePath: null
+  };
+
+  playerFileClose(): void {
+    this.playerFile = {
+      filePath: null
+    };
+  }
+
+  playerFileOpen(e: any): void {
+    const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
-      this.playerFile = 'file://' + event.target.files[0].path;
+      this.playerFile.filePath = 'file://' + e.target.files[0].path;
     }
   }
 
-  playerFileClose(): void {
-    this.playerFile = null;
+  async playerFileSave(): Promise<void> {
+    // Define video filters to apply.
+    let filters: string[] = [];
+    let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
+    // Define paths and commands.
+    const input: string = this.playerFile.filePath;
+    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
+    const ffmpeg: string = 'ffmpeg';
+    const params: string = ` -y -i ${input} ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy ${output}`;
+    // Execute command and listen for a response.
+    this.ipcRenderer.send('exec', ffmpeg + params, null);
+    this.ipcRenderer.on('exec', (e: any, r: string) => {
+      console.log(r ? r : 'ok');
+    });
   }
 
   playerLoadedMetadata(): void {
@@ -51,10 +80,5 @@ export class VideoPlayerComponent {
     this.playerVideo.pause();
     this.playerVideo.currentTime = 0;
     this.playerProgress.value = 0;
-  }
-
-  ngAfterContentInit(): void {
-    this.playerProgress = document.getElementById('playerProgress');
-    this.playerVideo = <HTMLVideoElement>document.getElementById('playerVideo');
   }
 }

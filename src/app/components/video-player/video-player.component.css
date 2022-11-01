@@ -1,10 +1,18 @@
 .player-buttons {
   display: flex;
+  margin-bottom: 8px;
 }
 
 .player-buttons button {
   all: unset;
   cursor: pointer;
+  height: 36px;
+  transition: background-color 0.2s ease-in-out;
+  width: 36px;
+}
+
+.player-buttons button:hover {
+  background-color: #334155;
 }
 
 .player-buttons img {
@@ -13,6 +21,10 @@
 
 .player-buttons > div:last-child {
   margin-left: auto;
+}
+
+.player-buttons > div button:not(:first-child) {
+  margin-left: 8px;
 }
 
 .player-controls {
@@ -41,6 +53,16 @@
   background-color: #1d4ed8;
 }
 
+.player-edit {
+  background-color: #0f172a;
+  border: solid 1px #0c1324;
+  display: flex;
+  height: calc(100% - 76px - 34px);
+  justify-content: center;
+  position: absolute;
+  width: calc(100% - 34px);
+}
+
 .player-file {
   height: 100%;
   width: 100%;
@@ -61,11 +83,6 @@
 }
 
 .player-video {
-  background-color: #0f172a;
-  border: solid 1px #0c1324;
-  display: flex;
-  height: calc(100% - 70px - 34px);
-  justify-content: center;
-  position: absolute;
-  width: calc(100% - 34px);
+  overflow: hidden;
+  position: relative;
 }

@@ -1,28 +1,31 @@
-<div class="player-video">
-  <div [style]="playerFile ? 'display:flex;' : 'display:none;'">
-    <video id="playerVideo" [muted]="true" [src]="playerFile" (loadedmetadata)="playerLoadedMetadata()"
+<div class="player-edit">
+  <div class="player-video" [style]="playerFile.filePath ? 'display: flex;' : 'display: none;'">
+    <video id="playerVideo" [muted]="true" [src]="playerFile.filePath" (loadedmetadata)="playerLoadedMetadata()"
       (timeupdate)="playerProgressUpdate()"></video>
   </div>
-  <div *ngIf="!playerFile" class="player-file">
+  <div *ngIf="!playerFile.filePath" class="player-file">
     <img [src]="'/assets/open.svg'">
     <input type="file" (change)="playerFileOpen($event)" />
   </div>
 </div>
-<div class="player-controls">
+<div class="player-controls" [style]="!playerFile.filePath ? 'pointer-events: none;' : ''">
   <div class="player-buttons">
     <div>
-      <button [disabled]="!playerFile" (click)="playerPlayPause()">
+      <button (click)="playerPlayPause()">
         <img [src]="playerVideo.paused || playerVideo.ended ? '/assets/play.svg' : '/assets/pause.svg'">
       </button>
-      <button [disabled]="!playerFile" (click)="playerStop()">
+      <button (click)="playerStop()">
         <img [src]="'/assets/stop.svg'">
       </button>
-      <button [disabled]="!playerFile" (click)="playerMute()">
+      <button (click)="playerMute()">
         <img [src]="playerVideo.muted || playerVideo.volume == 0 ? '/assets/mute.svg' : '/assets/volume.svg'">
       </button>
     </div>
     <div>
-      <button [disabled]="!playerFile" (click)="playerFileClose()">
+      <button (click)="playerFileSave()">
+        <img [src]="'/assets/done.svg'">
+      </button>
+      <button (click)="playerFileClose()">
         <img [src]="'/assets/close.svg'">
       </button>
     </div>
