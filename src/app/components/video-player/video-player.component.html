@@ -1,7 +1,8 @@
 <div class="player-edit">
   <div class="player-video" [style]="playerFile.filePath ? 'display: flex;' : 'display: none;'">
-    <video id="playerVideo" [muted]="true" [src]="playerFile.filePath" (loadedmetadata)="playerLoadedMetadata()"
+    <video id="playerVideo" [muted]="true" [src]="playerFile.filePath" (loadedmetadata)="playerLoadedMetadata($event)"
       (timeupdate)="playerProgressUpdate()"></video>
+    <div id="playerCrop" [hidden]="!filterActive.filterCrop" class="resizable"></div>
   </div>
   <div *ngIf="!playerFile.filePath" class="player-file">
     <img [src]="'/assets/open.svg'">
@@ -22,6 +23,9 @@
       </button>
     </div>
     <div>
+      <button [class]="filterActive.filterCrop ? 'active' : ''" (click)="$filterCrop()">
+        <img [src]="'/assets/crop.svg'">
+      </button>
       <button (click)="playerFileSave()">
         <img [src]="'/assets/done.svg'">
       </button>

@@ -2,3 +2,56 @@ body {
   background-color: #192134;
   margin: 16px;
 }
+
+.resizable {
+  border: solid 1px white;
+  box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);
+  cursor: all-scroll;
+  min-height: 100px;
+  min-width: 100px;
+  position: absolute;
+}
+
+.resizable-handle-w {
+  left: 0 !important;
+}
+
+.resizable-handle-nw {
+  border-left: 2px solid white;
+  border-top: 2px solid white;
+  left: 0 !important;
+  top: 0 !important;
+}
+
+.resizable-handle-n {
+  top: 0 !important;
+}
+
+.resizable-handle-ne {
+  border-right: 2px solid white;
+  border-top: 2px solid white;
+  right: 0 !important;
+  top: 0 !important;
+}
+
+.resizable-handle-e {
+  right: 0 !important;
+}
+
+.resizable-handle-se {
+  border-bottom: 2px solid white;
+  border-right: 2px solid white;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+.resizable-handle-s {
+  bottom: 0 !important;
+}
+
+.resizable-handle-sw {
+  border-bottom: 2px solid white;
+  border-left: 2px solid white;
+  bottom: 0 !important;
+  left: 0 !important;
+}

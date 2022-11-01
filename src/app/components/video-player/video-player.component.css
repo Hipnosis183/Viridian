@@ -11,7 +11,8 @@
   width: 36px;
 }
 
-.player-buttons button:hover {
+.player-buttons button:hover,
+.player-buttons button.active {
   background-color: #334155;
 }
 
