@@ -1,89 +1,64 @@
 .player-buttons {
-  display: flex;
-  margin-bottom: 8px;
+  @apply flex mb-2;
 }
 
 .player-buttons button {
+  @apply hover:bg-slate-700 cursor-pointer h-9 w-9 !important;
   all: unset;
-  cursor: pointer;
-  height: 36px;
   transition: background-color 0.2s ease-in-out;
-  width: 36px;
 }
 
-.player-buttons button:hover,
 .player-buttons button.active {
-  background-color: #334155;
+  @apply bg-slate-700;
 }
 
 .player-buttons img {
-  height: 36px;
+  @apply h-9;
 }
 
 .player-buttons > div:last-child {
-  margin-left: auto;
+  @apply ml-auto;
 }
 
 .player-buttons > div button:not(:first-child) {
-  margin-left: 8px;
+  @apply ml-2;
 }
 
 .player-controls {
-  bottom: 16px;
-  display: flex;
-  flex-direction: column;
-  height: 70px;
-  justify-content: center;
-  position: absolute;
+  @apply absolute bottom-4 flex flex-col h-[70px] justify-center;
   width: calc(100% - 34px);
 }
 
 .player-controls progress[value] {
-  appearance: none;
-  border: solid 1px #0c1324;
-  cursor: pointer;
-  height: 8px;
-  width: 100%;
+  @apply appearance-none border border-[#0c1324] cursor-pointer h-2 w-full;
 }
 
 .player-controls progress[value]::-webkit-progress-bar {
-  background-color: #0f172a;
+  @apply bg-slate-900;
 }
 
 .player-controls progress[value]::-webkit-progress-value {
-  background-color: #1d4ed8;
+  @apply bg-blue-700;
 }
 
 .player-edit {
-  background-color: #0f172a;
-  border: solid 1px #0c1324;
-  display: flex;
+  @apply absolute bg-slate-900 border border-[#0c1324] flex justify-center;
   height: calc(100% - 76px - 34px);
-  justify-content: center;
-  position: absolute;
   width: calc(100% - 34px);
 }
 
 .player-file {
-  height: 100%;
-  width: 100%;
+  @apply h-full w-full;
 }
 
 .player-file img {
-  height: 100%;
-  opacity: 0.2;
-  position: absolute;
-  width: 100%;
+  @apply absolute h-full opacity-20 w-full;
 }
 
 .player-file input {
-  cursor: pointer;
-  height: 100%;
-  opacity: 0;
-  width: 100%;
+  @apply cursor-pointer h-full opacity-0 w-full;
 }
 
 .player-video {
-  overflow: hidden;
-  position: relative;
+  @apply overflow-hidden relative;
 }
