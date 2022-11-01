@@ -50,3 +50,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+// IPC listeners for remote access of node modules.
+require('./remote.js');
