@@ -6,6 +6,14 @@ body {
   @apply bg-[#192134] m-4;
 }
 
+div, button, p, span {
+  @apply text-white;
+}
+
+p {
+  @apply cursor-default;
+}
+
 .resizable {
   @apply absolute border border-white cursor-all-scroll min-h-[100px] min-w-[100px];
   box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { IpcService } from 'src/app/services/ipc.service';
 
 // @ts-ignore
@@ -12,7 +12,10 @@ import Resizable from 'resizable';
 
 export class VideoPlayerComponent {
 
-  constructor(private ipcRenderer: IpcService) { }
+  constructor(
+    private ipc: IpcService,
+    private zone: NgZone
+  ) { }
 
   playerCrop: any;
   playerProgress: any;
@@ -55,6 +58,26 @@ export class VideoPlayerComponent {
     }
   }
 
+  fileSave: any = {
+    fileErrorText: null,
+    fileErrorView: false,
+    fileSaving: false,
+    fileSaved: false,
+  };
+
+  $playerFileSave(): void {
+    this.fileSave = {
+      fileErrorText: null,
+      fileErrorView: false,
+      fileSaving: false,
+      fileSaved: false,
+    };
+  }
+
+  playerFileError(): void {
+    this.fileSave.fileErrorView = !this.fileSave.fileErrorView;
+  }
+
   async playerFileSave(): Promise<void> {
     // Define video filters to apply.
     let filters: string[] = [];
@@ -64,11 +87,16 @@ export class VideoPlayerComponent {
     const input: string = this.playerFile.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
     const ffmpeg: string = '/home/renzo/Downloads/ffmpeg/ffmpeg';
-    const params: string = ` -y -i ${input} ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy ${output}`;
+    const params: string = ` -v error -y -i ${input} ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy ${output}`;
     // Execute command and listen for a response.
-    this.ipcRenderer.send('exec', ffmpeg + params, null);
-    this.ipcRenderer.on('exec', (e: any, r: string) => {
-      console.log(r ? r : 'ok');
+    this.fileSave.fileSaving = true;
+    this.ipc.send('exec', ffmpeg + params, null);
+    this.ipc.on('exec', (e: any, r: string) => {
+      this.zone.run(() => {
+        this.fileSave.fileSaved = true;
+        this.fileSave.fileSaving = false;
+        if (r) { this.fileSave.fileErrorText = r; }
+      });
     });
   }
 

@@ -38,13 +38,17 @@
 }
 
 .player-controls progress[value]::-webkit-progress-value {
-  @apply bg-blue-700;
+  @apply bg-blue-600;
 }
 
 .player-edit {
   @apply absolute bg-slate-900 border border-[#0c1324] flex justify-center;
   height: calc(100% - 76px - 34px);
   width: calc(100% - 34px);
+}
+
+.player-error {
+  @apply bg-slate-900 border border-slate-800 max-h-[50vh] overflow-auto p-2 w-full whitespace-nowrap;
 }
 
 .player-file {
@@ -57,6 +61,26 @@
 
 .player-file input {
   @apply cursor-pointer h-full opacity-0 w-full;
+}
+
+.player-save button {
+  @apply border px-6 py-2;
+}
+
+.player-save button.button-ok {
+  @apply border-blue-500 bg-blue-600 hover:bg-blue-500;
+}
+
+.player-save button.button-error {
+  @apply border-red-500 bg-red-600 hover:bg-red-500;
+}
+
+.player-save p {
+  @apply text-center;
+}
+
+.player-save > div {
+  @apply flex flex-col items-center justify-center space-y-8;
 }
 
 .player-video {

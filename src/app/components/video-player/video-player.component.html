@@ -36,3 +36,26 @@
   </div>
   <progress id="playerProgress" min="0" value="0" (mouseup)="playerProgressChange($event)"></progress>
 </div>
+<modal *ngIf="fileSave.fileSaving || fileSave.fileSaved">
+  <div class="player-save">
+    <div *ngIf="fileSave.fileSaving">
+      <p>Processing video...</p>
+    </div>
+    <div *ngIf="!fileSave.fileSaving">
+      <div *ngIf="!fileSave.fileErrorText">
+        <p>Video saved successfully!</p>
+      </div>
+      <div *ngIf="fileSave.fileErrorText">
+        <p>An error has occurred during the processing of the video.
+          Check the log for more details.</p>
+      </div>
+      <div class="flex space-x-4">
+        <button *ngIf="fileSave.fileErrorText" (click)="playerFileError()" class="button-error">Error log</button>
+        <button (click)="$playerFileSave()" class="button-ok">Ok</button>
+      </div>
+      <div *ngIf="fileSave.fileErrorView" class="player-error">
+        <span [innerText]="fileSave.fileErrorText"></span>
+      </div>
+    </div>
+  </div>
+</modal>
