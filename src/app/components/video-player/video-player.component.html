@@ -1,5 +1,5 @@
-<div class="player-edit">
-  <div class="player-video" [class]="playerFile.filePath ? 'flex' : 'hidden'">
+<div id="playerEdit" class="player-edit">
+  <div id="playerContainer" class="player-video" [class]="playerFile.filePath ? 'flex' : 'hidden'">
     <video id="playerVideo" [muted]="true" [src]="playerFile.filePath" (loadedmetadata)="playerLoadedMetadata($event)"
       (timeupdate)="playerProgressUpdate()"></video>
     <div id="playerCrop" [hidden]="!filterActive.filterCrop" class="resizable"></div>
@@ -23,6 +23,12 @@
       </button>
     </div>
     <div>
+      <button (click)="$filterRotate(false)">
+        <img [src]="'/assets/rotate.svg'" class="-scale-x-100">
+      </button>
+      <button (click)="$filterRotate(true)">
+        <img [src]="'/assets/rotate.svg'">
+      </button>
       <button [class]="filterActive.filterCrop ? 'active' : ''" (click)="$filterCrop()">
         <img [src]="'/assets/crop.svg'">
       </button>

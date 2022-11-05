@@ -14,8 +14,12 @@ p {
   @apply cursor-default;
 }
 
+video {
+  @apply max-w-none;
+}
+
 .resizable {
-  @apply absolute border border-white cursor-all-scroll min-h-[100px] min-w-[100px];
+  @apply absolute border border-white cursor-all-scroll min-h-[24px] min-w-[24px];
   box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);
 }
 
