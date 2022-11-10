@@ -12,13 +12,15 @@ import { ModalComponent } from './ui/modal/modal.component';
 
 // Pipes.
 import { ExpressionPipe } from './pipes/expression.pipe';
+import { FileSizePipe } from './pipes/filesize.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     VideoPlayerComponent,
     ModalComponent,
-    ExpressionPipe
+    ExpressionPipe,
+    FileSizePipe
   ],
   imports: [
     BrowserModule,
