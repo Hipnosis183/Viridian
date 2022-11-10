@@ -10,11 +10,15 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 // UI components.
 import { ModalComponent } from './ui/modal/modal.component';
 
+// Pipes.
+import { ExpressionPipe } from './pipes/expression.pipe';
+
 @NgModule({
   declarations: [
     AppComponent,
     VideoPlayerComponent,
-    ModalComponent
+    ModalComponent,
+    ExpressionPipe
   ],
   imports: [
     BrowserModule,
