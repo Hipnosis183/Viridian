@@ -11,6 +11,7 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 import { ModalComponent } from './ui/modal/modal.component';
 
 // Pipes.
+import { DurationPipe } from './pipes/duration.pipe';
 import { ExpressionPipe } from './pipes/expression.pipe';
 import { FileSizePipe } from './pipes/filesize.pipe';
 
@@ -19,6 +20,7 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     AppComponent,
     VideoPlayerComponent,
     ModalComponent,
+    DurationPipe,
     ExpressionPipe,
     FileSizePipe
   ],
