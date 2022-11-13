@@ -23,6 +23,9 @@
       </button>
     </div>
     <div>
+      <button (click)="$videoInfo.$videoInfo()">
+        <img [src]="'/assets/list.svg'">
+      </button>
       <button (click)="$filterRotate(false)">
         <img [src]="'/assets/rotate.svg'" class="-scale-x-100">
       </button>
@@ -65,3 +68,4 @@
     </div>
   </div>
 </modal>
+<video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="$videoInfo = videoInfo"></video-info>

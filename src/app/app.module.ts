@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // App components.
+import { VideoInfoComponent } from './components/video-info/video-info.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 
 // UI components.
@@ -18,11 +19,12 @@ import { FileSizePipe } from './pipes/filesize.pipe';
 @NgModule({
   declarations: [
     AppComponent,
+    VideoInfoComponent,
     VideoPlayerComponent,
     ModalComponent,
     DurationPipe,
     ExpressionPipe,
-    FileSizePipe
+    FileSizePipe,
   ],
   imports: [
     BrowserModule,

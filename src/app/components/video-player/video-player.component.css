@@ -48,7 +48,7 @@
 }
 
 .player-error {
-  @apply bg-slate-900 border border-slate-800 max-h-[50vh] overflow-auto p-2 w-full whitespace-nowrap;
+  @apply bg-slate-900 border border-slate-800 max-h-[50vh] overflow-auto p-4 w-full whitespace-nowrap;
 }
 
 .player-file {
@@ -61,6 +61,10 @@
 
 .player-file input {
   @apply cursor-pointer h-full opacity-0 w-full;
+}
+
+.player-save {
+  @apply w-[350px];
 }
 
 .player-save button {

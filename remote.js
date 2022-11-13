@@ -3,14 +3,14 @@ const { exec } = require('child_process');
 const { dirname } = require('path');
 
 ipcMain.on('exec', (e, ...a) => {
-  exec(a[0], a[1], (error) => {
-    e.reply('exec', error ? error : false);
+  exec(a[0], a[1], (error, stdout, stderr) => {
+    e.reply('exec', error ? error : stdout);
   });
 });
 
 ipcMain.handle('exec', async (e, ...a) => {
-  exec(a[0], a[1], (error) => {
-    return error ? error : false;
+  exec(a[0], a[1], (error, stdout, stderr) => {
+    return error ? error : stdout;
   });
 });
 

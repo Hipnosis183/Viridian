@@ -1,0 +1,45 @@
+<modal *ngIf="store.state.videoInfo.videoStreams && videoInfo">
+  <table>
+    <thead>
+      <tr>
+        <th>Track</th>
+        <th>Type</th>
+        <th>Codec</th>
+        <th>Bitrate</th>
+        <th>Information</th>
+      </tr>
+      <tr class="h-4"></tr>
+    </thead>
+    <tbody>
+      <div *ngFor="let stream of store.state.videoInfo.videoStreams; let i = index" class="contents">
+        <div class="contents info-tracks" [class]="stream.view ? 'selected' : ''">
+          <tr *ngIf="i == 0" (click)="videoStreamOpen(i)">
+            <td></td>
+            <td>File</td>
+            <td>{{ store.state.fileInfo.fileType }}</td>
+            <td>{{ stream.bit_rate / 1000 }}kbps</td>
+            <td>{{ stream.duration | duration }} - {{ stream.size | filesize }}</td>
+          </tr>
+          <tr *ngIf="i != 0" (click)="videoStreamOpen(i)">
+            <td>{{ stream.index }}</td>
+            <td>{{ stream.codec_type | titlecase }}</td>
+            <td>{{ stream.codec_name }}/{{ stream.codec_tag_string }}</td>
+            <td>{{ stream.bit_rate / 1000 }}kbps</td>
+            <td *ngIf="stream.codec_type=='video'">{{ stream.coded_width }}x{{ stream.coded_height }} @{{ stream.r_frame_rate | expression }}fps</td>
+            <td *ngIf="stream.codec_type=='audio'">{{ stream.channels }} Channels ({{ stream.channel_layout | titlecase }})</td>
+          </tr>
+        </div>
+        <tr>
+          <td colspan="100%">
+            <div *ngIf="stream.view" class="info-details">
+              <span [innerHtml]="store.state.videoInfo.videoStreamsText[i]" class="space-y-1"></span>
+            </div>
+          </td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+  <button (click)="$videoInfo()">
+    <img [src]="'/assets/close.svg'">
+  </button>
+</modal>

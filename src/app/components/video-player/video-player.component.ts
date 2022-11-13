@@ -25,6 +25,7 @@ export class VideoPlayerComponent {
   playerProgress: any;
   playerVideo: any;
   playerResizable: any;
+  $videoInfo: any;
 
   ngAfterContentInit(): void {
     this.playerContainer = document.getElementById('playerContainer');
