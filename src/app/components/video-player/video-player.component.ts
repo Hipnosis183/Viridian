@@ -1,5 +1,6 @@
 import { Component, HostListener, NgZone } from '@angular/core';
 import { IpcService } from 'src/app/services/ipc.service';
+import { StoreService } from 'src/app/services/store.service';
 
 // @ts-ignore
 import Resizable from 'resizable';
@@ -14,6 +15,7 @@ export class VideoPlayerComponent {
 
   constructor(
     private ipc: IpcService,
+    public store: StoreService,
     private zone: NgZone
   ) { }
 
@@ -38,24 +40,18 @@ export class VideoPlayerComponent {
     });
   }
 
-  playerFile: any = {
-    filePath: null,
-    videoWidth: null,
-    videoHeight: null
-  };
-
   playerFileClose(): void {
-    this.playerFile = {
-      filePath: null,
-      videoWidth: null,
-      videoHeight: null
-    }; this.filterActive.filterCrop = false;
+    this.store.resetAll();
+    this.filterActive.filterCrop = false;
   }
 
   playerFileOpen(e: any): void {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
-      this.playerFile.filePath = 'file://' + e.target.files[0].path;
+      this.store.state.fileInfo.filePath = 'file://' + e.target.files[0].path;
+      this.store.state.fileInfo.fileName = e.target.files[0].name;
+      this.store.state.fileInfo.fileType = e.target.files[0].type;
+      this.store.state.fileInfo.fileLoaded = true;
     }
   }
 
@@ -86,14 +82,13 @@ export class VideoPlayerComponent {
     if (this.filterActive.filterCrop) { filters.push(this.filterCrop()); }
     let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
     // Define paths and commands.
-    const input: string = this.playerFile.filePath;
+    const input: string = this.store.state.fileInfo.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const ffmpeg: string = '/home/renzo/Downloads/ffmpeg/ffmpeg';
-    const params: string = ` -v error -y -i ${input} ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy ${output}`;
+    const command: string = `ffmpeg -v error -y -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy "${output}"`;
     // Execute command and listen for a response.
     this.fileSave.fileSaving = true;
-    this.ipc.send('exec', ffmpeg + params, null);
-    this.ipc.on('exec', (e: any, r: string) => {
+    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+    this.ipc.once('exec', (e: any, r: string) => {
       this.zone.run(() => {
         this.fileSave.fileSaved = true;
         this.fileSave.fileSaving = false;
@@ -105,8 +100,8 @@ export class VideoPlayerComponent {
   playerLoadedMetadata(d: any): void {
     this.playerProgress.setAttribute('max', this.playerVideo.duration.toString());
     // Store dimensions from the original video.
-    this.playerFile.videoWidth = d.srcElement.videoWidth;
-    this.playerFile.videoHeight = d.srcElement.videoHeight;
+    this.store.state.videoInfo.videoWidth = d.srcElement.videoWidth;
+    this.store.state.videoInfo.videoHeight = d.srcElement.videoHeight;
     // Reset filters and setup positioning of the video container.
     this.filterActive = {
       filterCrop: false,
@@ -150,26 +145,28 @@ export class VideoPlayerComponent {
   }
 
   filterCrop(): string {
+    const videoHeight = this.store.state.videoInfo.videoHeight;
+    const videoWidth = this.store.state.videoInfo.videoWidth;
     // Calculate real absolute position values to fit the original video dimensions.
     const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;
     const res: any = re.exec(this.playerCrop.style.transform);
-    const x = Math.round(res.groups.x * this.playerFile.videoWidth / this.playerVideo.offsetWidth);
-    const y = Math.round(res.groups.y * this.playerFile.videoHeight / this.playerVideo.offsetHeight);
+    const x = Math.round(res.groups.x * videoWidth / this.playerVideo.offsetWidth);
+    const y = Math.round(res.groups.y * videoHeight / this.playerVideo.offsetHeight);
     // Calculate real absolute size values to fit the original video dimensions.
     let h, w;
-    if (this.playerFile.videoWidth > this.playerFile.videoHeight) {
-      h = Math.round(this.playerFile.videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-      w = Math.round(this.playerFile.videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
+    if (videoWidth > videoHeight) {
+      h = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
+      w = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
       if (this.playerVideo.getBoundingClientRect().width > this.playerVideo.getBoundingClientRect().height) {
-        w = Math.round(this.playerFile.videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-        h = Math.round(this.playerFile.videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
+        w = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
+        h = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
       }
     } else {
-      w = Math.round(this.playerFile.videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-      h = Math.round(this.playerFile.videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
+      w = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
+      h = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
       if (this.playerVideo.getBoundingClientRect().width > this.playerVideo.getBoundingClientRect().height) {
-        h = Math.round(this.playerFile.videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-        w = Math.round(this.playerFile.videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
+        h = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
+        w = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
       }
     }
     // Return built parameter.

@@ -1,15 +1,15 @@
 <div id="playerEdit" class="player-edit">
-  <div id="playerContainer" class="player-video" [class]="playerFile.filePath ? 'flex' : 'hidden'">
-    <video id="playerVideo" [muted]="true" [src]="playerFile.filePath" (loadedmetadata)="playerLoadedMetadata($event)"
+  <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
+    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="playerLoadedMetadata($event)"
       (timeupdate)="playerProgressUpdate()"></video>
     <div id="playerCrop" [hidden]="!filterActive.filterCrop" class="resizable"></div>
   </div>
-  <div *ngIf="!playerFile.filePath" class="player-file">
+  <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
     <img [src]="'/assets/open.svg'">
     <input type="file" (change)="playerFileOpen($event)" />
   </div>
 </div>
-<div class="player-controls" [class]="!playerFile.filePath ? 'pointer-events-none' : ''">
+<div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
   <div class="player-buttons">
     <div>
       <button (click)="playerPlayPause()">
