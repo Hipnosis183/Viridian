@@ -1,5 +1,5 @@
-import { Component, HostListener, NgZone } from '@angular/core';
-import { IpcService } from 'src/app/services/ipc.service';
+import { Component, HostListener } from '@angular/core';
+import { FiltersService } from 'src/app/services/filters.service';
 import { StoreService } from 'src/app/services/store.service';
 
 // @ts-ignore
@@ -14,39 +14,48 @@ import Resizable from 'resizable';
 export class VideoPlayerComponent {
 
   constructor(
-    private ipc: IpcService,
+    public filters: FiltersService,
     public store: StoreService,
-    private zone: NgZone
   ) { }
 
-  playerContainer: any;
-  playerCrop: any;
-  playerEdit: any;
-  playerProgress: any;
-  playerVideo: any;
-  playerResizable: any;
   $videoInfo: any;
 
+  playerInfo: any;
+  ngOnInit(): void {
+    const $this = this;
+    this.playerInfo = {
+      playerContainer: null,
+      playerEdit: null,
+      playerProgress: null,
+      playerResizable: null,
+      get playerCrop() { return $this.store.state.playerInfo.playerCrop },
+      set playerCrop(v) { $this.store.state.playerInfo.playerCrop = v },
+      get playerVideo() { return $this.store.state.playerInfo.playerVideo },
+      set playerVideo(v) { $this.store.state.playerInfo.playerVideo = v },
+    };
+  }
+
   ngAfterContentInit(): void {
-    this.playerContainer = document.getElementById('playerContainer');
-    this.playerEdit = document.getElementById('playerEdit');
-    this.playerProgress = document.getElementById('playerProgress');
-    this.playerVideo = document.getElementById('playerVideo');
+    // Get video player elements from the DOM.
+    this.playerInfo.playerContainer = document.getElementById('playerContainer');
+    this.playerInfo.playerEdit = document.getElementById('playerEdit');
+    this.playerInfo.playerProgress = document.getElementById('playerProgress');
+    this.playerInfo.playerVideo = document.getElementById('playerVideo');
     // Get crop element and set default position values.
-    this.playerCrop = document.querySelector('#playerCrop');
-    this.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
+    this.playerInfo.playerCrop = document.querySelector('#playerCrop');
+    this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
     // Create a resizable instance from the crop element.
-    this.playerResizable = new Resizable(this.playerCrop, {
+    this.playerInfo.playerResizable = new Resizable(this.playerInfo.playerCrop, {
       draggable: true, within: 'parent'
     });
   }
 
-  playerFileClose(): void {
+  videoFileClose(): void {
     this.store.resetAll();
-    this.filterActive.filterCrop = false;
+    this.filters.filterReset();
   }
 
-  playerFileOpen(e: any): void {
+  videoFileOpen(e: any): void {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
       this.store.state.fileInfo.filePath = 'file://' + e.target.files[0].path;
@@ -56,192 +65,105 @@ export class VideoPlayerComponent {
     }
   }
 
-  fileSave: any = {
-    fileErrorText: null,
-    fileErrorView: false,
-    fileSaving: false,
-    fileSaved: false,
-  };
-
-  $playerFileSave(): void {
-    this.fileSave = {
-      fileErrorText: null,
-      fileErrorView: false,
-      fileSaving: false,
-      fileSaved: false,
-    };
-  }
-
-  playerFileError(): void {
-    this.fileSave.fileErrorView = !this.fileSave.fileErrorView;
-  }
-
-  async playerFileSave(): Promise<void> {
-    // Define video filters to apply.
-    let filters: string[] = [];
-    if (this.filterActive.filterRotate) { filters.push(this.filterRotate()); }
-    if (this.filterActive.filterCrop) { filters.push(this.filterCrop()); }
-    let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
-    // Define paths and commands.
-    const input: string = this.store.state.fileInfo.filePath;
-    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy "${output}"`;
-    // Execute command and listen for a response.
-    this.fileSave.fileSaving = true;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-    this.ipc.once('exec', (e: any, r: string) => {
-      this.zone.run(() => {
-        this.fileSave.fileSaved = true;
-        this.fileSave.fileSaving = false;
-        if (r) { this.fileSave.fileErrorText = r; }
-      });
-    });
-  }
-
-  playerLoadedMetadata(d: any): void {
-    this.playerProgress.setAttribute('max', this.playerVideo.duration.toString());
+  videoFileLoaded(d: any): void {
+    this.playerInfo.playerProgress.setAttribute('max', this.playerInfo.playerVideo.duration.toString());
     // Store dimensions from the original video.
     this.store.state.videoInfo.videoWidth = d.srcElement.videoWidth;
     this.store.state.videoInfo.videoHeight = d.srcElement.videoHeight;
     // Reset filters and setup positioning of the video container.
-    this.filterActive = {
-      filterCrop: false,
-      filterRotate: 0
-    }; this.setPosition(0);
+    this.filters.filterReset();
+    this.videoSetPosition(0);
   }
 
-  playerMute(): void {
-    this.playerVideo.muted = !this.playerVideo.muted;
+  videoPlayerMute(): void {
+    this.playerInfo.playerVideo.muted = !this.playerInfo.playerVideo.muted;
   }
 
-  playerPlayPause(): void {
-    if (this.playerVideo.paused || this.playerVideo.ended) {
-      this.playerVideo.play();
-    } else { this.playerVideo.pause(); }
+  videoPlayerPlay(): void {
+    if (this.playerInfo.playerVideo.paused || this.playerInfo.playerVideo.ended) {
+      this.playerInfo.playerVideo.play();
+    } else { this.playerInfo.playerVideo.pause(); }
   }
 
-  playerProgressChange(e: any): void {
-    const rect = this.playerProgress.getBoundingClientRect();
-    const pos = (e.pageX - rect.left) / this.playerProgress.offsetWidth;
-    this.playerVideo.currentTime = pos * this.playerVideo.duration;
+  $videoPlayerProgress(): void {
+    this.playerInfo.playerProgress.value = this.playerInfo.playerVideo.currentTime;
   }
 
-  playerProgressUpdate(): void {
-    this.playerProgress.value = this.playerVideo.currentTime;
+  videoPlayerProgress(e: any): void {
+    const rect = this.playerInfo.playerProgress.getBoundingClientRect();
+    const pos = (e.pageX - rect.left) / this.playerInfo.playerProgress.offsetWidth;
+    this.playerInfo.playerVideo.currentTime = pos * this.playerInfo.playerVideo.duration;
   }
 
-  playerStop(): void {
-    this.playerVideo.pause();
-    this.playerVideo.currentTime = 0;
-    this.playerProgress.value = 0;
+  videoPlayerStop(): void {
+    this.playerInfo.playerVideo.pause();
+    this.playerInfo.playerVideo.currentTime = 0;
+    this.playerInfo.playerProgress.value = 0;
   }
 
-  filterActive = {
-    filterCrop: false,
-    filterRotate: 0
-  };
-
-  $filterCrop(): void {
-    this.filterActive.filterCrop = !this.filterActive.filterCrop;
+  videoFilterCrop(): void {
+    this.filters.filterInfo.filterCrop = !this.filters.filterInfo.filterCrop;
   }
 
-  filterCrop(): string {
-    const videoHeight = this.store.state.videoInfo.videoHeight;
-    const videoWidth = this.store.state.videoInfo.videoWidth;
-    // Calculate real absolute position values to fit the original video dimensions.
-    const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;
-    const res: any = re.exec(this.playerCrop.style.transform);
-    const x = Math.round(res.groups.x * videoWidth / this.playerVideo.offsetWidth);
-    const y = Math.round(res.groups.y * videoHeight / this.playerVideo.offsetHeight);
-    // Calculate real absolute size values to fit the original video dimensions.
-    let h, w;
-    if (videoWidth > videoHeight) {
-      h = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-      w = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-      if (this.playerVideo.getBoundingClientRect().width > this.playerVideo.getBoundingClientRect().height) {
-        w = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-        h = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-      }
-    } else {
-      w = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-      h = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-      if (this.playerVideo.getBoundingClientRect().width > this.playerVideo.getBoundingClientRect().height) {
-        h = Math.round(videoWidth / this.playerVideo.getBoundingClientRect().height * this.playerCrop.getBoundingClientRect().height);
-        w = Math.round(videoHeight / this.playerVideo.getBoundingClientRect().width * this.playerCrop.getBoundingClientRect().width);
-      }
-    }
-    // Return built parameter.
-    return `crop=${w}:${h}:${x}:${y}`;
-  }
-
-  $filterRotate(c: boolean): void {
-    let filterRotate = this.filterActive.filterRotate;
+  videoFilterRotate(c: boolean): void {
+    let filterRotate = this.filters.filterInfo.filterRotate;
     if (c) { filterRotate = filterRotate == 270 ? 0 : filterRotate + 90; }
     else { filterRotate = filterRotate == 0 ? 270 : filterRotate - 90; }
-    this.setPosition(filterRotate);
-  }
-
-  filterRotate(): string {
-    switch (this.filterActive.filterRotate) {
-      case 90: { return 'transpose=1'; }
-      case 180: { return 'transpose=2,transpose=2'; }
-      case 270: { return 'transpose=2'; }
-      default: { return ''; }
-    }
+    this.videoSetPosition(filterRotate);
   }
 
   @HostListener('window:resize')
-  onResize() { this.setPosition(this.filterActive.filterRotate); }
+  onResize() { this.videoSetPosition(this.filters.filterInfo.filterRotate); }
 
-  setPosition(rotation: number): void {
+  videoSetPosition(rotation: number): void {
     // Reset DOM elements styling.
-    this.playerContainer.removeAttribute('style');
-    this.playerEdit.removeAttribute('style');
-    this.playerVideo.removeAttribute('style');
+    this.playerInfo.playerContainer.removeAttribute('style');
+    this.playerInfo.playerEdit.removeAttribute('style');
+    this.playerInfo.playerVideo.removeAttribute('style');
     switch (rotation) {
       case 0: case 180: {
         // Define and set rotation attributes.
         const rotate = rotation == 0 ? null : 'rotate(180deg)';
-        this.playerVideo.style.transform = rotate;
+        this.playerInfo.playerVideo.style.transform = rotate;
         // Check if the video element clips horizontally with the parent container.
-        const videoWidth = this.playerVideo.getBoundingClientRect().width;
-        if (videoWidth > this.playerEdit.offsetWidth) {
-          this.playerContainer.style.width = '100%';
-          this.playerEdit.style.alignItems = 'center';
-          this.playerVideo.style.width = '100%';
-        } else { this.playerContainer.style.height = '100%'; } break;
+        const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
+        if (videoWidth > this.playerInfo.playerEdit.offsetWidth) {
+          this.playerInfo.playerContainer.style.width = '100%';
+          this.playerInfo.playerEdit.style.alignItems = 'center';
+          this.playerInfo.playerVideo.style.width = '100%';
+        } else { this.playerInfo.playerContainer.style.height = '100%'; } break;
       }
       case 90: case 270: {
         // Define and set rotation attributes.
         const rotate = rotation == 90 ? 'rotate(90deg) translateY(-100%)' : 'rotate(270deg) translateX(-100%)';
-        this.playerVideo.style.transform = rotate;
-        this.playerVideo.style.transformOrigin = 'top left';
+        this.playerInfo.playerVideo.style.transform = rotate;
+        this.playerInfo.playerVideo.style.transformOrigin = 'top left';
         // Setup styling for clipping calculation.
-        this.playerContainer.style.width = '100%';
-        this.playerContainer.style.height = '100%';
-        this.playerVideo.style.width = (this.playerEdit.offsetHeight - 2) + 'px';
-        this.playerVideo.style.height = 'fit-content';
+        this.playerInfo.playerContainer.style.width = '100%';
+        this.playerInfo.playerContainer.style.height = '100%';
+        this.playerInfo.playerVideo.style.width = (this.playerInfo.playerEdit.offsetHeight - 2) + 'px';
+        this.playerInfo.playerVideo.style.height = 'fit-content';
         // Check if the video element clips horizontally with the parent container.
-        const videoWidth = this.playerVideo.getBoundingClientRect().width;
-        if (videoWidth > this.playerEdit.offsetWidth) {
+        const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
+        if (videoWidth > this.playerInfo.playerEdit.offsetWidth) {
           // Fit the video element horizontally on the parent.
-          this.playerEdit.style.alignItems = 'center';
-          this.playerVideo.style.width = null;
-          this.playerVideo.style.height = this.playerContainer.offsetWidth + 'px';
-          this.playerContainer.style.height = this.playerVideo.offsetWidth + 'px';
+          this.playerInfo.playerEdit.style.alignItems = 'center';
+          this.playerInfo.playerVideo.style.width = null;
+          this.playerInfo.playerVideo.style.height = this.playerInfo.playerContainer.offsetWidth + 'px';
+          this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
         } else {
           // Fit the video element vertically on the parent.
-          this.playerContainer.style.width = this.playerVideo.offsetHeight + 'px';
-          if (this.playerVideo.offsetHeight == this.playerVideo.offsetWidth) {
-            this.playerContainer.style.height = this.playerVideo.offsetWidth + 'px';
-            this.playerEdit.style.alignItems = 'center';
+          this.playerInfo.playerContainer.style.width = this.playerInfo.playerVideo.offsetHeight + 'px';
+          if (this.playerInfo.playerVideo.offsetHeight == this.playerInfo.playerVideo.offsetWidth) {
+            this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
+            this.playerInfo.playerEdit.style.alignItems = 'center';
           }
         } break;
       }
-    } this.filterActive.filterRotate = rotation;
+    } this.filters.filterInfo.filterRotate = rotation;
     // Update crop tool dimensions on rotate and window resize.
-    this.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
-    this.playerCrop.style.width = this.playerVideo.getBoundingClientRect().width + 'px';
-    this.playerCrop.style.height = this.playerVideo.getBoundingClientRect().height + 'px';
+    this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
+    this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo.getBoundingClientRect().width + 'px';
+    this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo.getBoundingClientRect().height + 'px';
   }
 }

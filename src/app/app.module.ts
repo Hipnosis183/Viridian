@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 // App components.
 import { VideoInfoComponent } from './components/video-info/video-info.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
+import { VideoSaveComponent } from './components/video-save/video-save.component';
 
 // UI components.
 import { ModalComponent } from './ui/modal/modal.component';
@@ -21,6 +22,7 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     AppComponent,
     VideoInfoComponent,
     VideoPlayerComponent,
+    VideoSaveComponent,
     ModalComponent,
     DurationPipe,
     ExpressionPipe,

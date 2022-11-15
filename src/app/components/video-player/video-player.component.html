@@ -1,71 +1,49 @@
 <div id="playerEdit" class="player-edit">
   <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
-    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="playerLoadedMetadata($event)"
-      (timeupdate)="playerProgressUpdate()"></video>
-    <div id="playerCrop" [hidden]="!filterActive.filterCrop" class="resizable"></div>
+    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="videoFileLoaded($event)"
+      (timeupdate)="$videoPlayerProgress()"></video>
+    <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
   <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
     <img [src]="'/assets/open.svg'">
-    <input type="file" (change)="playerFileOpen($event)" />
+    <input type="file" (change)="videoFileOpen($event)" />
   </div>
 </div>
 <div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
   <div class="player-buttons">
     <div>
-      <button (click)="playerPlayPause()">
-        <img [src]="playerVideo.paused || playerVideo.ended ? '/assets/play.svg' : '/assets/pause.svg'">
+      <button (click)="videoPlayerPlay()">
+        <img [src]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? '/assets/play.svg' : '/assets/pause.svg'">
       </button>
-      <button (click)="playerStop()">
+      <button (click)="videoPlayerStop()">
         <img [src]="'/assets/stop.svg'">
       </button>
-      <button (click)="playerMute()">
-        <img [src]="playerVideo.muted || playerVideo.volume == 0 ? '/assets/mute.svg' : '/assets/volume.svg'">
+      <button (click)="videoPlayerMute()">
+        <img [src]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? '/assets/mute.svg' : '/assets/volume.svg'">
       </button>
     </div>
     <div>
       <button (click)="$videoInfo.$videoInfo()">
         <img [src]="'/assets/list.svg'">
       </button>
-      <button (click)="$filterRotate(false)">
+      <button (click)="videoFilterRotate(false)">
         <img [src]="'/assets/rotate.svg'" class="-scale-x-100">
       </button>
-      <button (click)="$filterRotate(true)">
+      <button (click)="videoFilterRotate(true)">
         <img [src]="'/assets/rotate.svg'">
       </button>
-      <button [class]="filterActive.filterCrop ? 'active' : ''" (click)="$filterCrop()">
+      <button [class]="filters.filterInfo.filterCrop ? 'active' : ''" (click)="videoFilterCrop()">
         <img [src]="'/assets/crop.svg'">
       </button>
-      <button (click)="playerFileSave()">
+      <button (click)="videoSave.videoSaveFile()">
         <img [src]="'/assets/done.svg'">
       </button>
-      <button (click)="playerFileClose()">
+      <button (click)="videoFileClose()">
         <img [src]="'/assets/close.svg'">
       </button>
     </div>
   </div>
-  <progress id="playerProgress" min="0" value="0" (mouseup)="playerProgressChange($event)"></progress>
+  <progress id="playerProgress" min="0" value="0" (mouseup)="videoPlayerProgress($event)"></progress>
 </div>
-<modal *ngIf="fileSave.fileSaving || fileSave.fileSaved">
-  <div class="player-save">
-    <div *ngIf="fileSave.fileSaving">
-      <p>Processing video...</p>
-    </div>
-    <div *ngIf="!fileSave.fileSaving">
-      <div *ngIf="!fileSave.fileErrorText">
-        <p>Video saved successfully!</p>
-      </div>
-      <div *ngIf="fileSave.fileErrorText">
-        <p>An error has occurred during the processing of the video.
-          Check the log for more details.</p>
-      </div>
-      <div class="flex space-x-4">
-        <button *ngIf="fileSave.fileErrorText" (click)="playerFileError()" class="button-error">Error log</button>
-        <button (click)="$playerFileSave()" class="button-ok">Ok</button>
-      </div>
-      <div *ngIf="fileSave.fileErrorView" class="player-error">
-        <span [innerText]="fileSave.fileErrorText"></span>
-      </div>
-    </div>
-  </div>
-</modal>
 <video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="$videoInfo = videoInfo"></video-info>
+<video-save #videoSave></video-save>

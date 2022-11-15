@@ -47,10 +47,6 @@
   width: calc(100% - 34px);
 }
 
-.player-error {
-  @apply bg-slate-900 border border-slate-800 max-h-[50vh] overflow-auto p-4 w-full whitespace-nowrap;
-}
-
 .player-file {
   @apply h-full w-full;
 }
@@ -61,30 +57,6 @@
 
 .player-file input {
   @apply cursor-pointer h-full opacity-0 w-full;
-}
-
-.player-save {
-  @apply w-[350px];
-}
-
-.player-save button {
-  @apply border px-6 py-2;
-}
-
-.player-save button.button-ok {
-  @apply border-blue-500 bg-blue-600 hover:bg-blue-500;
-}
-
-.player-save button.button-error {
-  @apply border-red-500 bg-red-600 hover:bg-red-500;
-}
-
-.player-save p {
-  @apply text-center;
-}
-
-.player-save > div {
-  @apply flex flex-col items-center justify-center space-y-8;
 }
 
 .player-video {

@@ -1,0 +1,23 @@
+<modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">
+  <div class="save-container">
+    <div *ngIf="videoSave.videoSaving">
+      <p>Processing video...</p>
+    </div>
+    <div *ngIf="!videoSave.videoSaving">
+      <div *ngIf="!videoSave.videoErrorText">
+        <p>Video saved successfully!</p>
+      </div>
+      <div *ngIf="videoSave.videoErrorText">
+        <p>An error has occurred during the processing of the video.
+          Check the log for more details.</p>
+      </div>
+      <div class="save-buttons">
+        <button *ngIf="videoSave.videoErrorText" (click)="videoSaveError()" class="button-error">Error log</button>
+        <button (click)="videoSaveOk()" class="button-ok">Ok</button>
+      </div>
+      <div *ngIf="videoSave.videoErrorView" class="save-error">
+        <span [innerText]="videoSave.videoErrorText"></span>
+      </div>
+    </div>
+  </div>
+</modal>
