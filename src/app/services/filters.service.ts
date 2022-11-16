@@ -8,12 +8,14 @@ export class FiltersService {
   constructor(public store: StoreService) { }
 
   filterInfo = {
+    filterClear: false,
     filterCrop: false,
     filterRotate: 0
   };
 
   filterReset(): void {
     this.filterInfo = {
+      filterClear: false,
       filterCrop: false,
       filterRotate: 0
     };

@@ -44,10 +44,12 @@ export class VideoSaveComponent {
     if (this.filters.filterInfo.filterRotate) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
     let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
+    // Define metadata modifications.
+    const metadata = this.videoSaveMetadata();
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} -c:a copy "${output}"`;
+    const command: string = `ffmpeg -v error -y -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} -c:a copy "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
@@ -58,5 +60,19 @@ export class VideoSaveComponent {
         if (r) { this.videoSave.videoErrorText = r; }
       });
     });
+  }
+
+  videoSaveMetadata(): string {
+    if (!this.filters.filterInfo.filterClear) { return ''; }
+    // Remove general metadata, rotation and encoder tags.
+    let metadata = '-map_metadata -1 -metadata:s:v rotate="" -fflags +bitexact';
+    const stream = this.store.state.videoInfo.videoStreams[1];
+    // Correct aspect ratio if metadata exists, since it can't be removed.
+    if (Object.keys(stream).filter((e) => e.indexOf("aspect_ratio") >= 0).length > 0) {
+      const rotation = this.filters.filterInfo.filterRotate;
+      metadata += rotation == 90 || rotation == 270
+        ? ` -aspect ${stream.height}:${stream.width}`
+        : ` -aspect ${stream.width}:${stream.height}`;
+    } return metadata;
   }
 }

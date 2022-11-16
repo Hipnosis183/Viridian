@@ -101,6 +101,10 @@ export class VideoPlayerComponent {
     this.playerInfo.playerProgress.value = 0;
   }
 
+  videoFilterClear(): void {
+    this.filters.filterInfo.filterClear = !this.filters.filterInfo.filterClear;
+  }
+
   videoFilterCrop(): void {
     this.filters.filterInfo.filterCrop = !this.filters.filterInfo.filterCrop;
   }
