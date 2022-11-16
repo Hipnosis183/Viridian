@@ -10,14 +10,16 @@ export class FiltersService {
   filterInfo = {
     filterClear: false,
     filterCrop: false,
-    filterRotate: 0
+    filterRotate: 0,
+    filterRotation: 0
   };
 
   filterReset(): void {
     this.filterInfo = {
       filterClear: false,
       filterCrop: false,
-      filterRotate: 0
+      filterRotate: 0,
+      filterRotation: 0
     };
   }
 
@@ -54,11 +56,41 @@ export class FiltersService {
   }
 
   filterRotate(): string {
-    switch (this.filterInfo.filterRotate) {
-      case 90: { return 'transpose=1'; }
-      case 180: { return 'transpose=2,transpose=2'; }
-      case 270: { return 'transpose=2'; }
-      default: { return ''; }
-    }
+    // filterRotation: Metadata rotation.
+    // filterRotate: Rotation tool rotation.
+    switch (this.filterInfo.filterRotation) {
+      case 90: {
+        switch (this.filterInfo.filterRotate) {
+          case 90: { return ''; }
+          case 180: { return 'transpose=1'; }
+          case 270: { return 'transpose=2,transpose=2'; }
+          default: { return 'transpose=2'; }
+        }
+      }
+      case 180: {
+        switch (this.filterInfo.filterRotate) {
+          case 90: { return 'transpose=2'; }
+          case 180: { return ''; }
+          case 270: { return 'transpose=1'; }
+          default: { return 'transpose=2,transpose=2'; }
+        }
+      }
+      case 270: {
+        switch (this.filterInfo.filterRotate) {
+          case 90: { return 'transpose=2,transpose=2'; }
+          case 180: { return 'transpose=2'; }
+          case 270: { return ''; }
+          default: { return 'transpose=1'; }
+        }
+      }
+      default: {
+        switch (this.filterInfo.filterRotate) {
+          case 90: { return 'transpose=1'; }
+          case 180: { return 'transpose=2,transpose=2'; }
+          case 270: { return 'transpose=2'; }
+          default: { return ''; }
+        }
+      }
+    };
   }
 }

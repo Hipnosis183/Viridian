@@ -55,7 +55,8 @@ export class VideoInfoComponent {
           this.store.state.videoInfo.videoStreamsText.push(this.videoStreamFormat(streams[i]));
           streams[i].view = null;
         } this.store.state.videoInfo.videoStreams = streams;
+        this.loaded.emit();
       });
-    }); this.loaded.emit();
+    });
   }
 }

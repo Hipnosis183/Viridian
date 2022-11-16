@@ -1,6 +1,6 @@
 <div id="playerEdit" class="player-edit">
   <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
-    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="videoFileLoaded($event)"
+    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()"
       (timeupdate)="$videoPlayerProgress()"></video>
     <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
@@ -48,5 +48,5 @@
   </div>
   <progress id="playerProgress" min="0" value="0" (mouseup)="videoPlayerProgress($event)"></progress>
 </div>
-<video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="$videoInfo = videoInfo"></video-info>
+<video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="videoFileLoaded(videoInfo)"></video-info>
 <video-save #videoSave></video-save>

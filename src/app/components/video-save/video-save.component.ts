@@ -2,6 +2,7 @@ import { Component, NgZone } from '@angular/core';
 import { FiltersService } from 'src/app/services/filters.service';
 import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'video-save',
@@ -15,6 +16,7 @@ export class VideoSaveComponent {
     private filters: FiltersService,
     private ipc: IpcService,
     public store: StoreService,
+    public utils: UtilsService,
     private zone: NgZone
   ) { }
 
@@ -41,7 +43,7 @@ export class VideoSaveComponent {
   async videoSaveFile(): Promise<void> {
     // Define video filters to apply.
     let filters: string[] = [];
-    if (this.filters.filterInfo.filterRotate) { filters.push(this.filters.filterRotate()); }
+    if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
     let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
     // Define metadata modifications.
@@ -49,7 +51,7 @@ export class VideoSaveComponent {
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} -c:a copy "${output}"`;
+    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} -c:a copy "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
@@ -68,7 +70,7 @@ export class VideoSaveComponent {
     let metadata = '-map_metadata -1 -metadata:s:v rotate="" -fflags +bitexact';
     const stream = this.store.state.videoInfo.videoStreams[1];
     // Correct aspect ratio if metadata exists, since it can't be removed.
-    if (Object.keys(stream).filter((e) => e.indexOf("aspect_ratio") >= 0).length > 0) {
+    if (this.utils.findValueInKey(stream, 'aspect_ratio').length > 0) {
       const rotation = this.filters.filterInfo.filterRotate;
       metadata += rotation == 90 || rotation == 270
         ? ` -aspect ${stream.height}:${stream.width}`

@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { FiltersService } from 'src/app/services/filters.service';
 import { StoreService } from 'src/app/services/store.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 // @ts-ignore
 import Resizable from 'resizable';
@@ -16,6 +17,7 @@ export class VideoPlayerComponent {
   constructor(
     public filters: FiltersService,
     public store: StoreService,
+    public utils: UtilsService
   ) { }
 
   $videoInfo: any;
@@ -61,18 +63,31 @@ export class VideoPlayerComponent {
       this.store.state.fileInfo.filePath = 'file://' + e.target.files[0].path;
       this.store.state.fileInfo.fileName = e.target.files[0].name;
       this.store.state.fileInfo.fileType = e.target.files[0].type;
-      this.store.state.fileInfo.fileLoaded = true;
     }
   }
 
-  videoFileLoaded(d: any): void {
+  $videoFileLoaded(): void {
+    this.store.state.fileInfo.fileLoaded = true;
+  }
+
+  videoFileLoaded(v: any): void {
+    const stream = this.store.state.videoInfo.videoStreams[1];
     this.playerInfo.playerProgress.setAttribute('max', this.playerInfo.playerVideo.duration.toString());
     // Store dimensions from the original video.
-    this.store.state.videoInfo.videoWidth = d.srcElement.videoWidth;
-    this.store.state.videoInfo.videoHeight = d.srcElement.videoHeight;
-    // Reset filters and setup positioning of the video container.
-    this.filters.filterReset();
-    this.videoSetPosition(0);
+    this.store.state.videoInfo.videoWidth = stream.width;
+    this.store.state.videoInfo.videoHeight = stream.height;
+    // Normalize video rotation display if rotate metadata is present.
+    const rotated = this.utils.findValueByKey(stream, 'rotation');
+    // Older rotation API is measured CW, newer (display matrix) is CCW.
+    let rotation: number = 0;
+    switch (rotated) {
+      case 90: case -270: { rotation = 90; break; }
+      case 270: case -90: { rotation = 270; break; }
+      case 180: case -180: { rotation = 180; break; }
+    } this.filters.filterInfo.filterRotation = rotation;
+    // Reset and setup positioning of the video container.
+    this.videoSetPosition(rotation);
+    this.$videoInfo = v;
   }
 
   videoPlayerMute(): void {
