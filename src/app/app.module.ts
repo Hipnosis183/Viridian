@@ -12,6 +12,9 @@ import { VideoSaveComponent } from './components/video-save/video-save.component
 // UI components.
 import { ModalComponent } from './ui/modal/modal.component';
 
+// Directives.
+import { RenderedDirective } from './directives/rendered.directive';
+
 // Pipes.
 import { DurationPipe } from './pipes/duration.pipe';
 import { ExpressionPipe } from './pipes/expression.pipe';
@@ -24,6 +27,7 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     VideoPlayerComponent,
     VideoSaveComponent,
     ModalComponent,
+    RenderedDirective,
     DurationPipe,
     ExpressionPipe,
     FileSizePipe,
