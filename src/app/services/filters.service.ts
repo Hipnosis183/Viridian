@@ -30,67 +30,91 @@ export class FiltersService {
     const videoHeight = this.store.state.videoInfo.videoHeight;
     const videoWidth = this.store.state.videoInfo.videoWidth;
     // Calculate real absolute position values to fit the original video dimensions.
+    const r = this.$filterRotate();
     const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;
     const res: any = re.exec(playerCrop.style.transform);
-    const x = Math.round(res.groups.x * videoWidth / playerVideo.offsetWidth);
-    const y = Math.round(res.groups.y * videoHeight / playerVideo.offsetHeight);
+    const x = Math.round(res.groups.x * (r == 90 || r == 270 ? videoHeight : videoWidth) / playerVideo.getBoundingClientRect().width);
+    const y = Math.round(res.groups.y * (r == 90 || r == 270 ? videoWidth : videoHeight) / playerVideo.getBoundingClientRect().height);
+    // Calculate coordinates to fix aspect ratio using original video dimensions.
+    let aspectRatio = videoWidth / videoHeight;
+    let $videoHeight, $videoWidth, cropHeight, cropWidth;
+    if (r == 90 || r == 270) {
+      $videoWidth = playerVideo.getBoundingClientRect().width;
+      $videoHeight = $videoWidth * aspectRatio;
+      cropWidth = playerCrop.getBoundingClientRect().width;
+      cropHeight = $videoHeight * playerCrop.getBoundingClientRect().height / playerVideo.getBoundingClientRect().height;
+    } else {
+      $videoHeight = playerVideo.getBoundingClientRect().height;
+      $videoWidth = $videoHeight * aspectRatio;
+      cropHeight = playerCrop.getBoundingClientRect().height;
+      cropWidth = $videoWidth * playerCrop.getBoundingClientRect().width / playerVideo.getBoundingClientRect().width;
+    }
     // Calculate real absolute size values to fit the original video dimensions.
     let h, w;
     if (videoWidth > videoHeight) {
-      h = Math.round(videoWidth / playerVideo.getBoundingClientRect().height * playerCrop.getBoundingClientRect().height);
-      w = Math.round(videoHeight / playerVideo.getBoundingClientRect().width * playerCrop.getBoundingClientRect().width);
-      if (playerVideo.getBoundingClientRect().width > playerVideo.getBoundingClientRect().height) {
-        w = Math.round(videoWidth / playerVideo.getBoundingClientRect().width * playerCrop.getBoundingClientRect().width);
-        h = Math.round(videoHeight / playerVideo.getBoundingClientRect().height * playerCrop.getBoundingClientRect().height);
+      h = Math.round(videoWidth / $videoHeight * cropHeight);
+      w = Math.round(videoHeight / $videoWidth * cropWidth);
+      if ($videoWidth > $videoHeight) {
+        w = Math.round(videoWidth / $videoWidth * cropWidth);
+        h = Math.round(videoHeight / $videoHeight * cropHeight);
       }
     } else {
-      w = Math.round(videoWidth / playerVideo.getBoundingClientRect().width * playerCrop.getBoundingClientRect().width);
-      h = Math.round(videoHeight / playerVideo.getBoundingClientRect().height * playerCrop.getBoundingClientRect().height);
-      if (playerVideo.getBoundingClientRect().width > playerVideo.getBoundingClientRect().height) {
-        h = Math.round(videoWidth / playerVideo.getBoundingClientRect().height * playerCrop.getBoundingClientRect().height);
-        w = Math.round(videoHeight / playerVideo.getBoundingClientRect().width * playerCrop.getBoundingClientRect().width);
+      w = Math.round(videoWidth / $videoWidth * cropWidth);
+      h = Math.round(videoHeight / $videoHeight * cropHeight);
+      if ($videoWidth > $videoHeight) {
+        h = Math.round(videoWidth / $videoHeight * cropHeight);
+        w = Math.round(videoHeight / $videoWidth * cropWidth);
       }
     }
     // Return built parameter.
     return `crop=${w}:${h}:${x}:${y}`;
   }
 
-  filterRotate(): string {
+  $filterRotate(): number {
     // filterRotation: Metadata rotation.
     // filterRotate: Rotation tool rotation.
     switch (this.filterInfo.filterRotation) {
       case 90: {
         switch (this.filterInfo.filterRotate) {
-          case 90: { return ''; }
-          case 180: { return 'transpose=1'; }
-          case 270: { return 'transpose=2,transpose=2'; }
-          default: { return 'transpose=2'; }
+          case 90: { return 0; }
+          case 180: { return 90; }
+          case 270: { return 180; }
+          default: { return 270; }
         }
       }
       case 180: {
         switch (this.filterInfo.filterRotate) {
-          case 90: { return 'transpose=2'; }
-          case 180: { return ''; }
-          case 270: { return 'transpose=1'; }
-          default: { return 'transpose=2,transpose=2'; }
+          case 90: { return 270; }
+          case 180: { return 0; }
+          case 270: { return 90; }
+          default: { return 180; }
         }
       }
       case 270: {
         switch (this.filterInfo.filterRotate) {
-          case 90: { return 'transpose=2,transpose=2'; }
-          case 180: { return 'transpose=2'; }
-          case 270: { return ''; }
-          default: { return 'transpose=1'; }
+          case 90: { return 180; }
+          case 180: { return 270; }
+          case 270: { return 0; }
+          default: { return 90; }
         }
       }
       default: {
         switch (this.filterInfo.filterRotate) {
-          case 90: { return 'transpose=1'; }
-          case 180: { return 'transpose=2,transpose=2'; }
-          case 270: { return 'transpose=2'; }
-          default: { return ''; }
+          case 90: { return 90; }
+          case 180: { return 180; }
+          case 270: { return 270; }
+          default: { return 0; }
         }
       }
-    };
+    }
+  }
+
+  filterRotate(): string {
+    switch (this.$filterRotate()) {
+      case 90: { return 'transpose=1'; }
+      case 180: { return 'transpose=2,transpose=2'; }
+      case 270: { return 'transpose=2'; }
+      default: { return ''; }
+    }
   }
 }
