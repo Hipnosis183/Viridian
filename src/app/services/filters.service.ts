@@ -10,6 +10,7 @@ export class FiltersService {
   filterInfo = {
     filterClear: false,
     filterCrop: false,
+    filterNoAudio: false,
     filterRotate: 0,
     filterRotation: 0
   };
@@ -18,6 +19,7 @@ export class FiltersService {
     this.filterInfo = {
       filterClear: false,
       filterCrop: false,
+      filterNoAudio: false,
       filterRotate: 0,
       filterRotation: 0
     };

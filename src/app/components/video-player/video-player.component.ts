@@ -124,6 +124,10 @@ export class VideoPlayerComponent {
     this.filters.filterInfo.filterCrop = !this.filters.filterInfo.filterCrop;
   }
 
+  videoFilterNoAudio(): void {
+    this.filters.filterInfo.filterNoAudio = !this.filters.filterInfo.filterNoAudio;
+  }
+
   videoFilterRotate(c: boolean): void {
     let filterRotate = this.filters.filterInfo.filterRotate;
     if (c) { filterRotate = filterRotate == 270 ? 0 : filterRotate + 90; }

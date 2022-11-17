@@ -29,6 +29,9 @@
       <button [class]="filters.filterInfo.filterClear ? 'active' : ''" (click)="videoFilterClear()">
         <img [src]="'/assets/clear.svg'">
       </button>
+      <button [class]="filters.filterInfo.filterNoAudio ? 'active' : ''" (click)="videoFilterNoAudio()">
+        <img [src]="'/assets/noaudio.svg'">
+      </button>
       <button (click)="videoFilterRotate(false)">
         <img [src]="'/assets/rotate.svg'" class="-scale-x-100">
       </button>

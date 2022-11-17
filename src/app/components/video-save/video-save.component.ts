@@ -45,13 +45,15 @@ export class VideoSaveComponent {
     let filters: string[] = [];
     if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
-    let filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
+    const filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
+    // Define removal of audio streams.
+    const audio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
     // Define metadata modifications.
     const metadata = this.videoSaveMetadata();
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} -c:a copy "${output}"`;
+    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} ${audio} "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
