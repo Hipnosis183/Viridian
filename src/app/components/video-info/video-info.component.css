@@ -15,7 +15,7 @@ th {
 }
 
 .info-details {
-  @apply bg-slate-900 border border-slate-800 max-h-[50vh] my-2 overflow-auto p-4 w-[624px] whitespace-nowrap;
+  @apply bg-slate-900 border border-slate-800 max-h-[50vh] my-2 overflow-auto p-4 whitespace-nowrap;
 }
 
 .info-details > span {
@@ -23,7 +23,7 @@ th {
 }
 
 .info-tracks td {
-  @apply px-6 py-4;
+  @apply px-6 py-4 text-center;
 }
 
 .info-tracks.selected td {

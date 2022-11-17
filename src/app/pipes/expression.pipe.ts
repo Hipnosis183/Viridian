@@ -5,6 +5,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ExpressionPipe implements PipeTransform {
 
   transform(value: string): string {
-    return new Function(`return ${value}`)();
+    return new Function(`return ${value}`)().toFixed(2);
   }
 }

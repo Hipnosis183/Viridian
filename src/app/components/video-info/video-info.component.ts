@@ -40,6 +40,17 @@ export class VideoInfoComponent {
     } this.store.state.videoInfo.videoStreams[i].view = this.store.state.videoInfo.videoStreams[i].view ? false : true;
   }
 
+  $videoStreamResize: any = [];
+  videoStreamResize(e: any, i: number): void {
+    this.$videoStreamResize.push(e);
+    if (i == this.store.state.videoInfo.videoStreams.length - 1) {
+      let t: any = document.getElementsByTagName('table')[0];
+      for (let k = 0; k < this.$videoStreamResize.length; k++) {
+        this.$videoStreamResize[k].style.width = t.offsetWidth + 'px';
+      }
+    }
+  }
+
   ngOnInit(): void {
     // Get video file metadata.
     const input: string = this.store.state.fileInfo.filePath;
