@@ -43,6 +43,7 @@ export class VideoSaveComponent {
   async videoSaveFile(): Promise<void> {
     // Define video filters to apply.
     let filters: string[] = [];
+    if (this.filters.filterInfo.filterFlipH || this.filters.filterInfo.filterFlipV) { filters.push(this.filters.filterFlip()); }
     if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
     const filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
@@ -53,7 +54,7 @@ export class VideoSaveComponent {
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
     const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join(',')}"` : ''} ${metadata} ${audio} "${output}"`;
+    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join()}"` : ''} ${metadata} ${audio} "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);

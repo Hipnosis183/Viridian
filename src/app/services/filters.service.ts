@@ -10,6 +10,8 @@ export class FiltersService {
   filterInfo = {
     filterClear: false,
     filterCrop: false,
+    filterFlipH: false,
+    filterFlipV: false,
     filterNoAudio: false,
     filterRotate: 0,
     filterRotation: 0
@@ -19,6 +21,8 @@ export class FiltersService {
     this.filterInfo = {
       filterClear: false,
       filterCrop: false,
+      filterFlipH: false,
+      filterFlipV: false,
       filterNoAudio: false,
       filterRotate: 0,
       filterRotation: 0
@@ -70,6 +74,13 @@ export class FiltersService {
     }
     // Return built parameter.
     return `crop=${w}:${h}:${x}:${y}`;
+  }
+
+  filterFlip(): string {
+    let filters: any = [];
+    if (this.filterInfo.filterFlipH) { filters.push('hflip'); }
+    if (this.filterInfo.filterFlipV) { filters.push('vflip'); }
+    return filters.join();
   }
 
   $filterRotate(): number {

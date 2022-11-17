@@ -27,6 +27,7 @@ export class VideoPlayerComponent {
     const $this = this;
     this.playerInfo = {
       playerContainer: null,
+      $playerContainer: null,
       playerEdit: null,
       playerProgress: null,
       playerResizable: null,
@@ -40,6 +41,7 @@ export class VideoPlayerComponent {
   ngAfterContentInit(): void {
     // Get video player elements from the DOM.
     this.playerInfo.playerContainer = document.getElementById('playerContainer');
+    this.playerInfo.$playerContainer = document.getElementById('$playerContainer');
     this.playerInfo.playerEdit = document.getElementById('playerEdit');
     this.playerInfo.playerProgress = document.getElementById('playerProgress');
     this.playerInfo.playerVideo = document.getElementById('playerVideo');
@@ -128,6 +130,12 @@ export class VideoPlayerComponent {
     this.filters.filterInfo.filterNoAudio = !this.filters.filterInfo.filterNoAudio;
   }
 
+  videoFilterFlip(v: boolean): void {
+    if (v) { this.filters.filterInfo.filterFlipV = !this.filters.filterInfo.filterFlipV; }
+    else { this.filters.filterInfo.filterFlipH = !this.filters.filterInfo.filterFlipH; }
+    this.videoSetPosition(this.filters.filterInfo.filterRotate);
+  }
+
   videoFilterRotate(c: boolean): void {
     let filterRotate = this.filters.filterInfo.filterRotate;
     if (c) { filterRotate = filterRotate == 270 ? 0 : filterRotate + 90; }
@@ -141,6 +149,7 @@ export class VideoPlayerComponent {
   videoSetPosition(rotation: number): void {
     // Reset DOM elements styling.
     this.playerInfo.playerContainer.removeAttribute('style');
+    this.playerInfo.$playerContainer.removeAttribute('style');
     this.playerInfo.playerEdit.removeAttribute('style');
     this.playerInfo.playerVideo.removeAttribute('style');
     switch (rotation) {
@@ -152,9 +161,19 @@ export class VideoPlayerComponent {
         const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
         if (videoWidth > this.playerInfo.playerEdit.offsetWidth) {
           this.playerInfo.playerContainer.style.width = '100%';
+          this.playerInfo.$playerContainer.style.width = '100%';
           this.playerInfo.playerEdit.style.alignItems = 'center';
           this.playerInfo.playerVideo.style.width = '100%';
-        } else { this.playerInfo.playerContainer.style.height = '100%'; } break;
+        } else {
+          this.playerInfo.playerContainer.style.height = '100%';
+          this.playerInfo.$playerContainer.style.height = '100%';
+        }
+        // Set scale attributes for flipping/mirroring.
+        if (this.filters.filterInfo.filterFlipH) {
+          this.playerInfo.$playerContainer.style.transform += 'scaleX(-1)';
+        } if (this.filters.filterInfo.filterFlipV) {
+          this.playerInfo.$playerContainer.style.transform += 'scaleY(-1)';
+        } break;
       }
       case 90: case 270: {
         // Define and set rotation attributes.
@@ -164,6 +183,8 @@ export class VideoPlayerComponent {
         // Setup styling for clipping calculation.
         this.playerInfo.playerContainer.style.width = '100%';
         this.playerInfo.playerContainer.style.height = '100%';
+        this.playerInfo.$playerContainer.style.width = '100%';
+        this.playerInfo.$playerContainer.style.height = '100%';
         this.playerInfo.playerVideo.style.width = (this.playerInfo.playerEdit.offsetHeight - 2) + 'px';
         this.playerInfo.playerVideo.style.height = 'fit-content';
         // Check if the video element clips horizontally with the parent container.
@@ -174,13 +195,22 @@ export class VideoPlayerComponent {
           this.playerInfo.playerVideo.style.width = null;
           this.playerInfo.playerVideo.style.height = this.playerInfo.playerContainer.offsetWidth + 'px';
           this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
+          this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
         } else {
           // Fit the video element vertically on the parent.
           this.playerInfo.playerContainer.style.width = this.playerInfo.playerVideo.offsetHeight + 'px';
+          this.playerInfo.$playerContainer.style.width = this.playerInfo.playerVideo.offsetHeight + 'px';
           if (this.playerInfo.playerVideo.offsetHeight == this.playerInfo.playerVideo.offsetWidth) {
             this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
+            this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
             this.playerInfo.playerEdit.style.alignItems = 'center';
           }
+        }
+        // Set scale attributes for flipping/mirroring.
+        if (this.filters.filterInfo.filterFlipH) {
+          this.playerInfo.$playerContainer.style.transform += 'scaleY(-1)';
+        } if (this.filters.filterInfo.filterFlipV) {
+          this.playerInfo.$playerContainer.style.transform += 'scaleX(-1)';
         } break;
       }
     } this.filters.filterInfo.filterRotate = rotation;

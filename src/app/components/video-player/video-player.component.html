@@ -1,7 +1,9 @@
 <div id="playerEdit" class="player-edit">
   <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
-    <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()"
-      (timeupdate)="$videoPlayerProgress()"></video>
+    <div id="$playerContainer" class="player-video flex">
+      <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()"
+        (timeupdate)="$videoPlayerProgress()"></video>
+    </div>
     <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
   <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
@@ -37,6 +39,12 @@
       </button>
       <button (click)="videoFilterRotate(true)">
         <img [src]="'/assets/rotate.svg'">
+      </button>
+      <button (click)="videoFilterFlip(true)">
+        <img [src]="'/assets/flip.svg'" class="rotate-90">
+      </button>
+      <button (click)="videoFilterFlip(false)">
+        <img [src]="'/assets/flip.svg'">
       </button>
       <button [class]="filters.filterInfo.filterCrop ? 'active' : ''" (click)="videoFilterCrop()">
         <img [src]="'/assets/crop.svg'">
