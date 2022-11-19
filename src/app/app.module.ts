@@ -10,7 +10,7 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 import { VideoSaveComponent } from './components/video-save/video-save.component';
 
 // UI components.
-import { ModalComponent } from './ui/modal/modal.component';
+import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
 
 // Directives.
 import { RenderedDirective } from './directives/rendered.directive';
@@ -26,7 +26,7 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     VideoInfoComponent,
     VideoPlayerComponent,
     VideoSaveComponent,
-    ModalComponent,
+    UiModalComponent,
     RenderedDirective,
     DurationPipe,
     ExpressionPipe,

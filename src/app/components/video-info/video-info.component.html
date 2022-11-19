@@ -1,4 +1,4 @@
-<modal *ngIf="store.state.videoInfo.videoStreams && videoInfo">
+<ui-modal *ngIf="store.state.videoInfo.videoStreams && videoInfo">
   <table>
     <thead>
       <tr>
@@ -42,4 +42,4 @@
   <button (click)="$videoInfo()">
     <img [src]="'/assets/close.svg'">
   </button>
-</modal>
+</ui-modal>
