@@ -2,11 +2,11 @@
   <table>
     <thead>
       <tr>
-        <th>Track</th>
-        <th>Type</th>
-        <th>Codec</th>
-        <th>Bitrate</th>
-        <th>Information</th>
+        <th>{{ 'VIDEO_INFO.TRACK' | translate }}</th>
+        <th>{{ 'VIDEO_INFO.TYPE' | translate }}</th>
+        <th>{{ 'GENERAL.CODEC' | translate }}</th>
+        <th>{{ 'VIDEO_INFO.BITRATE' | translate }}</th>
+        <th>{{ 'VIDEO_INFO.INFORMATION' | translate }}</th>
       </tr>
       <tr class="h-4"></tr>
     </thead>
@@ -15,7 +15,7 @@
         <div class="contents info-tracks" [class]="stream.view ? 'selected' : ''">
           <tr *ngIf="i == 0" (click)="videoStreamOpen(i)">
             <td></td>
-            <td>File</td>
+            <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
             <td>{{ store.state.fileInfo.fileType }}</td>
             <td>{{ stream.bit_rate / 1000 }}kbps</td>
             <td>{{ stream.duration | duration }} - {{ stream.size | filesize }}</td>
@@ -26,7 +26,7 @@
             <td>{{ stream.codec_name | uppercase }}{{ (stream.codec_tag_string != '[0][0][0][0]' ? '/' + stream.codec_tag_string : '') | uppercase }}</td>
             <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + 'kbps' : '-'}}</td>
             <td *ngIf="stream.codec_type=='video'">{{ stream.coded_width }}x{{ stream.coded_height }} @{{ stream.r_frame_rate | expression }}fps</td>
-            <td *ngIf="stream.codec_type=='audio'">{{ stream.channels }} Channels ({{ stream.channel_layout | titlecase }})</td>
+            <td *ngIf="stream.codec_type=='audio'">{{ stream.channels }} {{ 'VIDEO_INFO.CHANNELS' | translate }} ({{ stream.channel_layout | titlecase }})</td>
           </tr>
         </div>
         <tr>

@@ -1,0 +1,34 @@
+{
+  "GENERAL": {
+    "CODEC": "Codec"
+  },
+  "VIDEO_INFO": {
+    "BITRATE": "Bitrate",
+    "CHANNELS": "Channels",
+    "FILE": "File",
+    "INFORMATION": "Information",
+    "TRACK": "Track",
+    "TYPE": "Type"
+  },
+  "VIDEO_SAVE": {
+    "CANCEL": "Cancel",
+    "CLOSE": "Close",
+    "ENCODER": "Encoder",
+    "ERROR_LOG": "Error log",
+    "EXPORT": "Export",
+    "FORMAT": "Format",
+    "OK": "Ok",
+    "SAVE": {
+      "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
+      "SAVE_OK": "Video saved successfully!",
+      "SAVING": "Processing video..."
+    },
+    "SELECT": {
+      "CODECS": "All Codecs",
+      "CONTAINERS": "All Containers",
+      "DEFAULT": "Default | Recommended",
+      "DETECTED": "Detected | Recommended",
+      "ENCODERS": "All Encoders"
+    }
+  }
+}

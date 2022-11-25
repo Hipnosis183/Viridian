@@ -1,8 +1,7 @@
 <div id="playerEdit" class="player-edit">
   <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
     <div id="$playerContainer" class="player-video flex">
-      <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()"
-        (timeupdate)="null"></video>
+      <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()" (timeupdate)="null"></video>
     </div>
     <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
