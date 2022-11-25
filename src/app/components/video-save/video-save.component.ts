@@ -1,8 +1,12 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, EventEmitter, NgZone, Output } from '@angular/core';
 import { FiltersService } from 'src/app/services/filters.service';
 import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
 import { UtilsService } from 'src/app/services/utils.service';
+
+// Import formats and codecs list.
+import Codecs from 'src/assets/lists/codecs.json'
+import Formats from 'src/assets/lists/formats.json'
 
 @Component({
   selector: 'video-save',
@@ -20,18 +24,57 @@ export class VideoSaveComponent {
     private zone: NgZone
   ) { }
 
+  videoCodec: any = Codecs[0];
+  videoCodecs: any = Codecs;
+  videoFormat: any = Formats[0];
+  videoFormats: any = Formats;
+  @Output() loaded = new EventEmitter;
+
+  ngOnInit(): void {
+    // Update default format and all formats list based on file extension.
+    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo.fileExtension))[0];
+    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo.fileExtension));
+    this.loaded.emit();
+  }
+
+  videoSaveFormat(format: any): void {
+    const f: any = Formats.find((f: any) => f.extensions[0] == format.extensions[0]);
+    const s: any = this.store.state.videoInfo.videoStreams[1];
+    // Update default codec and all codecs list based on format.
+    let videoCodec = Codecs.filter((v: any) => f.codecs.includes(v.code) && v.code == s.codec_name)[0];
+    let videoCodecs = Codecs.filter((v: any) => f.codecs.includes(v.code) && v.code != s.codec_name);
+    if (!videoCodec) {
+      videoCodec = Codecs.filter((v: any) => v.code == f.codecs[0])[0];
+      videoCodecs = videoCodecs.filter((v: any) => v.code != videoCodec.code);
+    }
+    this.videoCodec = videoCodec;
+    this.videoCodecs = videoCodecs;
+  }
+
   videoSave: any = {
+    videoCodec: null,
+    videoEncoder: null,
     videoErrorText: null,
     videoErrorView: false,
+    videoFormat: null,
     videoSaving: false,
+    videoSave: false,
     videoSaved: false,
   };
 
-  videoSaveOk(): void {
+  $videoSave(): void {
+    this.videoSave.videoSave = !this.videoSave.videoSave;
+  }
+
+  videoSaveDone(): void {
     this.videoSave = {
+      videoCodec: null,
+      videoEncoder: null,
       videoErrorText: null,
       videoErrorView: false,
+      videoFormat: null,
       videoSaving: false,
+      videoSave: false,
       videoSaved: false,
     };
   }
@@ -41,20 +84,22 @@ export class VideoSaveComponent {
   }
 
   async videoSaveFile(): Promise<void> {
+    // Define video codec to use, or copy stream if the same as input is used.
+    const codec = this.videoSave.videoCodec.code != this.store.state.videoInfo.videoStreams[1].codec_name ? '-c:v ' + this.videoSave.videoCodec.code : '';
     // Define video filters to apply.
     let filters: string[] = [];
     if (this.filters.filterInfo.filterFlipH || this.filters.filterInfo.filterFlipV) { filters.push(this.filters.filterFlip()); }
     if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
-    const filter = filters.length > 0 ? '-filter:v' : '-c:v copy';
+    const filter = filters.length > 0 ? '-filter:v' : codec.length > 0 ? '' : '-c:v copy';
     // Define removal of audio streams.
     const audio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
     // Define metadata modifications.
     const metadata = this.videoSaveMetadata();
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
-    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out$1');
-    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${filter} ${filters.length > 0 ? `"${filters.join()}"` : ''} ${metadata} ${audio} "${output}"`;
+    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoSave.videoFormat.extensions[0]);
+    const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${codec} ${filter} ${filters.length > 0 ? `"${filters.join()}"` : ''} ${metadata} ${audio} "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);

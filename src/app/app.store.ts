@@ -5,6 +5,7 @@ const { state } = createStore({
     ffmpeg: '/home/renzo/Downloads/ffmpeg/',
   },
   fileInfo: {
+    fileExtension: null,
     fileLoaded: false,
     fileName: null,
     filePath: null,

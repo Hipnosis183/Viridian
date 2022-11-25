@@ -1,0 +1,47 @@
+[
+  {
+    "name": "AVI (Audio Video Interleaved)",
+    "extensions": ["avi"],
+    "codecs": ["mpeg4","h264","hevc","vp9","mpeg1video","mpeg2video"]
+  },
+  {
+    "name": "Raw H.264 Video",
+    "extensions": ["h264","264"],
+    "codecs": ["h264"]
+  },
+  {
+    "name": "Raw H.265 / HVEC Video",
+    "extensions": ["hevc","h265","265"],
+    "codecs": ["hevc"]
+  },
+  {
+    "name": "Raw MPEG-4 Video",
+    "extensions": ["m4v"],
+    "codecs": ["mpeg4"]
+  },
+  {
+    "name": "QuickTime / MOV",
+    "extensions": ["mov","qt"],
+    "codecs": ["h264","hevc","mpeg4","mpeg1video","mpeg2video"]
+  },
+  {
+    "name": "MP4 (MPEG-4 Part 14)",
+    "extensions": ["mp4"],
+    "codecs": ["h264","hevc","av1","vp9","mpeg4","mpeg1video","mpeg2video"]
+  },
+  {
+    "name": "MPEG-1 Systems Stream",
+    "extensions": ["mpeg","mpg"],
+    "codecs": ["mpeg1video"]
+  },
+  {
+    "name": "Matroska",
+    "extensions": ["mkv"],
+    "codecs": ["h264","hevc","av1","vp9","mpeg4","mpeg1video","mpeg2video"]
+  },
+  {
+    "name": "Matroska / WebM",
+    "extensions": ["webm"],
+    "codecs": ["vp9","av1"]
+  }
+]

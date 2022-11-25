@@ -1,0 +1,37 @@
+[
+  {
+    "code": "av1",
+    "name": "Alliance for Open Media AV1",
+    "encoders": ["libaom-av1","libsvtav1","librav1e"]
+  },
+  {
+    "code": "h264",
+    "name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 Part 10",
+    "encoders": ["libx264","libx264rgb","h264_v4l2m2m"]
+  },
+  {
+    "code": "hevc",
+    "name": "H.265 / HEVC (High Efficiency Video Coding)",
+    "encoders": ["libx265","hevc_v4l2m2m"]
+  },
+  {
+    "code": "mpeg1video",
+    "name": "MPEG-1 Video",
+    "encoders": ["mpeg1video","mpeg1_v4l2m2m"]
+  },
+  {
+    "code": "mpeg2video",
+    "name": "MPEG-2 Video",
+    "encoders": ["mpeg2video","mpegvideo","mpeg2_v4l2m2m"]
+  },
+  {
+    "code": "mpeg4",
+    "name": "MPEG-4 Part 2",
+    "encoders": ["mpeg4","mpeg4_v4l2m2m","libxvid"]
+  },
+  {
+    "code": "vp9",
+    "name": "Google VP9",
+    "encoders": ["libvpx-vp9"]
+  }
+]

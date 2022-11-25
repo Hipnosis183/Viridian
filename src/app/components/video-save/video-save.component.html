@@ -1,5 +1,43 @@
+<ui-modal *ngIf="videoSave.videoSave">
+  <div *ngIf="store.state.fileInfo.fileLoaded" class="save-container">
+    <ui-select [selectLabel]="'Format'" [(selectValue)]="videoSave.videoFormat" (selectUpdated)="videoSaveFormat($event)">
+      <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'Detected | Recommended'">
+        <ui-option [optionValue]="f" [optionSelected]="true" [optionLabel]="f.extensions[0] + ' | ' + f.name"></ui-option>
+      </ui-option-group>
+      <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'All Containers'">
+        <div *ngFor="let f of videoFormats">
+          <ui-option [optionValue]="f" [optionLabel]="f.extensions[0] + ' | ' + f.name"></ui-option>
+        </div>
+      </ui-option-group>
+    </ui-select>
+    <ui-select *ngIf="videoSave.videoFormat" [selectLabel]="'Codec'" [(selectValue)]="videoSave.videoCodec">
+      <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'Detected | Recommended'">
+        <ui-option [optionValue]="c" [optionSelected]="true" [optionLabel]="c.code + ' | ' + c.name"></ui-option>
+      </ui-option-group>
+      <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'All Codecs'">
+        <div *ngFor="let c of videoCodecs">
+          <ui-option [optionValue]="c" [optionLabel]="c.code + ' | ' + c.name"></ui-option>
+        </div>
+      </ui-option-group>
+    </ui-select>
+    <ui-select *ngIf="videoSave.videoCodec as c" [selectLabel]="'Encoder'" [(selectValue)]="videoSave.videoEncoder">
+      <ui-option-group [optionLabel]="'Default | Recommended'">
+        <ui-option *ngIf="c" [optionValue]="c.encoders[0]" [optionSelected]="true" [optionLabel]="c.encoders[0]"></ui-option>
+      </ui-option-group>
+      <ui-option-group *ngIf="c.encoders.length > 1" [optionLabel]="'All Encoders'">
+        <div *ngFor="let e of c.encoders; index as i">
+          <ui-option *ngIf="i != 0" [optionValue]="e" [optionLabel]="e"></ui-option>
+        </div>
+      </ui-option-group>
+    </ui-select>
+  </div>
+  <div class="save-buttons">
+    <ui-button buttonColor="primary" buttonIcon="done" (click)="videoSaveFile()">Export</ui-button>
+    <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave()">Cancel</ui-button>
+  </div>
+</ui-modal>
 <ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">
-  <div class="save-container">
+  <div class="save-saving">
     <div *ngIf="videoSave.videoSaving">
       <p>Processing video...</p>
     </div>
@@ -12,8 +50,9 @@
           Check the log for more details.</p>
       </div>
       <div class="save-buttons">
-        <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" (click)="videoSaveError()">Error log</ui-button>
-        <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" (click)="videoSaveOk()">Ok</ui-button>
+        <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">Error log</ui-button>
+        <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
+          (click)="videoSaveDone()">{{ videoSave.videoErrorText ? 'Close' : 'Ok' }}</ui-button>
       </div>
       <div *ngIf="videoSave.videoErrorView" class="save-error">
         <span [innerText]="videoSave.videoErrorText"></span>

@@ -1,16 +1,16 @@
 .save-buttons {
-  @apply flex space-x-4;
+  @apply flex justify-evenly w-full;
 }
 
 .save-container {
-  @apply w-[350px];
+  @apply flex flex-col mb-7 mt-1 space-y-3;
 }
 
-.save-container p {
-  @apply text-center;
+.save-saving {
+  @apply w-[350px] [&_p]:text-center;
 }
 
-.save-container > div {
+.save-saving > div {
   @apply flex flex-col items-center justify-center space-y-8;
 }
 

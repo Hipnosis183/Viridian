@@ -21,6 +21,7 @@ export class VideoPlayerComponent {
   ) { }
 
   $videoInfo: any;
+  $videoSave: any;
 
   playerInfo: any;
   ngOnInit(): void {
@@ -29,7 +30,6 @@ export class VideoPlayerComponent {
       playerContainer: null,
       $playerContainer: null,
       playerEdit: null,
-      playerProgress: null,
       playerResizable: null,
       get playerCrop() { return $this.store.state.playerInfo.playerCrop },
       set playerCrop(v) { $this.store.state.playerInfo.playerCrop = v },
@@ -43,7 +43,6 @@ export class VideoPlayerComponent {
     this.playerInfo.playerContainer = document.getElementById('playerContainer');
     this.playerInfo.$playerContainer = document.getElementById('$playerContainer');
     this.playerInfo.playerEdit = document.getElementById('playerEdit');
-    this.playerInfo.playerProgress = document.getElementById('playerProgress');
     this.playerInfo.playerVideo = document.getElementById('playerVideo');
     // Get crop element and set default position values.
     this.playerInfo.playerCrop = document.querySelector('#playerCrop');
@@ -62,6 +61,7 @@ export class VideoPlayerComponent {
   videoFileOpen(e: any): void {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
+      this.store.state.fileInfo.fileExtension = e.target.files[0].path.split('.').pop();
       this.store.state.fileInfo.filePath = 'file://' + e.target.files[0].path;
       this.store.state.fileInfo.fileName = e.target.files[0].name;
       this.store.state.fileInfo.fileType = e.target.files[0].type;
@@ -74,7 +74,6 @@ export class VideoPlayerComponent {
 
   videoFileLoaded(v: any): void {
     const stream = this.store.state.videoInfo.videoStreams[1];
-    this.playerInfo.playerProgress.setAttribute('max', this.playerInfo.playerVideo.duration.toString());
     // Store dimensions from the original video.
     this.store.state.videoInfo.videoWidth = stream.width;
     this.store.state.videoInfo.videoHeight = stream.height;
@@ -102,20 +101,9 @@ export class VideoPlayerComponent {
     } else { this.playerInfo.playerVideo.pause(); }
   }
 
-  $videoPlayerProgress(): void {
-    this.playerInfo.playerProgress.value = this.playerInfo.playerVideo.currentTime;
-  }
-
-  videoPlayerProgress(e: any): void {
-    const rect = this.playerInfo.playerProgress.getBoundingClientRect();
-    const pos = (e.pageX - rect.left) / this.playerInfo.playerProgress.offsetWidth;
-    this.playerInfo.playerVideo.currentTime = pos * this.playerInfo.playerVideo.duration;
-  }
-
   videoPlayerStop(): void {
     this.playerInfo.playerVideo.pause();
     this.playerInfo.playerVideo.currentTime = 0;
-    this.playerInfo.playerProgress.value = 0;
   }
 
   videoFilterClear(): void {

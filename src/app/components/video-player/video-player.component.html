@@ -2,7 +2,7 @@
   <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
     <div id="$playerContainer" class="player-video flex">
       <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()"
-        (timeupdate)="$videoPlayerProgress()"></video>
+        (timeupdate)="null"></video>
     </div>
     <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
@@ -34,4 +34,4 @@
   <ui-progress [(progressTime)]="playerInfo.playerVideo.currentTime" [progressDuration]="playerInfo.playerVideo.duration"></ui-progress>
 </div>
 <video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="videoFileLoaded(videoInfo)"></video-info>
-<video-save #videoSave></video-save>
+<video-save #videoSave *ngIf="store.state.fileInfo.fileLoaded" (loaded)="$videoSave = videoSave"></video-save>
