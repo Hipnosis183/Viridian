@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-[#192134] m-4;
+  @apply bg-slate-850 m-4;
 }
 
 div, button, p, span {

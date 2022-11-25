@@ -4,7 +4,14 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        slate: {
+          850: '#192134',
+          1000: '#0c1324'
+        }
+      }
+    },
   },
   plugins: [],
 }

@@ -30,7 +30,7 @@
 }
 
 .player-controls progress[value] {
-  @apply appearance-none border border-[#0c1324] cursor-pointer h-2 w-full;
+  @apply appearance-none border border-slate-1000 cursor-pointer h-2 w-full;
 }
 
 .player-controls progress[value]::-webkit-progress-bar {
@@ -42,7 +42,7 @@
 }
 
 .player-edit {
-  @apply absolute bg-slate-900 border border-[#0c1324] flex justify-center;
+  @apply absolute bg-slate-900 border border-slate-1000 flex justify-center;
   height: calc(100% - 76px - 34px);
   width: calc(100% - 34px);
 }
