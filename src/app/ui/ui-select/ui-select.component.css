@@ -1,0 +1,29 @@
+label {
+  @apply flex mb-1 ml-1 text-slate-100;
+}
+
+.select-input.closed,
+.select-input.open {
+  @apply hover:bg-slate-700 border flex h-10 relative w-[400px];
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.select-input.closed {
+  @apply bg-slate-900 border-transparent rounded;
+}
+
+.select-input.open {
+  @apply bg-slate-700 border-slate-700 rounded-t-md;
+}
+
+.select-input > input {
+  @apply bg-transparent cursor-pointer px-3 text-base text-slate-100 w-full;
+}
+
+.select-options {
+  @apply absolute bg-slate-900 border border-t-0 border-slate-700 overflow-hidden rounded-b-md w-[400px] z-50;
+}
+
+.select-options > div {
+  @apply h-full max-h-96 overflow-y-auto w-full;
+}

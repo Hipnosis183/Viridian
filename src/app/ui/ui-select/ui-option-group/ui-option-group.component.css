@@ -1,0 +1,3 @@
+.option-label {
+  @apply flex my-2 px-5 text-slate-600 text-sm;
+}

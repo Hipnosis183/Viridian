@@ -1,0 +1,7 @@
+<label *ngIf="selectLabel">{{ selectLabel }}</label>
+<div (click)="selectOptions()" class="select-input" [class]="select.selectOptions ? 'open' : 'closed'">
+  <input disabled [ngModel]="select.selectLabel">
+</div>
+<div [hidden]="!select.selectOptions" class="select-options">
+  <div><ng-content></ng-content></div>
+</div>

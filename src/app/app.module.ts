@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,9 @@ import { VideoSaveComponent } from './components/video-save/video-save.component
 import { UiButtonComponent } from './ui/ui-button/ui-button.component';
 import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
 import { UiProgressComponent } from './ui/ui-progress/ui-progress.component';
+import { UiSelectComponent } from './ui/ui-select/ui-select.component';
+import { UiOptionComponent } from './ui/ui-select/ui-option/ui-option.component';
+import { UiOptionGroupComponent } from './ui/ui-select/ui-option-group/ui-option-group.component';
 
 // Directives.
 import { RenderedDirective } from './directives/rendered.directive';
@@ -31,14 +35,18 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     UiButtonComponent,
     UiModalComponent,
     UiProgressComponent,
+    UiSelectComponent,
+    UiOptionComponent,
+    UiOptionGroupComponent,
     RenderedDirective,
     DurationPipe,
     ExpressionPipe,
     FileSizePipe,
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
-    AppRoutingModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
