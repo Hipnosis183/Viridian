@@ -1,0 +1,19 @@
+progress[value] {
+  @apply appearance-none cursor-pointer h-2 w-full;
+}
+
+progress[value]::-webkit-progress-bar {
+  @apply bg-slate-900 rounded-sm;
+}
+
+progress[value]::-webkit-progress-value {
+  @apply bg-slate-700 rounded-sm;
+}
+
+.progress-container {
+  @apply flex relative;
+}
+
+.progress-thumb {
+  @apply absolute bg-slate-200 h-4 -mt-1 rounded-sm w-2;
+}

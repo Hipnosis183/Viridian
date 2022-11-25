@@ -1,0 +1,4 @@
+<div id="progress" class="progress-container">
+  <progress min="0" [max]="progressDuration | number" [value]="progressTime" (mouseup)="updateProgress($event)"></progress>
+  <div class="progress-thumb"></div>
+</div>

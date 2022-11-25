@@ -10,7 +10,9 @@ import { VideoPlayerComponent } from './components/video-player/video-player.com
 import { VideoSaveComponent } from './components/video-save/video-save.component';
 
 // UI components.
+import { UiButtonComponent } from './ui/ui-button/ui-button.component';
 import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
+import { UiProgressComponent } from './ui/ui-progress/ui-progress.component';
 
 // Directives.
 import { RenderedDirective } from './directives/rendered.directive';
@@ -26,7 +28,9 @@ import { FileSizePipe } from './pipes/filesize.pipe';
     VideoInfoComponent,
     VideoPlayerComponent,
     VideoSaveComponent,
+    UiButtonComponent,
     UiModalComponent,
+    UiProgressComponent,
     RenderedDirective,
     DurationPipe,
     ExpressionPipe,

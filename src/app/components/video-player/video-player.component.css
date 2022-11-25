@@ -15,18 +15,6 @@
   width: calc(100% - 34px);
 }
 
-.player-controls progress[value] {
-  @apply appearance-none border border-slate-1000 cursor-pointer h-2 w-full;
-}
-
-.player-controls progress[value]::-webkit-progress-bar {
-  @apply bg-slate-900;
-}
-
-.player-controls progress[value]::-webkit-progress-value {
-  @apply bg-blue-600;
-}
-
 .player-edit {
   @apply absolute bg-slate-900 border border-slate-1000 flex justify-center;
   height: calc(100% - 76px - 34px);

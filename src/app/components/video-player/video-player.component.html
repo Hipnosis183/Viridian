@@ -31,7 +31,7 @@
       <ui-button buttonColor="dark" buttonIcon="close" (click)="videoFileClose()"></ui-button>
     </div>
   </div>
-  <progress id="playerProgress" min="0" value="0" (mouseup)="videoPlayerProgress($event)"></progress>
+  <ui-progress [(progressTime)]="playerInfo.playerVideo.currentTime" [progressDuration]="playerInfo.playerVideo.duration"></ui-progress>
 </div>
 <video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="videoFileLoaded(videoInfo)"></video-info>
 <video-save #videoSave></video-save>
