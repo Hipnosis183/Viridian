@@ -6,7 +6,7 @@ body {
   @apply bg-slate-850 m-4;
 }
 
-div, button, p, span {
+div, p, span {
   @apply text-white;
 }
 

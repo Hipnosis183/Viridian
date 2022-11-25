@@ -14,47 +14,21 @@
 <div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
   <div class="player-buttons">
     <div>
-      <button (click)="videoPlayerPlay()">
-        <img [src]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? '/assets/play.svg' : '/assets/pause.svg'">
-      </button>
-      <button (click)="videoPlayerStop()">
-        <img [src]="'/assets/stop.svg'">
-      </button>
-      <button (click)="videoPlayerMute()">
-        <img [src]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? '/assets/mute.svg' : '/assets/volume.svg'">
-      </button>
+      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? 'play' : 'pause'" [buttonToggle]="!playerInfo.playerVideo.paused" (click)="videoPlayerPlay()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="stop" (click)="videoPlayerStop()"></ui-button>
+      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" (click)="videoPlayerMute()"></ui-button>
     </div>
     <div>
-      <button (click)="$videoInfo.$videoInfo()">
-        <img [src]="'/assets/list.svg'">
-      </button>
-      <button [class]="filters.filterInfo.filterClear ? 'active' : ''" (click)="videoFilterClear()">
-        <img [src]="'/assets/clear.svg'">
-      </button>
-      <button [class]="filters.filterInfo.filterNoAudio ? 'active' : ''" (click)="videoFilterNoAudio()">
-        <img [src]="'/assets/noaudio.svg'">
-      </button>
-      <button (click)="videoFilterRotate(false)">
-        <img [src]="'/assets/rotate.svg'" class="-scale-x-100">
-      </button>
-      <button (click)="videoFilterRotate(true)">
-        <img [src]="'/assets/rotate.svg'">
-      </button>
-      <button (click)="videoFilterFlip(true)">
-        <img [src]="'/assets/flip.svg'" class="rotate-90">
-      </button>
-      <button (click)="videoFilterFlip(false)">
-        <img [src]="'/assets/flip.svg'">
-      </button>
-      <button [class]="filters.filterInfo.filterCrop ? 'active' : ''" (click)="videoFilterCrop()">
-        <img [src]="'/assets/crop.svg'">
-      </button>
-      <button (click)="videoSave.videoSaveFile()">
-        <img [src]="'/assets/done.svg'">
-      </button>
-      <button (click)="videoFileClose()">
-        <img [src]="'/assets/close.svg'">
-      </button>
+      <ui-button buttonColor="dark" buttonIcon="list" (click)="$videoInfo.$videoInfo()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" (click)="videoFilterClear()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" (click)="videoFilterNoAudio()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" (click)="videoFilterRotate(false)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="rotate" (click)="videoFilterRotate(true)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="flip" buttonIconClass="rotate-90" (click)="videoFilterFlip(true)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="flip" (click)="videoFilterFlip(false)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="crop" [buttonToggle]="filters.filterInfo.filterCrop" (click)="videoFilterCrop()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="done" (click)="$videoSave.$videoSave()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="close" (click)="videoFileClose()"></ui-button>
     </div>
   </div>
   <progress id="playerProgress" min="0" value="0" (mouseup)="videoPlayerProgress($event)"></progress>

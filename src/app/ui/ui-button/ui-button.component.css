@@ -1,0 +1,156 @@
+button {
+  @apply cursor-pointer px-4 py-2 rounded;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+button > div {
+  transition: color 0.2s ease-in-out;
+}
+
+button.primary.default {
+  @apply bg-blue-600 hover:bg-blue-700 [&>div]:text-slate-100;
+}
+
+button.primary.default.active {
+  @apply bg-blue-700;
+}
+
+button.primary.default.bordered {
+  @apply border border-blue-800;
+}
+
+button.primary.outlined {
+  @apply border border-blue-600 hover:bg-blue-600 [&>div]:text-blue-600 [&>div]:hover:text-slate-100;
+}
+
+button.primary.outlined.active {
+  @apply bg-blue-600 [&>div]:hover:text-slate-100;
+}
+
+button.secondary.default {
+  @apply bg-slate-600 hover:bg-slate-700 [&>div]:text-slate-100;
+}
+
+button.secondary.default.active {
+  @apply bg-slate-700;
+}
+
+button.secondary.default.bordered {
+  @apply border border-slate-850;
+}
+
+button.secondary.outlined {
+  @apply border border-slate-600 hover:bg-slate-600 [&>div]:text-slate-600 [&>div]:hover:text-slate-100;
+}
+
+button.secondary.outlined.active {
+  @apply bg-slate-600 [&>div]:text-slate-100;
+}
+
+button.success.default {
+  @apply bg-green-600 hover:bg-green-700 [&>div]:text-slate-100;
+}
+
+button.success.default.active {
+  @apply bg-green-700;
+}
+
+button.success.default.bordered {
+  @apply border border-green-800;
+}
+
+button.success.outlined {
+  @apply border border-green-600 hover:bg-green-600 [&>div]:text-green-600 [&>div]:hover:text-slate-100;
+}
+
+button.success.outlined.active {
+  @apply bg-green-600 [&>div]:text-slate-100;
+}
+
+button.danger.default {
+  @apply bg-red-600 hover:bg-red-700 [&>div]:text-slate-100;
+}
+
+button.danger.default.active {
+  @apply bg-red-700;
+}
+
+button.danger.default.bordered {
+  @apply border border-red-800;
+}
+
+button.danger.outlined {
+  @apply border border-red-600 hover:bg-red-600 [&>div]:text-red-600 [&>div]:hover:text-slate-100;
+}
+
+button.danger.outlined.active {
+  @apply bg-red-600 [&>div]:text-slate-100;
+}
+
+button.warning.default {
+  @apply bg-amber-400 hover:bg-amber-500 [&>div]:text-slate-900;
+}
+
+button.warning.default.active {
+  @apply bg-amber-500;
+}
+
+button.warning.default.bordered {
+  @apply border border-amber-600;
+}
+
+button.warning.outlined {
+  @apply border border-amber-400 hover:bg-amber-400 [&>div]:text-amber-400 [&>div]:hover:text-slate-900;
+}
+
+button.warning.outlined.active {
+  @apply bg-amber-400 [&>div]:text-slate-900;
+}
+
+button.light.default {
+  @apply bg-slate-100 hover:bg-slate-300 [&>div]:text-slate-900;
+}
+
+button.light.default.active {
+  @apply bg-slate-300;
+}
+
+button.light.default.bordered {
+  @apply border border-slate-400;
+}
+
+button.light.outlined {
+  @apply border border-slate-100 hover:bg-slate-100 [&>div]:text-slate-100 [&>div]:hover:text-slate-900;
+}
+
+button.light.outlined.active {
+  @apply bg-slate-100 [&>div]:text-slate-900;
+}
+
+button.dark.default {
+  @apply bg-slate-900 hover:bg-slate-700 [&>div]:text-slate-100;
+}
+
+button.dark.default.active {
+  @apply bg-slate-700;
+}
+
+button.dark.default.bordered {
+  @apply border border-slate-700;
+}
+
+button.dark.outlined {
+  @apply border border-slate-900 hover:bg-slate-900 [&>div]:text-slate-900 [&>div]:hover:text-slate-100;
+}
+
+button.dark.outlined.active {
+  @apply bg-slate-900 [&>div]:text-slate-100;
+}
+
+button.button-text {
+  @apply flex items-center pl-1.5 py-0.5 [&>img]:h-9 [&>img]:mr-1;
+}
+
+button.button-icon {
+  @apply p-0 [&>img]:h-9;
+}

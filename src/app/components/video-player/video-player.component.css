@@ -2,25 +2,11 @@
   @apply flex mb-2;
 }
 
-.player-buttons button {
-  @apply hover:bg-slate-700 cursor-pointer h-9 w-9 !important;
-  all: unset;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.player-buttons button.active {
-  @apply bg-slate-700;
-}
-
-.player-buttons img {
-  @apply h-9;
-}
-
 .player-buttons > div:last-child {
   @apply ml-auto;
 }
 
-.player-buttons > div button:not(:first-child) {
+.player-buttons > div ui-button:not(:first-child) {
   @apply ml-2;
 }
 

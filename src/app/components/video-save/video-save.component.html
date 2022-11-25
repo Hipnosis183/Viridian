@@ -12,8 +12,8 @@
           Check the log for more details.</p>
       </div>
       <div class="save-buttons">
-        <button *ngIf="videoSave.videoErrorText" (click)="videoSaveError()" class="button-error">Error log</button>
-        <button (click)="videoSaveOk()" class="button-ok">Ok</button>
+        <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" (click)="videoSaveError()">Error log</ui-button>
+        <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" (click)="videoSaveOk()">Ok</ui-button>
       </div>
       <div *ngIf="videoSave.videoErrorView" class="save-error">
         <span [innerText]="videoSave.videoErrorText"></span>
