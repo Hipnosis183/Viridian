@@ -7,7 +7,7 @@
     <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
   </div>
   <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
-    <img [src]="'/assets/open.svg'">
+    <img [src]="'/assets/images/open.svg'">
     <input type="file" (change)="videoFileOpen($event)" />
   </div>
 </div>
