@@ -11,26 +11,35 @@
 }
 
 .player-controls {
-  @apply absolute bottom-4 flex flex-col h-[70px] justify-center;
+  @apply absolute bottom-0 flex flex-col h-[70px] justify-center mb-4 mx-4;
   width: calc(100% - 34px);
 }
 
 .player-edit {
-  @apply absolute bg-slate-900 border border-slate-1000 flex justify-center;
-  height: calc(100% - 76px - 34px);
-  width: calc(100% - 34px);
+  @apply absolute bg-slate-1000 border border-slate-1000 flex justify-center w-full;
+  height: calc(100% - 100px);
 }
 
 .player-file {
   @apply h-full w-full;
 }
 
+.player-file > div {
+  @apply absolute flex flex-col h-full items-center justify-center w-full [&>h1]:text-2xl [&>h1]:font-medium [&>p]:opacity-60;
+}
+
 .player-file img {
-  @apply absolute h-full opacity-20 w-full;
+  @apply h-36 mb-6 opacity-20 w-full;
 }
 
 .player-file input {
   @apply cursor-pointer h-full opacity-0 w-full;
+}
+
+.player-file span {
+  @apply absolute border-2 border-dashed border-slate-100 opacity-20 rounded-md;
+  height: calc(100% - 36px);
+  width: calc(100% - 36px);
 }
 
 .player-video {

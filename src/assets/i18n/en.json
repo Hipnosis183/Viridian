@@ -10,6 +10,12 @@
     "TRACK": "Track",
     "TYPE": "Type"
   },
+  "VIDEO_PLAYER": {
+    "FILE_OPEN": {
+      "TITLE": "Select video file",
+      "SUB": "or drag and drop it here"
+    }
+  },
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",
     "CLOSE": "Close",

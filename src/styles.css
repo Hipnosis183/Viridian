@@ -8,12 +8,12 @@
 }
 
 body {
-  @apply bg-slate-850 m-4;
+  @apply bg-slate-850;
   font-family: 'Inter';
 }
 
-div, p, span {
-  @apply text-white;
+div, h1, p, span {
+  @apply text-slate-100;
 }
 
 p {
