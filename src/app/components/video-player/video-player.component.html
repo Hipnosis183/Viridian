@@ -26,11 +26,13 @@
       <ui-button buttonColor="dark" buttonIcon="list" (click)="$videoInfo.$videoInfo()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" (click)="videoFilterClear()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" (click)="videoFilterNoAudio()"></ui-button>
+      <div class="player-separator"></div>
       <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" (click)="videoFilterRotate(false)"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="rotate" (click)="videoFilterRotate(true)"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="flip" buttonIconClass="rotate-90" (click)="videoFilterFlip(true)"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="flip" (click)="videoFilterFlip(false)"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="crop" [buttonToggle]="filters.filterInfo.filterCrop" (click)="videoFilterCrop()"></ui-button>
+      <div class="player-separator"></div>
       <ui-button buttonColor="dark" buttonIcon="done" (click)="$videoSave.$videoSave()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="close" (click)="videoFileClose()"></ui-button>
     </div>

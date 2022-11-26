@@ -42,6 +42,10 @@
   width: calc(100% - 36px);
 }
 
+.player-separator {
+  @apply bg-slate-700 h-7 inline-flex ml-4 mr-2 my-1 w-0.5;
+}
+
 .player-video {
   @apply overflow-hidden relative;
 }
