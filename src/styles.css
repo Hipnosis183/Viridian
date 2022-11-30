@@ -7,6 +7,10 @@
   src: url('./assets/fonts/Inter.ttf');
 }
 
+*:focus {
+  outline: none;
+}
+
 body {
   @apply bg-slate-850;
   font-family: 'Inter';

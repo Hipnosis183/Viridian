@@ -1,0 +1,2 @@
+<label *ngIf="inputLabel">{{ inputLabel }}</label>
+<input [(ngModel)]="inputValue" [placeholder]="inputPlaceholder" [required]="inputRequired" [type]="inputType" (input)="inputUpdate()">
