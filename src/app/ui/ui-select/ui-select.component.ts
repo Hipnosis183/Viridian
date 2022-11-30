@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, SimpleChanges } from '@angular/core';
 import { UiSelectService } from './ui-select.service';
 
 @Component({
@@ -15,24 +15,42 @@ export class UiSelectComponent {
     public select: UiSelectService,
   ) { }
 
-  selectUpdate: any;
-  @Output() selectUpdated = new EventEmitter;
+  $selectClick: any;
+  $selectUpdate: any;
+  @Output() selectClick = new EventEmitter;
+  @Output() selectUpdate = new EventEmitter;
 
-  ngOnDestroy(): void { this.selectUpdate.unsubscribe(); }
+  ngOnDestroy(): void {
+    this.$selectClick.unsubscribe();
+    this.$selectUpdate.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this.selectUpdate = this.select.selectUpdate.subscribe(() => {
+    this.$selectUpdate = this.select.selectUpdate.subscribe((v: any) => {
       setTimeout(() => {
-        this.selectValueChange.emit(this.select.selectValue);
-        this.selectUpdated.emit(this.select.selectValue);
+        this.selectValue = v;
+        this.selectValueChange.emit(v);
+        this.selectUpdate.emit(v);
+      });
+    });
+    this.$selectClick = this.select.selectClick.subscribe((v: any) => {
+      setTimeout(() => {
+        this.selectValue = v;
+        this.selectValueChange.emit(v);
+        this.selectClick.emit(v);
       });
     });
   }
 
   @Input() selectLabel: string = '';
-  @Input()
-  get selectValue() { return this.select.selectValue; }
-  set selectValue(v: any) { this.select.selectValue = v; }
+  @Input() selectValue: any;
   @Output() selectValueChange = new EventEmitter;
+
+  ngOnChanges(c: SimpleChanges) {
+    if (c['selectValue']) {
+      this.select.selectValue = c['selectValue'].currentValue;
+    }
+  }
 
   selectOptions(): void {
     this.select.selectOptions = !this.select.selectOptions;

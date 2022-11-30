@@ -2,9 +2,13 @@ label {
   @apply flex mb-1 ml-1 text-slate-100;
 }
 
+:host {
+  @apply relative w-full;
+}
+
 .select-input.closed,
 .select-input.open {
-  @apply hover:bg-slate-700 border flex h-10 relative w-[400px];
+  @apply hover:bg-slate-700 border flex h-10 relative w-full;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
@@ -13,7 +17,7 @@ label {
 }
 
 .select-input.open {
-  @apply bg-slate-700 border-slate-700 rounded-t-md;
+  @apply bg-slate-700 border-slate-700 rounded-t;
 }
 
 .select-input > input {
@@ -21,9 +25,9 @@ label {
 }
 
 .select-options {
-  @apply absolute bg-slate-900 border border-t-0 border-slate-700 overflow-hidden rounded-b-md w-[400px] z-50;
+  @apply absolute bg-slate-900 border border-t-0 border-slate-700 overflow-hidden rounded-b w-full z-50;
 }
 
 .select-options > div {
-  @apply h-full max-h-96 overflow-y-auto w-full;
+  @apply h-full max-h-64 overflow-y-auto w-full;
 }

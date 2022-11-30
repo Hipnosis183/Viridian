@@ -7,12 +7,17 @@ export class UiSelectService {
 
   selectLabel: string = '';
   selectOptions: boolean = false;
+  selectValue: any;
+
+  selectClick: any = new Subject();
+  selectValueClick(v: any) {
+    this.selectValue = v;
+    this.selectClick.next(v);
+  }
 
   selectUpdate: any = new Subject();
-  $selectValue: any;
-  get selectValue() { return this.$selectValue; }
-  set selectValue(v: any) {
-    this.$selectValue = v;
+  selectValueUpdate(v: any) {
+    this.selectValue = v;
     this.selectUpdate.next(v);
   }
 }

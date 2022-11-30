@@ -15,17 +15,32 @@ export class UiOptionComponent {
   @Input() optionSelected: boolean = false;
   @Input() optionValue: any;
 
-  optionsSelect(): void {
+  optionsClick(): void {
+    this.select.selectValueClick(this.optionValue);
     this.select.selectLabel = this.optionLabel;
-    this.select.selectValue = this.optionValue;
     this.select.selectOptions = false;
   }
 
+  optionsUpdate(): void {
+    this.select.selectValueUpdate(this.optionValue);
+    this.select.selectLabel = this.optionLabel;
+    this.select.selectOptions = false;
+  }
+
+  optionLoaded: boolean = false;
+  ngAfterContentInit(): void {
+    setTimeout(() => { this.optionLoaded = true; });
+  }
+
   ngOnInit(): void {
-    if (this.optionSelected) { this.optionsSelect(); }
+    if (this.optionSelected || (this.optionValue == this.select.selectValue)) {
+      this.optionsUpdate();
+    }
   }
 
   ngOnChanges(): void {
-    if (this.optionSelected) { this.optionsSelect(); }
+    if (this.optionSelected || (this.optionValue == this.select.selectValue)) {
+      this.optionsUpdate();
+    }
   }
 }
