@@ -11,6 +11,10 @@ const { state } = createStore({
     filePath: null,
     fileType: null,
   },
+  filterInfo: {
+    filterHeight: null,
+    filterWidth: null
+  },
   playerInfo: {
     playerCrop: null,
     playerVideo: null,

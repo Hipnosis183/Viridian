@@ -56,6 +56,8 @@ export class VideoPlayerComponent {
   videoFileClose(): void {
     this.store.resetAll();
     this.filters.filterReset();
+    this.$videoInfo = null;
+    this.$videoSave = null;
   }
 
   videoFileOpen(e: any): void {
@@ -77,6 +79,8 @@ export class VideoPlayerComponent {
     // Store dimensions from the original video.
     this.store.state.videoInfo.videoWidth = stream.width;
     this.store.state.videoInfo.videoHeight = stream.height;
+    this.store.state.filterInfo.filterWidth = stream.width;
+    this.store.state.filterInfo.filterHeight = stream.height;
     // Normalize video rotation display if rotate metadata is present.
     const rotated = this.utils.findValueByKey(stream, 'rotation');
     // Older rotation API is measured CW, newer (display matrix) is CCW.
@@ -125,6 +129,7 @@ export class VideoPlayerComponent {
   }
 
   videoFilterRotate(c: boolean): void {
+    // Set rotation angle for repositioning in the player.
     let filterRotate = this.filters.filterInfo.filterRotate;
     if (c) { filterRotate = filterRotate == 270 ? 0 : filterRotate + 90; }
     else { filterRotate = filterRotate == 0 ? 270 : filterRotate - 90; }

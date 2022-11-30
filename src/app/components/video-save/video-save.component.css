@@ -3,7 +3,20 @@
 }
 
 .save-container {
+  @apply flex space-x-6;
+}
+
+:host ::ng-deep .save-container ui-button {
+  @apply flex items-end [&_button]:w-max [&_img]:m-0.5;
+}
+
+.save-container > div {
   @apply flex flex-col mb-7 mt-1 space-y-3;
+}
+
+.save-output > div,
+.save-scaler > div {
+  @apply flex space-x-2;
 }
 
 .save-saving {

@@ -7,6 +7,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 // Import formats and codecs list.
 import Codecs from 'src/assets/lists/codecs.json'
 import Formats from 'src/assets/lists/formats.json'
+import Scaler from 'src/assets/lists/scaler.json'
 
 @Component({
   selector: 'video-save',
@@ -17,18 +18,24 @@ import Formats from 'src/assets/lists/formats.json'
 export class VideoSaveComponent {
 
   constructor(
-    private filters: FiltersService,
+    public filters: FiltersService,
     private ipc: IpcService,
     public store: StoreService,
     public utils: UtilsService,
     private zone: NgZone
   ) { }
 
+  @Output() loaded = new EventEmitter;
+
   videoCodec: any = Codecs[0];
   videoCodecs: any = Codecs;
   videoFormat: any = Formats[0];
   videoFormats: any = Formats;
-  @Output() loaded = new EventEmitter;
+  videoOutput: any = {
+    videoCodec: null,
+    videoEncoder: null,
+    videoFormat: null,
+  };
 
   ngOnInit(): void {
     // Update default format and all formats list based on file extension.
@@ -37,7 +44,7 @@ export class VideoSaveComponent {
     this.loaded.emit();
   }
 
-  videoSaveFormat(format: any): void {
+  videoOutputFormat(format: any): void {
     const f: any = Formats.find((f: any) => f.extensions[0] == format.extensions[0]);
     const s: any = this.store.state.videoInfo.videoStreams[1];
     // Update default codec and all codecs list based on format.
@@ -51,6 +58,64 @@ export class VideoSaveComponent {
     this.videoCodecs = videoCodecs;
   }
 
+  $videoScaler: any = Scaler;
+  videoScaler: any = {
+    videoLock: true,
+    videoRatio: 0,
+    videoScale: 0,
+  };
+
+  ngAfterContentInit(): void {
+    setTimeout(() => {
+      this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
+    });
+  }
+
+  videoScalerLock(): void {
+    this.videoScaler.videoLock = !this.videoScaler.videoLock;
+  }
+
+  videoScalerHeight(h: any): void {
+    this.videoScaler.videoRatio = 0;
+    this.videoScaler.videoScale = 0;
+    if (this.videoScaler.videoLock) {
+      const ar = this.store.state.filterInfo.filterWidth / this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterWidth = 2 * Math.round(h * ar / 2);
+    }
+  }
+
+  videoScalerWidth(w: any): void {
+    this.videoScaler.videoRatio = 0;
+    this.videoScaler.videoScale = 0;
+    if (this.videoScaler.videoLock) {
+      const ar = this.store.state.filterInfo.filterWidth / this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterHeight = 2 * Math.round(w / ar / 2);
+    }
+  }
+
+  videoScalerRatio(ar: any): void {
+    this.videoScaler.videoScale = 0;
+    if (ar > 0) {
+      this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterWidth = 2 * Math.round(this.store.state.filterInfo.filterHeight * ar / 2);
+    } else if (ar < 0) {
+      this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
+    }
+  }
+
+  videoScalerScale(s: any): void {
+    this.videoScaler.videoRatio = 0;
+    if (s == 1) {
+      this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
+      this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
+    } else if (s) {
+      this.filters.filterInfo.filterHeight = 2 * Math.round(this.store.state.filterInfo.filterHeight * s / 2);
+      this.filters.filterInfo.filterWidth = 2 * Math.round(this.store.state.filterInfo.filterWidth * s / 2);
+    }
+  }
+
   videoSave: any = {
     videoCodec: null,
     videoEncoder: null,
@@ -62,17 +127,17 @@ export class VideoSaveComponent {
     videoSaved: false,
   };
 
-  $videoSave(): void {
+  $videoSave(c: boolean = false): void {
+    // Setup values for the scale filter and video export.
+    if (!c) { this.filters.filterInit(); }
+    // Open export/save dialog.
     this.videoSave.videoSave = !this.videoSave.videoSave;
   }
 
   videoSaveDone(): void {
     this.videoSave = {
-      videoCodec: null,
-      videoEncoder: null,
       videoErrorText: null,
       videoErrorView: false,
-      videoFormat: null,
       videoSaving: false,
       videoSave: false,
       videoSaved: false,
@@ -85,12 +150,13 @@ export class VideoSaveComponent {
 
   async videoSaveFile(): Promise<void> {
     // Define video codec to use, or copy stream if the same as input is used.
-    const codec = this.videoSave.videoCodec.code != this.store.state.videoInfo.videoStreams[1].codec_name ? '-c:v ' + this.videoSave.videoCodec.code : '';
+    const codec = this.videoOutput.videoCodec.code != this.store.state.videoInfo.videoStreams[1].codec_name ? '-c:v ' + this.videoOutput.videoCodec.code : '';
     // Define video filters to apply.
     let filters: string[] = [];
     if (this.filters.filterInfo.filterFlipH || this.filters.filterInfo.filterFlipV) { filters.push(this.filters.filterFlip()); }
     if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
+    if (this.filters.filterScaler()) { filters.push(this.filters.filterScaler()); }
     const filter = filters.length > 0 ? '-filter:v' : codec.length > 0 ? '' : '-c:v copy';
     // Define removal of audio streams.
     const audio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
@@ -98,7 +164,7 @@ export class VideoSaveComponent {
     const metadata = this.videoSaveMetadata();
     // Define paths and commands.
     const input: string = this.store.state.fileInfo.filePath;
-    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoSave.videoFormat.extensions[0]);
+    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]);
     const command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${codec} ${filter} ${filters.length > 0 ? `"${filters.join()}"` : ''} ${metadata} ${audio} "${output}"`;
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;

@@ -19,22 +19,29 @@
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",
     "CLOSE": "Close",
-    "ENCODER": "Encoder",
     "ERROR_LOG": "Error log",
     "EXPORT": "Export",
-    "FORMAT": "Format",
     "OK": "Ok",
+    "OUTPUT": {
+      "CODECS": "All Codecs",
+      "CONTAINERS": "All Containers",
+      "DEFAULT": "Default | Recommended",
+      "DETECTED": "Detected | Recommended",
+      "ENCODER": "Encoder",
+      "ENCODERS": "All Encoders",
+      "FORMAT": "Format"
+    },
     "SAVE": {
       "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
       "SAVE_OK": "Video saved successfully!",
       "SAVING": "Processing video..."
     },
-    "SELECT": {
-      "CODECS": "All Codecs",
-      "CONTAINERS": "All Containers",
-      "DEFAULT": "Default | Recommended",
-      "DETECTED": "Detected | Recommended",
-      "ENCODERS": "All Encoders"
+    "SCALER": {
+      "ALGORITHM": "Scaling Algorithm",
+      "ASPECT_RATIO": "Aspect Ratio",
+      "HEIGHT": "Height",
+      "SCALE": "Scale",
+      "WIDTH": "Width"
     }
   }
 }

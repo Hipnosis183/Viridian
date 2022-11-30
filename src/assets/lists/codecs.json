@@ -6,7 +6,7 @@
   },
   {
     "code": "h264",
-    "name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 Part 10",
+    "name": "H.264 / AVC / MPEG-4 Part 10",
     "encoders": ["libx264","libx264rgb","h264_v4l2m2m"]
   },
   {
