@@ -28,9 +28,11 @@ export class UiSelectComponent {
   ngOnInit(): void {
     this.$selectUpdate = this.select.selectUpdate.subscribe((v: any) => {
       setTimeout(() => {
-        this.selectValue = v;
-        this.selectValueChange.emit(v);
-        this.selectUpdate.emit(v);
+        if (this.selectValue != v) {
+          this.selectValue = v;
+          this.selectValueChange.emit(v);
+          this.selectUpdate.emit(v);
+        }
       });
     });
     this.$selectClick = this.select.selectClick.subscribe((v: any) => {
@@ -38,6 +40,7 @@ export class UiSelectComponent {
         this.selectValue = v;
         this.selectValueChange.emit(v);
         this.selectClick.emit(v);
+        this.selectUpdate.emit(v);
       });
     });
   }
@@ -48,7 +51,7 @@ export class UiSelectComponent {
 
   ngOnChanges(c: SimpleChanges) {
     if (c['selectValue']) {
-      this.select.selectValue = c['selectValue'].currentValue;
+      this.select.selectValueUpdate(c['selectValue'].currentValue);
     }
   }
 

@@ -32,7 +32,17 @@ export class UiOptionComponent {
     setTimeout(() => { this.optionLoaded = true; });
   }
 
+  $selectUpdate: any;
+  ngOnDestroy(): void { this.$selectUpdate.unsubscribe(); }
+
   ngOnInit(): void {
+    this.$selectUpdate = this.select.selectUpdate.subscribe((v: any) => {
+      setTimeout(() => {
+        if (this.optionSelected || (this.optionValue == v)) {
+          this.select.selectLabel = this.optionLabel;
+        }
+      });
+    });
     if (this.optionSelected || (this.optionValue == this.select.selectValue)) {
       this.optionsUpdate();
     }
