@@ -8,7 +8,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export class UiInputComponent {
 
+  @Input() inputDisabled: boolean = false;
   @Input() inputLabel: string = '';
+  @Input() inputMax: number = Infinity;
+  @Input() inputMin: number = 0;
   @Input() inputPlaceholder: string = '';
   @Input() inputRequired: boolean = true;
   @Input() inputType: string = 'text';
@@ -17,6 +20,16 @@ export class UiInputComponent {
   @Output() inputValueChange = new EventEmitter;
 
   inputUpdate(): void {
+    if (this.inputType == 'number') {
+      if (this.inputValue > this.inputMax) {
+        this.inputValue = this.inputMax;
+        setTimeout(() => { this.inputValue = this.inputMax.toString(); });
+      }
+      if (this.inputValue < this.inputMin) {
+        this.inputValue = this.inputMin;
+        setTimeout(() => { this.inputValue = this.inputMin.toString(); });
+      }
+    }
     this.inputValueChange.emit(this.inputValue);
     this.inputUpdated.emit(this.inputValue);
   }
