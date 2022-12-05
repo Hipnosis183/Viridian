@@ -1,0 +1,20 @@
+.group-box-normal {
+  @apply border border-slate-700 p-4 relative rounded;
+}
+
+.group-box-normal label {
+  @apply absolute bg-slate-850 left-4 px-2 text-slate-400 top-[-12px];
+}
+
+.group-box-normal div,
+.group-box-slim div {
+  @apply flex mb-4;
+}
+
+.group-box-slim {
+  @apply border-t border-t-slate-700 relative;
+}
+
+.group-box-slim label {
+  @apply absolute bg-slate-850 px-2 text-slate-400 top-[-12px];
+}

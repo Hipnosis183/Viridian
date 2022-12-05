@@ -15,6 +15,7 @@ import { VideoSaveComponent } from './components/video-save/video-save.component
 
 // UI components.
 import { UiButtonComponent } from './ui/ui-button/ui-button.component';
+import { UiGroupBoxComponent } from './ui/ui-group-box/ui-group-box.component';
 import { UiInputComponent } from './ui/ui-input/ui-input.component';
 import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
 import { UiProgressComponent } from './ui/ui-progress/ui-progress.component';
@@ -53,6 +54,7 @@ function appInitializerFactory(translate: TranslateService) {
     VideoPlayerComponent,
     VideoSaveComponent,
     UiButtonComponent,
+    UiGroupBoxComponent,
     UiInputComponent,
     UiModalComponent,
     UiProgressComponent,
