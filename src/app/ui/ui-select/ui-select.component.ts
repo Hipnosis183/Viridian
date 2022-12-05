@@ -45,6 +45,7 @@ export class UiSelectComponent {
     });
   }
 
+  @Input() selectDisabled: boolean = false;
   @Input() selectLabel: string = '';
   @Input() selectValue: any;
   @Output() selectValueChange = new EventEmitter;
@@ -52,6 +53,10 @@ export class UiSelectComponent {
   ngOnChanges(c: SimpleChanges) {
     if (c['selectValue']) {
       this.select.selectValueUpdate(c['selectValue'].currentValue);
+      setTimeout(() => {
+        const options = this.element.nativeElement.querySelector('ui-option');
+        if (!options) { this.select.selectLabel = ''; }
+      });
     }
   }
 
