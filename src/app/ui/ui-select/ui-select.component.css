@@ -7,6 +7,7 @@ label {
 }
 
 .select-input.closed,
+.select-input.open-i,
 .select-input.open {
   @apply hover:bg-slate-700 border flex h-10 relative w-full;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
@@ -20,6 +21,10 @@ label {
   @apply bg-slate-700 border-slate-700 rounded-t;
 }
 
+.select-input.open-i {
+  @apply bg-slate-700 border-slate-700 rounded-b;
+}
+
 .select-input > input {
   @apply bg-transparent cursor-pointer px-3 text-base text-slate-100 w-full;
 }
@@ -28,6 +33,12 @@ label {
   @apply absolute bg-slate-900 border border-t-0 border-slate-700 overflow-hidden rounded-b w-full z-50;
 }
 
-.select-options > div {
+.select-options-i {
+  @apply absolute bg-slate-900 border border-b-0 border-slate-700 overflow-hidden rounded-t w-full z-50;
+  transform: translateY(calc(-100% - 40px));
+}
+
+.select-options > div,
+.select-options-i > div {
   @apply h-full max-h-64 overflow-y-auto w-full;
 }

@@ -64,6 +64,20 @@ export class UiSelectComponent {
     this.select.selectOptions = !this.select.selectOptions;
   }
 
+  $selectPosition: boolean = false;
+
+  @HostListener('window:resize')
+  onResize() { this.selectPosition(); }
+  ngAfterViewInit(): void { this.selectPosition(); }
+
+  selectPosition(): void {
+    setTimeout(() => {
+      const vh = window.innerHeight;
+      const pos = this.element.nativeElement.getBoundingClientRect().bottom;
+      this.$selectPosition = (vh - pos) < 256 ? true : false;
+    });
+  }
+
   @HostListener('document:click', ['$event'])
   selectOutside(event: any) {
     if (!this.element.nativeElement.contains(event.target)) {
