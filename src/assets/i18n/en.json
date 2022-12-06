@@ -1,6 +1,7 @@
 {
   "GENERAL": {
-    "CODEC": "Codec"
+    "CODEC": "Codec",
+    "DEFAULT": "Default"
   },
   "VIDEO_INFO": {
     "BITRATE": "Bitrate",
@@ -19,6 +20,15 @@
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",
     "CLOSE": "Close",
+    "ENCODING": {
+      "BITRATE": "Bitrate (kb/s)",
+      "ENCODING": "Encoding",
+      "PRESET": "Preset",
+      "PRESETS": "All Presets",
+      "QUALITY": "Quality (0-{{ max }})",
+      "RATE": "Control Rate Mode",
+      "RATES": "All Modes"
+    },
     "ERROR_LOG": "Error log",
     "EXPORT": "Export",
     "OK": "Ok",
@@ -29,18 +39,20 @@
       "DETECTED": "Detected | Recommended",
       "ENCODER": "Encoder",
       "ENCODERS": "All Encoders",
-      "FORMAT": "Format"
+      "FORMAT": "Format",
+      "FORMATCODEC": "Format and Codec"
     },
     "SAVE": {
       "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
       "SAVE_OK": "Video saved successfully!",
       "SAVING": "Processing video..."
     },
-    "SCALER": {
+    "SCALING": {
       "ALGORITHM": "Scaling Algorithm",
       "ASPECT_RATIO": "Aspect Ratio",
       "HEIGHT": "Height",
       "SCALE": "Scale",
+      "SCALING": "Scaling",
       "WIDTH": "Width"
     }
   }

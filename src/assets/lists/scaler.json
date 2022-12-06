@@ -1,6 +1,6 @@
 {
   "algorithm": [
-    { "text": "Bicubic (Default)", "value": "bicubic" },
+    { "text": "Bicubic", "value": "bicubic" },
     { "text": "Bilinear", "value": "bilinear" },
     { "text": "Fast Bilinear", "value": "fast_bilinear" },
     { "text": "Nearest Neighbor", "value": "neighbor" },

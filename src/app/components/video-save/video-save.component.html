@@ -1,73 +1,125 @@
 <ui-modal *ngIf="videoSave.videoSave">
   <div *ngIf="store.state.fileInfo.fileLoaded" class="save-container">
-    <div class="save-scaler">
-      <div class="w-[300px]">
-        <ui-input [inputLabel]="'VIDEO_SAVE.SCALER.WIDTH' | translate" inputType="number" [(inputValue)]="filters.filterInfo.filterWidth" (inputUpdated)="videoScalerWidth($event)"></ui-input>
-        <ui-input [inputLabel]="'VIDEO_SAVE.SCALER.HEIGHT' | translate" inputType="number" [(inputValue)]="filters.filterInfo.filterHeight" (inputUpdated)="videoScalerHeight($event)"></ui-input>
-        <ui-button buttonColor="dark" [buttonIcon]="videoScaler.videoLock ? 'lock' : 'unlock'" [buttonToggle]="videoScaler.videoLock" (click)="videoScalerLock()"></ui-button>
-      </div>
-      <div>
-        <div class="w-[122px]">
-          <ui-select [selectLabel]="'VIDEO_SAVE.SCALER.SCALE' | translate" [(selectValue)]="videoScaler.videoScale" (selectClick)="videoScalerScale($event)">
-            <div *ngFor="let s of $videoScaler.scale; index as i">
-              <ui-option *ngIf="i == 0 && videoScaler.videoScale == 0" [optionLabel]="s.text" [optionValue]="s.value"></ui-option>
-              <ui-option *ngIf="i > 0" [optionLabel]="s.text" [optionSelected]="i == 1" [optionValue]="s.value"></ui-option>
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT.FORMATCODEC' | translate">
+      <div class="save-section">
+        <ui-select [selectLabel]="'VIDEO_SAVE.OUTPUT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat"
+          (selectUpdate)="videoOutputFormat($event)">
+          <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
+            <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionSelected]="true" [optionValue]="f"></ui-option>
+          </ui-option-group>
+          <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CONTAINERS' | translate">
+            <div *ngFor="let f of videoFormats">
+              <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionValue]="f"></ui-option>
             </div>
-          </ui-select>
-        </div>
-        <div class="w-[170px]">
-          <ui-select [selectLabel]="'VIDEO_SAVE.SCALER.ASPECT_RATIO' | translate" [(selectValue)]="videoScaler.videoRatio" (selectClick)="videoScalerRatio($event)">
-            <div *ngFor="let a of $videoScaler.ratio; index as i">
-              <ui-option *ngIf="i == 0 && videoScaler.videoRatio == 0" [optionLabel]="a.text" [optionValue]="a.value"></ui-option>
-              <ui-option *ngIf="i > 0" [optionLabel]="a.text" [optionSelected]="i == 1" [optionValue]="a.value"></ui-option>
+          </ui-option-group>
+        </ui-select>
+        <ui-select *ngIf="videoOutput.videoFormat" [selectLabel]="'GENERAL.CODEC' | translate" [(selectValue)]="videoOutput.videoCodec">
+          <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
+            <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionSelected]="true" [optionValue]="c"></ui-option>
+          </ui-option-group>
+          <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CODECS' | translate">
+            <div *ngFor="let c of videoCodecs">
+              <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionValue]="c"></ui-option>
             </div>
-          </ui-select>
-        </div>
+          </ui-option-group>
+        </ui-select>
+        <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.OUTPUT.ENCODER' | translate"
+          [(selectValue)]="videoOutput.videoEncoder" (selectUpdate)="videoOutputEncoder($event)">
+          <ui-option-group [optionLabel]="'VIDEO_SAVE.OUTPUT.DEFAULT' | translate">
+            <ui-option *ngIf="c" [optionLabel]="c.encoders[0]" [optionSelected]="true" [optionValue]="c.encoders[0]"></ui-option>
+          </ui-option-group>
+          <ui-option-group *ngIf="c.encoders.length > 1" [optionLabel]="'VIDEO_SAVE.OUTPUT.ENCODERS' | translate">
+            <div *ngFor="let e of c.encoders; index as i">
+              <ui-option *ngIf="i != 0" [optionLabel]="e" [optionValue]="e"></ui-option>
+            </div>
+          </ui-option-group>
+        </ui-select>
       </div>
-      <div class="w-[300px]">
-        <ui-select [selectLabel]="'VIDEO_SAVE.SCALER.ALGORITHM' | translate" [(selectValue)]="filters.filterInfo.filterAlgorithm">
-          <div *ngFor="let s of $videoScaler.algorithm; index as i">
-            <ui-option [optionLabel]="s.text" [optionSelected]="i == 0" [optionValue]="s.value"></ui-option>
+    </ui-group-box>
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.ENCODING.ENCODING' | translate">
+      <div class="save-section">
+        <ui-select *ngIf="videoOutput.videoEncoder" [selectDisabled]="!videoOutput.videoRate"
+          [selectLabel]="'VIDEO_SAVE.ENCODING.RATE' | translate" [(selectValue)]="videoOutput.videoRate">
+          <div *ngIf="videoRates.length > 0">
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.OUTPUT.DEFAULT' | translate">
+              <ui-option [optionLabel]="videoRates[0].text" [optionSelected]="true" [optionValue]="videoRates[0].value"></ui-option>
+            </ui-option-group>
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
+              <div *ngFor="let e of videoRates; index as i">
+                <ui-option *ngIf="i != 0" [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
+              </div>
+            </ui-option-group>
+          </div>
+        </ui-select>
+        <div>
+          <ui-input [inputDisabled]="!videoOutput.videoRate || !videoEncoder.rates[videoOutput.videoRate].includes('$crf')"
+            [inputLabel]="'VIDEO_SAVE.ENCODING.QUALITY' | translate: { max: (videoEncoder?.quality[1] || 0) }"
+            [inputMax]="videoEncoder?.quality[1] || 0" inputType="number" [(inputValue)]="videoOutput.videoQuality"></ui-input>
+          <ui-input [inputDisabled]="!videoOutput.videoRate || !videoEncoder.rates[videoOutput.videoRate].includes('$bit')"
+            [inputLabel]="'VIDEO_SAVE.ENCODING.BITRATE' | translate" [inputPlaceholder]="'GENERAL.DEFAULT' | translate"
+            inputType="number" [(inputValue)]="videoOutput.videoBitrate"></ui-input>
+        </div>
+        <ui-select [selectDisabled]="!videoOutput.videoPreset" [selectLabel]="'VIDEO_SAVE.ENCODING.PRESET' | translate"
+          [(selectValue)]="videoOutput.videoPreset">
+          <div *ngIf="videoPresets.length > 0">
+            <ui-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
+              <ui-option [optionLabel]="videoPresets[0].text" [optionSelected]="true" [optionValue]="videoPresets[0].value"></ui-option>
+            </ui-option-group>
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
+              <div *ngFor="let e of videoPresets; index as i">
+                <ui-option *ngIf="i != 0" [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
+              </div>
+            </ui-option-group>
           </div>
         </ui-select>
       </div>
-    </div>
-    <div class="save-output w-[310px]">
-      <ui-select [selectLabel]="'VIDEO_SAVE.OUTPUT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat" (selectUpdate)="videoOutputFormat($event)">
-        <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
-          <ui-option [optionValue]="f" [optionSelected]="true" [optionLabel]="f.extensions[0] + ' | ' + f.name"></ui-option>
-        </ui-option-group>
-        <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CONTAINERS' | translate">
-          <div *ngFor="let f of videoFormats">
-            <ui-option [optionValue]="f" [optionLabel]="f.extensions[0] + ' | ' + f.name"></ui-option>
+    </ui-group-box>
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.SCALING.SCALING' | translate">
+      <div class="save-section">
+        <div>
+          <ui-input [inputLabel]="'VIDEO_SAVE.SCALING.WIDTH' | translate" inputType="number"
+            [(inputValue)]="filters.filterInfo.filterWidth" (inputUpdated)="videoScalerWidth($event)"></ui-input>
+          <ui-input [inputLabel]="'VIDEO_SAVE.SCALING.HEIGHT' | translate" inputType="number"
+            [(inputValue)]="filters.filterInfo.filterHeight" (inputUpdated)="videoScalerHeight($event)"></ui-input>
+          <ui-button buttonColor="dark" [buttonIcon]="videoOutput.videoLock ? 'lock' : 'unlock'"
+            [buttonToggle]="videoOutput.videoLock" (click)="videoScalerLock()"></ui-button>
+        </div>
+        <div>
+          <div class="w-[132px]">
+            <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.SCALE' | translate"
+              [(selectValue)]="videoOutput.videoScale" (selectClick)="videoScalerScale($event)">
+              <div *ngFor="let s of videoScaler.scale; index as i">
+                <ui-option *ngIf="i == 0 && videoOutput.videoScale == 0" [optionLabel]="s.text" [optionValue]="s.value"></ui-option>
+                <ui-option *ngIf="i > 0" [optionLabel]="s.text" [optionSelected]="i == 1" [optionValue]="s.value"></ui-option>
+              </div>
+            </ui-select>
           </div>
-        </ui-option-group>
-      </ui-select>
-      <ui-select *ngIf="videoOutput.videoFormat" [selectLabel]="'GENERAL.CODEC' | translate" [(selectValue)]="videoOutput.videoCodec">
-        <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
-          <ui-option [optionValue]="c" [optionSelected]="true" [optionLabel]="c.code + ' | ' + c.name"></ui-option>
-        </ui-option-group>
-        <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CODECS' | translate">
-          <div *ngFor="let c of videoCodecs">
-            <ui-option [optionValue]="c" [optionLabel]="c.code + ' | ' + c.name"></ui-option>
+          <div class="w-[180px]">
+            <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.ASPECT_RATIO' | translate"
+              [(selectValue)]="videoOutput.videoRatio" (selectClick)="videoScalerRatio($event)">
+              <div *ngFor="let a of videoScaler.ratio; index as i">
+                <ui-option *ngIf="i == 0 && videoOutput.videoRatio == 0" [optionLabel]="a.text" [optionValue]="a.value"></ui-option>
+                <ui-option *ngIf="i > 0" [optionLabel]="a.text" [optionSelected]="i == 1" [optionValue]="a.value"></ui-option>
+              </div>
+            </ui-select>
           </div>
-        </ui-option-group>
-      </ui-select>
-      <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.OUTPUT.ENCODER' | translate" [(selectValue)]="videoOutput.videoEncoder">
-        <ui-option-group [optionLabel]="'VIDEO_SAVE.OUTPUT.DEFAULT' | translate">
-          <ui-option *ngIf="c" [optionValue]="c.encoders[0]" [optionSelected]="true" [optionLabel]="c.encoders[0]"></ui-option>
-        </ui-option-group>
-        <ui-option-group *ngIf="c.encoders.length > 1" [optionLabel]="'VIDEO_SAVE.OUTPUT.ENCODERS' | translate">
-          <div *ngFor="let e of c.encoders; index as i">
-            <ui-option *ngIf="i != 0" [optionValue]="e" [optionLabel]="e"></ui-option>
-          </div>
-        </ui-option-group>
-      </ui-select>
-    </div>
-  </div>
-  <div class="save-buttons">
-    <ui-button buttonColor="primary" buttonIcon="done" (click)="videoSaveFile()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-    <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+        </div>
+        <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.ALGORITHM' | translate" [(selectValue)]="filters.filterInfo.filterAlgorithm">
+          <ui-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
+            <ui-option [optionLabel]="videoScaler.algorithm[0].text" [optionSelected]="true" [optionValue]="videoScaler.algorithm[0].value"></ui-option>
+          </ui-option-group>
+          <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
+            <div *ngFor="let s of videoScaler.algorithm; index as i">
+              <ui-option *ngIf="i != 0" [optionLabel]="s.text" [optionValue]="s.value"></ui-option>
+            </div>
+          </ui-option-group>
+        </ui-select>
+      </div>
+    </ui-group-box>
+    <span class="save-buttons">
+      <ui-button buttonColor="primary" buttonIcon="done" (click)="videoSaveFile()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+    </span>
   </div>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">

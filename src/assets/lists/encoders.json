@@ -1,0 +1,61 @@
+[
+  {
+    "codes": ["libx264","libx264rgb"],
+    "quality": [23,51],
+    "presets": {
+      "h26x": "-preset $level"
+    },
+    "rates": {
+      "crf": "-crf $crf",
+      "vbv": "-crf $crf -bufsize $bitk -maxrate $bitk -minrate $bitk",
+      "vbv2": "-b:v $bitk -bufsize $bitk -maxrate $bitk -minrate $bitk -pass $pass",
+      "abr": "-b:v $bitk",
+      "abr2": "-b:v $bitk -pass $pass",
+      "cbr": "-x264-params \"nal-hrd=cbr:force-cfr=1\" -b:v $bitk -bufsize $bitk -maxrate $bitk -minrate $bitk"
+    }
+  },
+  {
+    "codes": ["libx265"],
+    "quality": [28,51],
+    "presets": {
+      "h26x": "-preset $level"
+    },
+    "rates": {
+      "crf": "-crf $crf",
+      "vbv": "-crf $crf -x265-params vbv-bufsize=$bitk:vbv-maxrate=$bitk:vbv-minrate=$bitk",
+      "vbv2": "-b:v $bitk -x265-params vbv-bufsize=$bitk:vbv-maxrate=$bitk:vbv-minrate=$bitk:pass=$pass",
+      "abr": "-b:v $bitk",
+      "abr2": "-b:v $bitk -x265-params pass=$pass"
+    }
+  },
+  {
+    "codes": ["libvpx-vp9"],
+    "quality": [30,63],
+    "presets": {
+      "vpx": "-deadline $level"
+    },
+    "rates": {
+      "crf": "-crf $crf",
+      "vbv": "-crf $crf -b:v $bitk",
+      "vbv2": "-crf $crf -b:v $bitk -pass $pass",
+      "abr": "-b:v $bitk",
+      "abr2": "-b:v $bitk -pass $pass",
+      "cbr": "-b:v $bitk -maxrate $bitk -minrate $bitk"
+    }
+  },
+  {
+    "codes": ["libaom-av1"],
+    "quality": [30,63],
+    "presets": {
+      "avx": "-usage $level"
+    },
+    "rates": {
+      "crf": "-crf $crf",
+      "vbv": "-crf $crf -b:v $bitk",
+      "vbv2": "-crf $crf -b:v $bitk -pass $pass",
+      "abr": "-b:v $bitk",
+      "abr2": "-b:v $bitk -pass $pass",
+      "cbr": "-b:v $bitk -maxrate $bitk -minrate $bitk"
+    }
+  }
+]

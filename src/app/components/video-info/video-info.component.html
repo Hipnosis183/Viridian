@@ -17,14 +17,14 @@
             <td></td>
             <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
             <td>{{ store.state.fileInfo.fileType }}</td>
-            <td>{{ stream.bit_rate / 1000 }}kbps</td>
+            <td>{{ stream.bit_rate / 1000 }} kb/s</td>
             <td>{{ stream.duration | duration }} - {{ stream.size | filesize }}</td>
           </tr>
           <tr *ngIf="i != 0" (click)="videoStreamOpen(i)">
             <td>{{ stream.index }}</td>
             <td>{{ stream.codec_type | titlecase }}</td>
             <td>{{ stream.codec_name | uppercase }}{{ (stream.codec_tag_string != '[0][0][0][0]' ? '/' + stream.codec_tag_string : '') | uppercase }}</td>
-            <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + 'kbps' : '-'}}</td>
+            <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + ' kb/s' : '-'}}</td>
             <td *ngIf="stream.codec_type=='video'">{{ stream.coded_width }}x{{ stream.coded_height }} @{{ stream.r_frame_rate | expression }}fps</td>
             <td *ngIf="stream.codec_type=='audio'">{{ stream.channels }} {{ 'VIDEO_INFO.CHANNELS' | translate }} ({{ stream.channel_layout | titlecase }})</td>
           </tr>

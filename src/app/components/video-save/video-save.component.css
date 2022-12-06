@@ -1,22 +1,17 @@
 .save-buttons {
-  @apply flex justify-evenly w-full;
+  @apply flex items-center justify-evenly w-full;
 }
 
 .save-container {
-  @apply flex space-x-6;
+  @apply gap-x-6 gap-y-8 grid grid-cols-2 grid-rows-2 mt-2;
 }
 
-:host ::ng-deep .save-container ui-button {
+.save-section {
+  @apply flex flex-col space-y-3 w-[320px] [&>div]:flex [&>div]:space-x-2;
+}
+
+:host ::ng-deep .save-section ui-button {
   @apply flex items-end [&_button]:w-max [&_img]:m-0.5;
-}
-
-.save-container > div {
-  @apply flex flex-col mb-7 mt-1 space-y-3;
-}
-
-.save-output > div,
-.save-scaler > div {
-  @apply flex space-x-2;
 }
 
 .save-saving {

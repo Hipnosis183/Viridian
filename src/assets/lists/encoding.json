@@ -1,0 +1,33 @@
+{
+  "presets": {
+    "avx": [
+      { "text": "Good", "value": "good" },
+      { "text": "Real-time", "value": "realtime" },
+      { "text": "All Intra", "value": "allintra" }
+    ],
+    "h26x": [
+      { "text": "Medium", "value": "medium" },
+      { "text": "Ultra Fast", "value": "ultrafast" },
+      { "text": "Super Fast", "value": "superfast" },
+      { "text": "Very Fast", "value": "veryfast" },
+      { "text": "Faster", "value": "faster" },
+      { "text": "Fast", "value": "fast" },
+      { "text": "Slow", "value": "slow" },
+      { "text": "Slower", "value": "slower" },
+      { "text": "Very Slow", "value": "veryslow" }
+    ],
+    "vpx": [
+      { "text": "Good", "value": "good" },
+      { "text": "Best", "value": "best" },
+      { "text": "Real-time", "value": "realtime" }
+    ]
+  },
+  "rates": [
+    { "text": "VBR (CRF) | Constant Rate Factor", "value": "crf" },
+    { "text": "VBR (VBV) | Constrained Encoding", "value": "vbv" },
+    { "text": "VBR (VBV-2) | 2-Pass Constrained Encoding", "value": "vbv2" },
+    { "text": "VBR (ABR) | Average Bitrate", "value": "abr" },
+    { "text": "VBR (ABR-2) | 2-Pass Average Bitrate", "value": "abr2" },
+    { "text": "CBR | Constant Bitrate", "value": "cbr" }
+  ]
+}
