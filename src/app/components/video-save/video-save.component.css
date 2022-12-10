@@ -1,9 +1,9 @@
-.save-buttons {
-  @apply flex items-center justify-evenly w-full;
-}
-
 .save-container {
   @apply gap-x-6 gap-y-8 grid grid-cols-2 grid-rows-2 mt-2;
+}
+
+.save-container .save-buttons {
+  @apply gap-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center self-center w-fit;
 }
 
 .save-section {
@@ -20,6 +20,10 @@
 
 .save-saving > div {
   @apply flex flex-col items-center justify-center space-y-8;
+}
+
+.save-saving .save-buttons {
+  @apply flex items-center justify-evenly w-full;
 }
 
 .save-error {

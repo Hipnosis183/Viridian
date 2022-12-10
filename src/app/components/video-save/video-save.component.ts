@@ -176,7 +176,8 @@ export class VideoSaveComponent {
     // Setup values for the scale filter and video export.
     if (!c) { this.filters.filterInit(); }
     // Check and update filters state.
-    this.$videoReencode();
+    //this.$videoReencode();
+    this.videoSaveReset();
     // Open export/save dialog.
     this.videoSave.videoSave = !this.videoSave.videoSave;
   }
@@ -242,6 +243,25 @@ export class VideoSaveComponent {
     // Define paths and commands.
     const output = this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]);
     this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`;
+  }
+
+  videoSaveReset(): void {
+    // Reset scaling values.
+    this.videoOutput.videoRatio = -1;
+    this.videoOutput.videoScale = 1;
+    this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
+    this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
+    // Reset format and encoding values.
+    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo.fileExtension))[0];
+    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo.fileExtension));
+    this.videoOutput.videoFormat = this.videoFormat;
+    this.videoOutputFormat(this.videoFormat);
+    this.videoOutput.videoCodec = this.videoCodec;
+    this.videoOutputCodec();
+    if (this.videoSave.$videoFilters.length == 0) {
+      this.videoOutput.videoEncoder = null;
+      this.videoReencode = false;
+    }
   }
 
   videoSaveClose(): void {

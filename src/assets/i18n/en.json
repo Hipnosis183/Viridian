@@ -43,6 +43,7 @@
       "FORMATCODEC": "Format and Codec",
       "NONE": "None (Copy Stream)"
     },
+    "RESET": "Reset",
     "SAVE": {
       "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
       "SAVE_OK": "Video saved successfully!",

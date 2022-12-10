@@ -121,6 +121,7 @@
     <span class="save-buttons">
       <ui-button buttonColor="primary" buttonIcon="done" (click)="videoSaveFile()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
       <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+      <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
     </span>
   </div>
 </ui-modal>
