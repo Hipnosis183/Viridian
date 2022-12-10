@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ui-modal',
@@ -6,4 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./ui-modal.component.css']
 })
 
-export class UiModalComponent { }
+export class UiModalComponent {
+  
+  @Input() modalHidden: boolean = false;
+}
