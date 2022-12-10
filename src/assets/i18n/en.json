@@ -40,7 +40,8 @@
       "ENCODER": "Encoder",
       "ENCODERS": "All Encoders",
       "FORMAT": "Format",
-      "FORMATCODEC": "Format and Codec"
+      "FORMATCODEC": "Format and Codec",
+      "NONE": "None (Copy Stream)"
     },
     "SAVE": {
       "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",

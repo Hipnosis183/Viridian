@@ -71,6 +71,13 @@ export class VideoSaveComponent {
     this.videoCodecs = videoCodecs;
   }
 
+  videoOutputCodec(): void {
+    // Fallback to default value when reencoding is not used.
+    if (!this.videoOutput.videoCodec.encoders.includes(this.videoOutput.videoEncoder)) {
+      this.videoOutput.videoEncoder = null;
+    } this.$videoReencode();
+  }
+
   videoOutputEncoder(c: any): void {
     // Set default encoder for the selected codec.
     const e: any = Encoders.find((e: any) => e.codes.includes(c));
@@ -90,7 +97,7 @@ export class VideoSaveComponent {
       this.videoOutput.videoQuality = 0;
       this.videoOutput.videoPreset = null;
       this.videoOutput.videoRate = null;
-    }
+    } this.$videoReencode();
   }
 
   ngAfterContentInit(): void {
@@ -110,7 +117,7 @@ export class VideoSaveComponent {
     if (this.videoOutput.videoLock) {
       const ar = this.store.state.filterInfo.filterWidth / this.store.state.filterInfo.filterHeight;
       this.filters.filterInfo.filterWidth = 2 * Math.round(h * ar / 2);
-    }
+    } this.$videoReencode();
   }
 
   videoScalerWidth(w: any): void {
@@ -119,7 +126,7 @@ export class VideoSaveComponent {
     if (this.videoOutput.videoLock) {
       const ar = this.store.state.filterInfo.filterWidth / this.store.state.filterInfo.filterHeight;
       this.filters.filterInfo.filterHeight = 2 * Math.round(w / ar / 2);
-    }
+    } this.$videoReencode();
   }
 
   videoScalerRatio(ar: any): void {
@@ -130,7 +137,7 @@ export class VideoSaveComponent {
     } else if (ar < 0) {
       this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
       this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
-    }
+    } this.$videoReencode();
   }
 
   videoScalerScale(s: any): void {
@@ -141,12 +148,25 @@ export class VideoSaveComponent {
     } else if (s) {
       this.filters.filterInfo.filterHeight = 2 * Math.round(this.store.state.filterInfo.filterHeight * s / 2);
       this.filters.filterInfo.filterWidth = 2 * Math.round(this.store.state.filterInfo.filterWidth * s / 2);
-    }
+    } this.$videoReencode();
+  }
+
+  videoReencode: boolean = false;
+  $videoReencode(): void {
+    this.videoSaveFilters();
+    this.videoReencode = (this.videoSave.$videoFilters.length > 0) || this.videoOutput.videoEncoder ? true : false;
   }
 
   videoSave: any = {
+    videoAudio: '',
+    videoCodec: '',
+    videoCommand: '',
+    videoEncoding: '',
     videoErrorText: null,
     videoErrorView: false,
+    $videoFilters: [],
+    videoFilters: '',
+    videoMetadata: '',
     videoSaving: false,
     videoSave: false,
     videoSaved: false,
@@ -155,80 +175,57 @@ export class VideoSaveComponent {
   $videoSave(c: boolean = false): void {
     // Setup values for the scale filter and video export.
     if (!c) { this.filters.filterInit(); }
+    // Check and update filters state.
+    this.$videoReencode();
     // Open export/save dialog.
     this.videoSave.videoSave = !this.videoSave.videoSave;
   }
 
-  videoSaveDone(): void {
-    this.videoSave = {
-      videoErrorText: null,
-      videoErrorView: false,
-      videoSaving: false,
-      videoSave: false,
-      videoSaved: false,
-    };
+  videoSaveAudio(): void {
+    // Define removal of audio streams.
+    this.videoSave.videoAudio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
+  }
+
+  videoSaveCodec(): void {
+    // Define video codec to use, or copy stream if the same as input is used.
+    this.videoSave.videoCodec = (this.videoSave.$videoFilters.length > 0) || this.videoReencode ? '-c:v ' + this.videoOutput.videoEncoder : '-c:v copy';
+  }
+
+  videoSaveEncoding(): void {
+    // Define encoding options for the selected codec.
+    const stream = this.store.state.videoInfo.videoStreams;
+    if ((this.videoSave.$videoFilters.length > 0) || this.videoReencode) {
+      if (!this.videoEncoder) { this.videoSave.videoEncoding = ''; return; }
+      // Get encoding speed and compression ratio preset.
+      let preset = this.videoEncoder.presets[Object.keys(this.videoEncoder.presets)[0]];
+      preset = preset.replaceAll('$level', this.videoOutput.videoPreset);
+      // Get control rate quality and calculate bitrate.
+      const quality = this.videoOutput.videoQuality || this.videoEncoder.quality[0];
+      const bitrate = this.videoOutput.videoBitrate || Math.round(stream[1].bit_rate / 1000) || Math.round(stream[0].bit_rate / 1000);
+      let rate = this.videoEncoder.rates[this.videoOutput.videoRate];
+      rate = rate.replaceAll('$crf', quality);
+      rate = rate.replaceAll('$bit', bitrate);
+      this.videoSave.videoEncoding = `${preset} ${rate}`;
+    } else { this.videoSave.videoEncoding = ''; }
   }
 
   videoSaveError(): void {
     this.videoSave.videoErrorView = !this.videoSave.videoErrorView;
   }
 
-  async videoSaveFile(): Promise<void> {
+  videoSaveFilters(): void {
     // Define video filters to apply.
-    let filters: string[] = [];
-    if (this.filters.filterInfo.filterFlipH || this.filters.filterInfo.filterFlipV) { filters.push(this.filters.filterFlip()); }
-    if (this.filters.filterRotate()) { filters.push(this.filters.filterRotate()); }
-    if (this.filters.filterInfo.filterCrop) { filters.push(this.filters.filterCrop()); }
-    if (this.filters.filterScaler()) { filters.push(this.filters.filterScaler()); }
-    const filter = filters.length > 0 ? `-filter:v "${filters.join()}"` : '';
-    // Define video codec to use, or copy stream if the same as input is used.
-    const stream = this.store.state.videoInfo.videoStreams[1];
-    const codec = (filters.length > 0) || (this.videoOutput.videoCodec.code != stream.codec_name) ? '-c:v ' + this.videoOutput.videoEncoder : '-c:v copy';
-    // Define encoding options for the selected codec.
-    const encoding = (filters.length > 0) || (this.videoOutput.videoCodec.code != stream.codec_name) ? this.videoSaveEncoding() : '';
-    // Define removal of audio streams.
-    const audio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
+    this.videoSave.$videoFilters = [];
+    if (this.filters.filterInfo.filterFlipH || this.filters.filterInfo.filterFlipV) { this.videoSave.$videoFilters.push(this.filters.filterFlip()); }
+    if (this.filters.filterRotate()) { this.videoSave.$videoFilters.push(this.filters.filterRotate()); }
+    if (this.filters.filterInfo.filterCrop) { this.videoSave.$videoFilters.push(this.filters.filterCrop()); }
+    if (this.filters.filterScaler()) { this.videoSave.$videoFilters.push(this.filters.filterScaler()); }
+    this.videoSave.videoFilters = this.videoSave.$videoFilters.length > 0 ? `-filter:v "${this.videoSave.$videoFilters.join()}"` : '';
+  }
+
+  videoSaveMetadata(): void {
     // Define metadata modifications.
-    const metadata = this.videoSaveMetadata();
-    // Define paths and commands.
-    const input: string = this.store.state.fileInfo.filePath;
-    const output: string = input.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]);
-    let command: string = `ffmpeg -v error -y -noautorotate -i "${input}" ${codec} ${encoding} ${filter} ${metadata} ${audio} "${output}"`;
-    // Detect and adapt command for 2-pass encoding.
-    if (encoding.includes('$pass')) {
-      const pass1 = `ffmpeg -v error -y -noautorotate -i "${input}" ${codec} ${encoding.replace('$pass', '1')} ${filter} -an -f null -`;
-      const pass2 = this.store.state.filePaths.ffmpeg + command.replace('$pass', '2');
-      command = `${pass1} && ${pass2}`;
-    }
-    // Execute command and listen for a response.
-    this.videoSave.videoSaving = true;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-    this.ipc.once('exec', (e: any, r: string) => {
-      this.zone.run(() => {
-        this.videoSave.videoSaved = true;
-        this.videoSave.videoSaving = false;
-        if (r) { this.videoSave.videoErrorText = r; }
-      });
-    });
-  }
-
-  videoSaveEncoding(): string {
-    if (!this.videoEncoder) { return ''; }
-    // Get encoding speed and compression ratio preset.
-    let preset = this.videoEncoder.presets[Object.keys(this.videoEncoder.presets)[0]];
-    preset = preset.replaceAll('$level', this.videoOutput.videoPreset);
-    // Get control rate quality and calculate bitrate.
-    const stream = this.store.state.videoInfo.videoStreams;
-    const quality = this.videoOutput.videoQuality || this.videoEncoder.quality[0];
-    const bitrate = this.videoOutput.videoBitrate || Math.round(stream[1].bit_rate / 1000) || Math.round(stream[0].bit_rate / 1000);
-    let rate = this.videoEncoder.rates[this.videoOutput.videoRate];
-    rate = rate.replaceAll('$crf', quality);
-    rate = rate.replaceAll('$bit', bitrate);
-    return `${preset} ${rate}`;
-  }
-
-  videoSaveMetadata(): string {
-    if (!this.filters.filterInfo.filterClear) { return ''; }
+    if (!this.filters.filterInfo.filterClear) { this.videoSave.videoMetadata = ''; return; }
     // Remove general metadata, rotation and encoder tags.
     let metadata = '-map_metadata -1 -metadata:s:v rotate="" -fflags +bitexact';
     const stream = this.store.state.videoInfo.videoStreams[1];
@@ -238,6 +235,46 @@ export class VideoSaveComponent {
       metadata += rotation == 90 || rotation == 270
         ? ` -aspect ${stream.height}:${stream.width}`
         : ` -aspect ${stream.width}:${stream.height}`;
-    } return metadata;
+    } this.videoSave.videoMetadata = metadata;
+  }
+
+  videoSaveOutput(): void {
+    // Define paths and commands.
+    const output = this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]);
+    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`;
+  }
+
+  videoSaveClose(): void {
+    this.videoSave.videoErrorText = null;
+    this.videoSave.videoErrorView = false;
+    this.videoSave.videoSaving = false;
+    this.videoSave.videoSave = false;
+    this.videoSave.videoSaved = false;
+  }
+
+  async videoSaveFile(): Promise<void> {
+    // Build output command.
+    this.videoSaveAudio();
+    this.videoSaveFilters();
+    this.videoSaveMetadata();
+    this.videoSaveCodec();
+    this.videoSaveEncoding();
+    this.videoSaveOutput();
+    // Detect and adapt command for 2-pass encoding.
+    if (this.videoSave.videoEncoding.includes('$pass')) {
+      const pass1 = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
+      const pass2 = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
+      this.videoSave.videoCommand = `${pass1} && ${pass2}`;
+    }
+    // Execute command and listen for a response.
+    this.videoSave.videoSaving = true;
+    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand, null);
+    this.ipc.once('exec', (e: any, r: string) => {
+      this.zone.run(() => {
+        this.videoSave.videoSaved = true;
+        this.videoSave.videoSaving = false;
+        if (r) { this.videoSave.videoErrorText = r; }
+      });
+    });
   }
 }
