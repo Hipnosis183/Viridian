@@ -161,6 +161,7 @@ export class VideoSaveComponent {
     videoAudio: '',
     videoCodec: '',
     videoCommand: '',
+    videoEditing: false,
     videoEncoding: '',
     videoErrorText: null,
     videoErrorView: false,
@@ -176,7 +177,6 @@ export class VideoSaveComponent {
     // Setup values for the scale filter and video export.
     if (!c) { this.filters.filterInit(); }
     // Check and update filters state.
-    //this.$videoReencode();
     this.videoSaveReset();
     // Open export/save dialog.
     this.videoSave.videoSave = !this.videoSave.videoSave;
@@ -245,6 +245,11 @@ export class VideoSaveComponent {
     this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`;
   }
 
+  videoSaveEdit(): void {
+    if (!this.videoSave.videoEditing) { this.videoSaveBuild(); }
+    this.videoSave.videoEditing = !this.videoSave.videoEditing;
+  }
+
   videoSaveReset(): void {
     // Reset scaling values.
     this.videoOutput.videoRatio = -1;
@@ -270,9 +275,10 @@ export class VideoSaveComponent {
     this.videoSave.videoSaving = false;
     this.videoSave.videoSave = false;
     this.videoSave.videoSaved = false;
+    this.videoSave.videoEditing = false;
   }
 
-  async videoSaveFile(): Promise<void> {
+  videoSaveBuild(): void {
     // Build output command.
     this.videoSaveAudio();
     this.videoSaveFilters();
@@ -286,6 +292,11 @@ export class VideoSaveComponent {
       const pass2 = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
       this.videoSave.videoCommand = `${pass1} && ${pass2}`;
     }
+    // Remove extra whitespace.
+    this.videoSave.videoCommand = this.videoSave.videoCommand.replace(/\s\s+/g, ' ');
+  }
+
+  videoSaveRun(): void {
     // Execute command and listen for a response.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand, null);
@@ -296,5 +307,10 @@ export class VideoSaveComponent {
         if (r) { this.videoSave.videoErrorText = r; }
       });
     });
+  }
+
+  async videoSaveExport(): Promise<void> {
+    this.videoSaveBuild();
+    this.videoSaveRun();
   }
 }

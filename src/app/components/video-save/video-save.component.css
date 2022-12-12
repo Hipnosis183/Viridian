@@ -1,9 +1,17 @@
-.save-container {
-  @apply gap-x-6 gap-y-8 grid grid-cols-2 grid-rows-2 mt-2;
+textarea {
+  @apply bg-slate-900 border border-slate-800 break-all h-[300px] mb-4 p-4 resize-none rounded-md text-slate-100 w-[600px];
 }
 
-.save-container .save-buttons {
-  @apply gap-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center self-center w-fit;
+.save-buttons {
+  @apply flex items-center justify-evenly w-full;
+}
+
+.save-buttons-grid {
+  @apply gap-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center self-center w-fit [&>*]:contents;
+}
+
+.save-container {
+  @apply gap-x-6 gap-y-8 grid grid-cols-2 grid-rows-2 mt-2;
 }
 
 .save-section {
@@ -20,10 +28,6 @@
 
 .save-saving > div {
   @apply flex flex-col items-center justify-center space-y-8;
-}
-
-.save-saving .save-buttons {
-  @apply flex items-center justify-evenly w-full;
 }
 
 .save-error {

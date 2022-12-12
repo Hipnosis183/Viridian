@@ -20,6 +20,7 @@
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",
     "CLOSE": "Close",
+    "EDIT": "Manual",
     "ENCODING": {
       "BITRATE": "Bitrate (kb/s)",
       "ENCODING": "Encoding",
