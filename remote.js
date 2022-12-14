@@ -1,6 +1,10 @@
-const { ipcMain } = require('electron');
+const { dialog, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { dirname } = require('path');
+
+ipcMain.on('dialog-save', async (e, ...a) => {
+  e.reply('dialog-save', dialog.showSaveDialogSync(a[0]));
+});
 
 ipcMain.on('exec', (e, ...a) => {
   exec(a[0], a[1], (error, stdout, stderr) => {

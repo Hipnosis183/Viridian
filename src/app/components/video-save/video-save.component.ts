@@ -168,6 +168,7 @@ export class VideoSaveComponent {
     $videoFilters: [],
     videoFilters: '',
     videoMetadata: '',
+    videoOutput: '',
     videoSaving: false,
     videoSave: false,
     videoSaved: false,
@@ -240,9 +241,15 @@ export class VideoSaveComponent {
   }
 
   videoSaveOutput(): void {
-    // Define paths and commands.
-    const output = this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]);
-    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`;
+    // Define output command.
+    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+  }
+
+  videoSaveDirectory(): void {
+    this.ipc.send('dialog-save', { defaultPath: this.videoSave.videoOutput });
+    this.ipc.once('dialog-save', (e: any, r: string) => {
+      this.zone.run(() => { if (r) { this.videoSave.videoOutput = r; } });
+    });
   }
 
   videoSaveEdit(): void {
@@ -256,6 +263,8 @@ export class VideoSaveComponent {
     this.videoOutput.videoScale = 1;
     this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
     this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
+    // Define output path.
+    this.videoSave.videoOutput = (this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0])).slice(7);
     // Reset format and encoding values.
     this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo.fileExtension))[0];
     this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo.fileExtension));

@@ -7,7 +7,7 @@ textarea {
 }
 
 .save-buttons-grid {
-  @apply gap-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center self-center w-fit [&>*]:contents;
+  @apply gap-x-8 gap-y-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center mt-2 w-fit [&>*]:contents;
 }
 
 .save-container {
@@ -32,4 +32,12 @@ textarea {
 
 .save-error {
   @apply bg-slate-900 border border-slate-850 max-h-[50vh] overflow-auto p-4 w-full whitespace-nowrap;
+}
+
+.save-output {
+  @apply flex space-x-2;
+}
+
+:host ::ng-deep .save-output ui-button {
+  @apply flex items-end pb-2 [&_img]:h-6 [&_img]:w-9 !important;
 }

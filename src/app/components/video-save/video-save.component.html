@@ -1,13 +1,13 @@
 <ui-modal [modalHidden]="!videoSave.videoSave">
   <div *ngIf="store.state.fileInfo.fileLoaded" class="save-container">
-    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT.FORMATCODEC' | translate">
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.FORMAT.FORMATCODEC' | translate">
       <div class="save-section">
-        <ui-select [selectLabel]="'VIDEO_SAVE.OUTPUT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat"
+        <ui-select [selectLabel]="'VIDEO_SAVE.FORMAT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat"
           (selectUpdate)="videoOutputFormat($event)">
-          <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
+          <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
             <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionSelected]="true" [optionValue]="f"></ui-option>
           </ui-option-group>
-          <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CONTAINERS' | translate">
+          <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'VIDEO_SAVE.FORMAT.CONTAINERS' | translate">
             <div *ngFor="let f of videoFormats">
               <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionValue]="f"></ui-option>
             </div>
@@ -15,22 +15,22 @@
         </ui-select>
         <ui-select *ngIf="videoOutput.videoFormat" [selectLabel]="'GENERAL.CODEC' | translate"
           [(selectValue)]="videoOutput.videoCodec" (selectUpdate)="videoOutputCodec()">
-          <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'VIDEO_SAVE.OUTPUT.DETECTED' | translate">
+          <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
             <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionSelected]="true" [optionValue]="c"></ui-option>
           </ui-option-group>
-          <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.CODECS' | translate">
+          <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'VIDEO_SAVE.FORMAT.CODECS' | translate">
             <div *ngFor="let c of videoCodecs">
               <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionValue]="c"></ui-option>
             </div>
           </ui-option-group>
         </ui-select>
-        <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.OUTPUT.ENCODER' | translate"
+        <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
           [(selectValue)]="videoOutput.videoEncoder" (selectUpdate)="videoOutputEncoder($event)">
-          <ui-option-group [optionLabel]="'VIDEO_SAVE.OUTPUT.DEFAULT' | translate">
-            <ui-option *ngIf="videoSave.$videoFilters.length == 0" [optionLabel]="'VIDEO_SAVE.OUTPUT.NONE' | translate" [optionSelected]="true" [optionValue]="null"></ui-option>
+          <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+            <ui-option *ngIf="videoSave.$videoFilters.length == 0" [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate" [optionSelected]="true" [optionValue]="null"></ui-option>
             <ui-option *ngIf="videoSave.$videoFilters.length > 0" [optionLabel]="c.encoders[0]" [optionSelected]="!videoOutput.videoEncoder" [optionValue]="c.encoders[0]"></ui-option>
           </ui-option-group>
-          <ui-option-group *ngIf="c.encoders.length == 1 && videoSave.$videoFilters.length > 0 ? false : true" [optionLabel]="'VIDEO_SAVE.OUTPUT.ENCODERS' | translate">
+          <ui-option-group *ngIf="c.encoders.length == 1 && videoSave.$videoFilters.length > 0 ? false : true" [optionLabel]="'VIDEO_SAVE.FORMAT.ENCODERS' | translate">
             <div *ngFor="let e of c.encoders; index as i">
               <ui-option *ngIf="(c.encoders.length > 0 && i != 0) || videoSave.$videoFilters.length == 0" [optionLabel]="e" [optionValue]="e"></ui-option>
             </div>
@@ -43,7 +43,7 @@
         <ui-select [selectDisabled]="!videoReencode || !videoOutput.videoRate"
           [selectLabel]="'VIDEO_SAVE.ENCODING.RATE' | translate" [(selectValue)]="videoOutput.videoRate">
           <div *ngIf="videoRates.length > 0">
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.OUTPUT.DEFAULT' | translate">
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
               <ui-option [optionLabel]="videoRates[0].text" [optionSelected]="true" [optionValue]="videoRates[0].value"></ui-option>
             </ui-option-group>
             <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
@@ -118,12 +118,20 @@
         </ui-select>
       </div>
     </ui-group-box>
-    <span class="save-buttons-grid">
-      <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
-      <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
-      <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
-    </span>
+    <div class="grid">
+      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+        <div class="save-output">
+          <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoSave.videoOutput"></ui-input>
+          <ui-button buttonColor="dark" buttonIcon="more" (click)="videoSaveDirectory()"></ui-button>
+        </div>
+      </ui-group-box>
+      <span class="save-buttons-grid">
+        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
+        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
+        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+      </span>
+    </div>
   </div>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoEditing">

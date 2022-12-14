@@ -32,8 +32,7 @@
     },
     "ERROR_LOG": "Error log",
     "EXPORT": "Export",
-    "OK": "Ok",
-    "OUTPUT": {
+    "FORMAT": {
       "CODECS": "All Codecs",
       "CONTAINERS": "All Containers",
       "DEFAULT": "Default | Recommended",
@@ -44,6 +43,9 @@
       "FORMATCODEC": "Format and Codec",
       "NONE": "None (Copy Stream)"
     },
+    "OK": "Ok",
+    "OUTPUT": "Output",
+    "PATH": "File Path",
     "RESET": "Reset",
     "SAVE": {
       "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
