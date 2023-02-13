@@ -23,6 +23,8 @@
       <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" (click)="videoPlayerMute()"></ui-button>
     </div>
     <div>
+      <ui-button buttonColor="dark" buttonIcon="capture" (click)="videoCapture.$videoCapture()"></ui-button>
+      <div class="player-separator"></div>
       <ui-button buttonColor="dark" buttonIcon="list" (click)="$videoInfo.$videoInfo()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" (click)="videoFilterClear()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" (click)="videoFilterNoAudio()"></ui-button>
@@ -39,5 +41,6 @@
   </div>
   <ui-progress [(progressTime)]="playerInfo.playerVideo.currentTime" [progressDuration]="playerInfo.playerVideo.duration"></ui-progress>
 </div>
+<video-capture #videoCapture [currentTime]="playerInfo.playerVideo.currentTime"></video-capture>
 <video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="videoFileLoaded(videoInfo)"></video-info>
 <video-save #videoSave *ngIf="store.state.fileInfo.fileLoaded && $videoInfo" (loaded)="$videoSave = videoSave"></video-save>

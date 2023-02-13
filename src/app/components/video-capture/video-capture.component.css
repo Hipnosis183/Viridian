@@ -1,0 +1,15 @@
+.capture-buttons {
+  @apply flex justify-evenly;
+}
+
+.capture-output {
+  @apply flex mb-6 space-x-2;
+}
+
+:host ::ng-deep .capture-output ui-button {
+  @apply flex items-end pb-2 [&_img]:h-6 [&_img]:w-9 !important;
+}
+
+:host ::ng-deep .capture-output ui-input {
+  @apply w-[500px];
+}

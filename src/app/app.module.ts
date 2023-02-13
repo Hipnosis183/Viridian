@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // App components.
+import { VideoCaptureComponent } from './components/video-capture/video-capture.component';
 import { VideoInfoComponent } from './components/video-info/video-info.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 import { VideoSaveComponent } from './components/video-save/video-save.component';
@@ -50,6 +51,7 @@ function appInitializerFactory(translate: TranslateService) {
 @NgModule({
   declarations: [
     AppComponent,
+    VideoCaptureComponent,
     VideoInfoComponent,
     VideoPlayerComponent,
     VideoSaveComponent,
