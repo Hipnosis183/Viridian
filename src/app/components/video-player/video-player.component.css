@@ -6,6 +6,10 @@
   @apply ml-auto;
 }
 
+.player-buttons > div p {
+  @apply ml-4 mt-1.5;
+}
+
 .player-buttons > div ui-button:not(:first-child) {
   @apply ml-2;
 }

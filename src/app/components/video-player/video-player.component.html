@@ -17,10 +17,11 @@
 </div>
 <div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
   <div class="player-buttons">
-    <div>
+    <div class="flex">
       <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? 'play' : 'pause'" [buttonToggle]="!playerInfo.playerVideo.paused" (click)="videoPlayerPlay()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="stop" (click)="videoPlayerStop()"></ui-button>
       <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" (click)="videoPlayerMute()"></ui-button>
+      <p>{{ (playerInfo.playerVideo.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo.duration || 0) | duration: true }}</p>
     </div>
     <div>
       <ui-button buttonColor="dark" buttonIcon="capture" (click)="videoCapture.$videoCapture()"></ui-button>
