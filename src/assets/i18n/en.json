@@ -12,10 +12,24 @@
     "TYPE": "Type"
   },
   "VIDEO_PLAYER": {
+    "CAPTURE": "Capture Frame",
+    "CLEAR": "Clear Metadata",
+    "CLOSE": "Close File",
+    "CROP": "Crop Video",
+    "DONE": "Export Video",
     "FILE_OPEN": {
       "TITLE": "Select video file",
       "SUB": "or drag and drop it here"
-    }
+    },
+    "FLIP_H": "Flip Horizontally",
+    "FLIP_V": "Flip Vertically",
+    "LIST": "File Tracks",
+    "MUTE": "Mute",
+    "NO_AUDIO": "Remove Audio",
+    "PLAY_PAUSE": "Play | Pause",
+    "ROTATE_CW": "Rotate 90º",
+    "ROTATE_CCW": "Rotate -90º",
+    "STOP": "Stop"
   },
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",

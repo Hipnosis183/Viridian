@@ -26,6 +26,7 @@ import { UiOptionGroupComponent } from './ui/ui-select/ui-option-group/ui-option
 
 // Directives.
 import { RenderedDirective } from './directives/rendered.directive';
+import { TooltipDirective } from './directives/tooltip.directive';
 
 // Pipes.
 import { DurationPipe } from './pipes/duration.pipe';
@@ -64,6 +65,7 @@ function appInitializerFactory(translate: TranslateService) {
     UiOptionComponent,
     UiOptionGroupComponent,
     RenderedDirective,
+    TooltipDirective,
     DurationPipe,
     ExpressionPipe,
     FileSizePipe,

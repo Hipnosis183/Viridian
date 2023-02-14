@@ -12,6 +12,7 @@ export class UiButtonComponent {
   @Input() buttonIcon: string = '';
   @Input() buttonIconClass: string = '';
   @Input() buttonToggle: boolean = false;
+  @Input() buttonTooltip: string = '';
 
   @Input()
   get buttonBorder() { return this.$buttonBorder; }

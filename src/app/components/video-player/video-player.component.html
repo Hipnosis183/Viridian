@@ -18,26 +18,26 @@
 <div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
   <div class="player-buttons">
     <div class="flex">
-      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? 'play' : 'pause'" [buttonToggle]="!playerInfo.playerVideo.paused" (click)="videoPlayerPlay()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="stop" (click)="videoPlayerStop()"></ui-button>
-      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" (click)="videoPlayerMute()"></ui-button>
+      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? 'play' : 'pause'" [buttonToggle]="!playerInfo.playerVideo.paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="stop" [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate" (click)="videoPlayerStop()"></ui-button>
+      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate" (click)="videoPlayerMute()"></ui-button>
       <p>{{ (playerInfo.playerVideo.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo.duration || 0) | duration: true }}</p>
     </div>
     <div>
-      <ui-button buttonColor="dark" buttonIcon="capture" (click)="videoCapture.$videoCapture()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
       <div class="player-separator"></div>
-      <ui-button buttonColor="dark" buttonIcon="list" (click)="$videoInfo.$videoInfo()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" (click)="videoFilterClear()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" (click)="videoFilterNoAudio()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="list" [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate" (click)="$videoInfo.$videoInfo()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate" (click)="videoFilterNoAudio()"></ui-button>
       <div class="player-separator"></div>
-      <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" (click)="videoFilterRotate(false)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="rotate" (click)="videoFilterRotate(true)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="flip" buttonIconClass="rotate-90" (click)="videoFilterFlip(true)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="flip" (click)="videoFilterFlip(false)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="crop" [buttonToggle]="filters.filterInfo.filterCrop" (click)="videoFilterCrop()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate" (click)="videoFilterRotate(false)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="rotate" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate" (click)="videoFilterRotate(true)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="flip" buttonIconClass="rotate-90" [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate" (click)="videoFilterFlip(true)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="flip" [buttonTooltip]="'VIDEO_PLAYER.FLIP_H' | translate" (click)="videoFilterFlip(false)"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="crop" [buttonToggle]="filters.filterInfo.filterCrop" [buttonTooltip]="'VIDEO_PLAYER.CROP' | translate" (click)="videoFilterCrop()"></ui-button>
       <div class="player-separator"></div>
-      <ui-button buttonColor="dark" buttonIcon="done" (click)="$videoSave.$videoSave()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="close" (click)="videoFileClose()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="done" [buttonTooltip]="'VIDEO_PLAYER.DONE' | translate" (click)="$videoSave.$videoSave()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="close" [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate" (click)="videoFileClose()"></ui-button>
     </div>
   </div>
   <ui-progress [(progressTime)]="playerInfo.playerVideo.currentTime" [progressDuration]="playerInfo.playerVideo.duration"></ui-progress>
