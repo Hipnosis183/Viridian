@@ -12,12 +12,16 @@ const { state } = createStore({
     fileType: null,
   },
   filterInfo: {
-    filterHeight: null,
-    filterWidth: null
+    filterHeight: 0,
+    filterWidth: 0,
+    filterX: 0,
+    filterY: 0,
   },
   playerInfo: {
     playerCrop: null,
     playerVideo: null,
+    playerHeight: 0,
+    playerWidth: 0,
   },
   videoInfo: {
     videoHeight: null,

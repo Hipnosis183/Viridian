@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { DelayService } from 'src/app/services/delay.service';
 import { FiltersService } from 'src/app/services/filters.service';
 import { StoreService } from 'src/app/services/store.service';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -15,6 +16,8 @@ import Resizable from 'resizable';
 export class VideoPlayerComponent {
 
   constructor(
+    private change: ChangeDetectorRef,
+    private delay: DelayService,
     public filters: FiltersService,
     public store: StoreService,
     public utils: UtilsService
@@ -51,6 +54,49 @@ export class VideoPlayerComponent {
     this.playerInfo.playerResizable = new Resizable(this.playerInfo.playerCrop, {
       draggable: true, within: 'parent'
     });
+    // Update crop element state on resize event.
+    this.playerInfo.playerResizable.on('resize', () => { this.$resizableOnResize(); });
+    // Update crop element state on drag event.
+    this.playerInfo.playerResizable.draggable.on('drag', () => { this.$resizableOnDrag(); });
+  }
+
+  $resizableOnResize = this.delay.throttle(() => this.resizableOnResize(), 100);
+  resizableOnResize(): void {
+    // Update crop filter values.
+    this.filters.filterInit();
+    this.filters.filterCrop();
+    // Fix precision problems.
+    const x = this.store.state.playerInfo.playerWidth - this.store.state.filterInfo.filterWidth;
+    const y = this.store.state.playerInfo.playerHeight - this.store.state.filterInfo.filterHeight;
+    if (this.store.state.filterInfo.filterX > x) { this.store.state.filterInfo.filterX = x; }
+    if (this.store.state.filterInfo.filterY > y) { this.store.state.filterInfo.filterY = y; }
+    if (this.store.state.filterInfo.filterWidth > this.store.state.playerInfo.playerWidth) {
+      this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
+    if (this.store.state.filterInfo.filterHeight > this.store.state.playerInfo.playerHeight) {
+      this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
+    // Update tooltip positioning.
+    if (this.playerInfo.playerCrop._tippy.popperInstance) {
+      this.playerInfo.playerCrop._tippy.popperInstance.update();
+    }
+  }
+
+  $resizableOnDrag = this.delay.throttle(() => this.resizableOnDrag(), 100);
+  resizableOnDrag(): void {
+    // Update crop filter values.
+    this.filters.filterCrop();
+    // Fix precision problems.
+    const x = this.store.state.playerInfo.playerWidth - this.store.state.filterInfo.filterWidth;
+    const y = this.store.state.playerInfo.playerHeight - this.store.state.filterInfo.filterHeight;
+    if (this.store.state.filterInfo.filterX > x) { this.store.state.filterInfo.filterX = x; }
+    if (this.store.state.filterInfo.filterY > y) { this.store.state.filterInfo.filterY = y; }
+    if (this.store.state.filterInfo.filterWidth > this.store.state.playerInfo.playerWidth) {
+      this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
+    if (this.store.state.filterInfo.filterHeight > this.store.state.playerInfo.playerHeight) {
+      this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
+    // Update tooltip positioning.
+    if (this.playerInfo.playerCrop._tippy.popperInstance)  {
+      this.playerInfo.playerCrop._tippy.popperInstance.update();
+    }
   }
 
   videoFileClose(): void {
@@ -81,6 +127,8 @@ export class VideoPlayerComponent {
     this.store.state.videoInfo.videoHeight = stream.height;
     this.store.state.filterInfo.filterWidth = stream.width;
     this.store.state.filterInfo.filterHeight = stream.height;
+    this.store.state.playerInfo.playerWidth = stream.width;
+    this.store.state.playerInfo.playerHeight = stream.height;
     // Normalize video rotation display if rotate metadata is present.
     const rotated = this.utils.findValueByKey(stream, 'rotation');
     // Older rotation API is measured CW, newer (display matrix) is CCW.
@@ -138,6 +186,64 @@ export class VideoPlayerComponent {
 
   @HostListener('window:resize')
   onResize() { this.videoSetPosition(this.filters.filterInfo.filterRotate); }
+
+  videoSetCoordinates(value: string, event: any): void {
+    // Get dimension values of video player.
+    const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
+    const videoHeight = this.playerInfo.playerVideo.getBoundingClientRect().height;
+    // Update selected coordinate.
+    switch (value) {
+      case 'x': { // Control maximum X position input value.
+        const w = this.store.state.playerInfo.playerWidth - this.store.state.filterInfo.filterWidth;
+        if (parseInt(event.target.value) > w) { this.change.detectChanges();
+          event.target.value = w; this.store.state.filterInfo.filterX = w; }
+        // Update X position value.
+        const x: number = videoWidth * event.target.value / this.store.state.playerInfo.playerWidth;
+        const y: any = /translate3d\((?<x>.*?)px, (?<y>.*?)px/.exec(this.playerInfo.playerCrop.style.transform);
+        this.playerInfo.playerCrop.style.transform = `translate3d(${x}px, ${y.groups.y}px, 0px)`; break;
+      }
+      case 'y': { // Control maximum Y position input value.
+        const h = this.store.state.playerInfo.playerHeight - this.store.state.filterInfo.filterHeight;
+        if (parseInt(event.target.value) > h) { this.change.detectChanges();
+          event.target.value = h; this.store.state.filterInfo.filterY = h; }
+        // Update Y position value.
+        const y: number = videoHeight * event.target.value / this.store.state.playerInfo.playerHeight;
+        const x: any = /translate3d\((?<x>.*?)px, (?<y>.*?)px/.exec(this.playerInfo.playerCrop.style.transform);
+        this.playerInfo.playerCrop.style.transform = `translate3d(${x.groups.x}px, ${y}px, 0px)`; break;
+      }
+      case 'w': { // Control maximum width input value.
+        if (event.target.value > this.store.state.playerInfo.playerWidth) {
+          this.change.detectChanges(); event.target.value = this.store.state.playerInfo.playerWidth;
+          this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
+        // Update width value.
+        const w: number = videoWidth * event.target.value / this.store.state.playerInfo.playerWidth;
+        this.playerInfo.playerCrop.style.width =  w + 'px';
+        // Update X value if new width overflows the original.
+        const x = this.store.state.filterInfo.filterX + parseInt(event.target.value);
+        if (x > this.store.state.playerInfo.playerWidth) {
+          this.store.state.filterInfo.filterX = this.store.state.playerInfo.playerWidth - event.target.value;
+          this.videoSetCoordinates('x', { target: { value: this.store.state.filterInfo.filterX }});
+        } break;
+      }
+      case 'h': { // Control maximum height input value.
+        if (event.target.value > this.store.state.playerInfo.playerHeight) {
+          this.change.detectChanges(); event.target.value = this.store.state.playerInfo.playerHeight;
+          this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
+        // Update height value.
+        const h: number = videoHeight * event.target.value / this.store.state.playerInfo.playerHeight;
+        this.playerInfo.playerCrop.style.height =  h + 'px';
+        // Update Y value if new height overflows the original.
+        const y = this.store.state.filterInfo.filterY + parseInt(event.target.value);
+        if (y > this.store.state.playerInfo.playerHeight) {
+          this.store.state.filterInfo.filterY = this.store.state.playerInfo.playerHeight - event.target.value;
+          this.videoSetCoordinates('y', { target: { value: this.store.state.filterInfo.filterY }});
+        } break;
+      }
+    } // Update tooltip positioning.
+    if (this.playerInfo.playerCrop._tippy.popperInstance)  {
+      this.playerInfo.playerCrop._tippy.popperInstance.update();
+    }
+  }
 
   videoSetPosition(rotation: number): void {
     // Reset DOM elements styling.
@@ -211,5 +317,8 @@ export class VideoPlayerComponent {
     this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
     this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo.getBoundingClientRect().width + 'px';
     this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo.getBoundingClientRect().height + 'px';
+    // Update crop filter values.
+    this.filters.filterInit();
+    this.filters.filterCrop();
   }
 }

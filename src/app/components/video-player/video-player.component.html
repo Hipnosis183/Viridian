@@ -3,7 +3,35 @@
     <div id="$playerContainer" class="player-video flex">
       <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()" (timeupdate)="null"></video>
     </div>
-    <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" class="resizable"></div>
+    <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" [tooltip]="playerCrop" [tooltipKeep]="true"
+      tooltipPlace="bottom" tooltipTheme="lite" tooltipTrigger="mouseenter" class="resizable"></div>
+    <div #playerCrop class="player-crop">
+      <div>
+        <div>
+          <p>W:</p>
+          <input [(ngModel)]="store.state.filterInfo.filterWidth" (input)="videoSetCoordinates('w', $event)"
+            min="0" [max]="store.state.playerInfo.playerWidth" type="number">
+        </div>
+        <div>
+          <p>H:</p>
+          <input [(ngModel)]="store.state.filterInfo.filterHeight" (input)="videoSetCoordinates('h', $event)"
+            min="0" [max]="store.state.playerInfo.playerHeight" type="number">
+        </div>
+      </div>
+      <span></span>
+      <div>
+        <div>
+          <p>X:</p>
+          <input [(ngModel)]="store.state.filterInfo.filterX" type="number" (input)="videoSetCoordinates('x', $event)"
+            min="0" [max]="store.state.playerInfo.playerWidth - store.state.filterInfo.filterWidth">
+        </div>
+        <div>
+          <p>Y:</p>
+          <input [(ngModel)]="store.state.filterInfo.filterY" type="number" (input)="videoSetCoordinates('y', $event)"
+            min="0" [max]="store.state.playerInfo.playerHeight - store.state.filterInfo.filterHeight">
+        </div>
+      </div>
+    </div>
   </div>
   <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
     <div>

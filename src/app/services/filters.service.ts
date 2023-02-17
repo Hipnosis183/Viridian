@@ -52,11 +52,17 @@ export class FiltersService {
         $videoHeight = $videoWidth * aspectRatio;
         cropWidth = playerCrop.getBoundingClientRect().width;
         cropHeight = $videoHeight * playerCrop.getBoundingClientRect().height / playerVideo.getBoundingClientRect().height;
+        // Swap dimensions for the crop filter.
+        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo.videoHeight;
+        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo.videoWidth;
       } else {
         $videoHeight = playerVideo.getBoundingClientRect().height;
         $videoWidth = $videoHeight * aspectRatio;
         cropHeight = playerCrop.getBoundingClientRect().height;
         cropWidth = $videoWidth * playerCrop.getBoundingClientRect().width / playerVideo.getBoundingClientRect().width;
+        // Swap dimensions for the crop filter.
+        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo.videoWidth;
+        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo.videoHeight;
       }
       // Calculate real absolute size values to fit the original video dimensions.
       if (videoWidth > videoHeight) {
@@ -99,10 +105,10 @@ export class FiltersService {
     const r = this.$filterRotate();
     const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;
     const res: any = re.exec(playerCrop.style.transform);
-    const x = Math.round(res.groups.x * (r == 90 || r == 270 ? videoHeight : videoWidth) / playerVideo.getBoundingClientRect().width);
-    const y = Math.round(res.groups.y * (r == 90 || r == 270 ? videoWidth : videoHeight) / playerVideo.getBoundingClientRect().height);
+    this.store.state.filterInfo.filterX = Math.round(res.groups.x * (r == 90 || r == 270 ? videoHeight : videoWidth) / playerVideo.getBoundingClientRect().width);
+    this.store.state.filterInfo.filterY = Math.round(res.groups.y * (r == 90 || r == 270 ? videoWidth : videoHeight) / playerVideo.getBoundingClientRect().height);
     // Return built parameter.
-    return `crop=${this.store.state.filterInfo.filterWidth}:${this.store.state.filterInfo.filterHeight}:${x}:${y}`;
+    return `crop=${this.store.state.filterInfo.filterWidth}:${this.store.state.filterInfo.filterHeight}:${this.store.state.filterInfo.filterX}:${this.store.state.filterInfo.filterY}`;
   }
 
   filterFlip(): string {
