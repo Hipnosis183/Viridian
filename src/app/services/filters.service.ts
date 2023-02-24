@@ -41,9 +41,9 @@ export class FiltersService {
     if (this.filterInfo.filterCrop) {
       // Get necessary values from store.
       const playerCrop = this.store.state.playerInfo.playerCrop;
-      const playerVideo = this.store.state.playerInfo.playerVideo;
-      const videoHeight = this.store.state.videoInfo.videoHeight;
-      const videoWidth = this.store.state.videoInfo.videoWidth;
+      const playerVideo = this.store.state.playerInfo.playerVideo[this.store.i];
+      const videoHeight = this.store.state.videoInfo[0].videoHeight;
+      const videoWidth = this.store.state.videoInfo[0].videoWidth;
       // Calculate coordinates to fix aspect ratio using original video dimensions.
       let aspectRatio = videoWidth / videoHeight;
       let $videoHeight, $videoWidth, cropHeight, cropWidth;
@@ -53,16 +53,16 @@ export class FiltersService {
         cropWidth = playerCrop.getBoundingClientRect().width;
         cropHeight = $videoHeight * playerCrop.getBoundingClientRect().height / playerVideo.getBoundingClientRect().height;
         // Swap dimensions for the crop filter.
-        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo.videoHeight;
-        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo.videoWidth;
+        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo[0].videoHeight;
+        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo[0].videoWidth;
       } else {
         $videoHeight = playerVideo.getBoundingClientRect().height;
         $videoWidth = $videoHeight * aspectRatio;
         cropHeight = playerCrop.getBoundingClientRect().height;
         cropWidth = $videoWidth * playerCrop.getBoundingClientRect().width / playerVideo.getBoundingClientRect().width;
         // Swap dimensions for the crop filter.
-        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo.videoWidth;
-        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo.videoHeight;
+        this.store.state.playerInfo.playerWidth = this.store.state.videoInfo[0].videoWidth;
+        this.store.state.playerInfo.playerHeight = this.store.state.videoInfo[0].videoHeight;
       }
       // Calculate real absolute size values to fit the original video dimensions.
       if (videoWidth > videoHeight) {
@@ -83,11 +83,11 @@ export class FiltersService {
     } else {
       // Swap dimensions for the scaler filter.
       if (r == 90 || r == 270) {
-        this.store.state.filterInfo.filterWidth = this.store.state.videoInfo.videoHeight;
-        this.store.state.filterInfo.filterHeight = this.store.state.videoInfo.videoWidth;
+        this.store.state.filterInfo.filterWidth = this.store.state.videoInfo[0].videoHeight;
+        this.store.state.filterInfo.filterHeight = this.store.state.videoInfo[0].videoWidth;
       } else {
-        this.store.state.filterInfo.filterWidth = this.store.state.videoInfo.videoWidth;
-        this.store.state.filterInfo.filterHeight = this.store.state.videoInfo.videoHeight;
+        this.store.state.filterInfo.filterWidth = this.store.state.videoInfo[0].videoWidth;
+        this.store.state.filterInfo.filterHeight = this.store.state.videoInfo[0].videoHeight;
       }
     }
     // Get dimension values from the store.
@@ -98,9 +98,9 @@ export class FiltersService {
   filterCrop(): string {
     // Get necessary values from store.
     const playerCrop = this.store.state.playerInfo.playerCrop;
-    const playerVideo = this.store.state.playerInfo.playerVideo;
-    const videoHeight = this.store.state.videoInfo.videoHeight;
-    const videoWidth = this.store.state.videoInfo.videoWidth;
+    const playerVideo = this.store.state.playerInfo.playerVideo[this.store.i];
+    const videoHeight = this.store.state.videoInfo[0].videoHeight;
+    const videoWidth = this.store.state.videoInfo[0].videoWidth;
     // Calculate real absolute position values to fit the original video dimensions.
     const r = this.$filterRotate();
     const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;

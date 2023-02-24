@@ -16,34 +16,40 @@ export class VideoInfoComponent {
     private zone: NgZone
   ) { }
 
+  @Output() inited = new EventEmitter;
   @Output() loaded = new EventEmitter;
 
+  ngOnInit(): void { this.inited.emit(); }
+
   videoInfo: boolean = false;
-  $videoInfo(): void {
-    this.videoInfo = !this.videoInfo;
+  $videoInfo(v?: boolean): void {
+    this.videoInfo = v ?? !this.videoInfo;
   }
 
-  videoStreamFormat(stream: any): string {
+  videoStreamFormat(s: any): string {
+    // Parse and format/beautify stream information.
     let text: string = '';
-    for (let v in stream) {
-      if (typeof stream[v] == 'object') {
+    for (let v in s) {
+      if (typeof s[v] == 'object') {
         text += `<span><span class="text-green-500 mr-2">${v}:</span><span class="text-blue-500">{</span></span>`;
-        text += `<span class="flex flex-col ml-4 space-y-1">${this.videoStreamFormat(stream[v])}</span>`
+        text += `<span class="flex flex-col ml-4 space-y-1">${this.videoStreamFormat(s[v])}</span>`
         text += `<span><span class="text-blue-500">}</span></span>`;
-      } else { text += `<span><span class="text-green-500 mr-2">${v}:</span><span class="text-blue-500">${stream[v]}</span></span>`; }
+      } else { text += `<span><span class="text-green-500 mr-2">${v}:</span><span class="text-blue-500">${s[v]}</span></span>`; }
     } return text;
   }
 
   videoStreamOpen(i: number): void {
-    for (let k = 0; k < this.store.state.videoInfo.videoStreams.length; k++) {
-      if (k != i) { this.store.state.videoInfo.videoStreams[k].view = null; }
-    } this.store.state.videoInfo.videoStreams[i].view = this.store.state.videoInfo.videoStreams[i].view ? false : true;
+    // Expand selected stream information panel.
+    for (let k = 0; k < this.store.state.videoInfo[this.store.i].videoStreams.length; k++) {
+      if (k != i) { this.store.state.videoInfo[this.store.i].videoStreams[k].view = null; }
+    } this.store.state.videoInfo[this.store.i].videoStreams[i].view = this.store.state.videoInfo[this.store.i].videoStreams[i].view ? false : true;
   }
 
   $videoStreamResize: any = [];
   videoStreamResize(e: any, i: number): void {
     this.$videoStreamResize.push(e);
-    if (i == this.store.state.videoInfo.videoStreams.length - 1) {
+    if (i == this.store.state.videoInfo[this.store.i].videoStreams.length - 1) {
+      // Adjust table's width value to fit the information.
       let t: any = document.getElementsByTagName('table')[0];
       for (let k = 0; k < this.$videoStreamResize.length; k++) {
         this.$videoStreamResize[k].style.width = t.offsetWidth + 'px';
@@ -51,21 +57,20 @@ export class VideoInfoComponent {
     }
   }
 
-  ngOnInit(): void {
+  videoStreamLoad(): void {
     // Get video file metadata.
-    const input: string = this.store.state.fileInfo.filePath;
+    const input: string = this.store.state.fileInfo[this.store.i].filePath;
     const command: string = `ffprobe -v error -of json -show_format -show_entries streams -i "${input}"`;
-    // Execute command and listen for a response.
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-    this.ipc.once('exec', (e: any, r: string) => {
+    this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
-        // Get format (general) and streams (tracks) data.
+        // Get general format and streams/tracks information.
         let streams = [JSON.parse(r).format];
         streams = streams.concat(JSON.parse(r).streams);
         for (let i = 0; i < streams.length; i++) {
-          this.store.state.videoInfo.videoStreamsText.push(this.videoStreamFormat(streams[i]));
+          this.store.state.videoInfo[this.store.i].videoStreamsText.push(this.videoStreamFormat(streams[i]));
           streams[i].view = null;
-        } this.store.state.videoInfo.videoStreams = streams;
+        } this.store.state.videoInfo[this.store.i].videoStreams = streams;
         this.loaded.emit();
       });
     });

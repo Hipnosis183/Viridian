@@ -1,55 +1,61 @@
-<div id="playerEdit" class="player-edit">
-  <div id="playerContainer" class="player-video" [class]="store.state.fileInfo.filePath ? 'flex' : 'hidden'">
-    <div id="$playerContainer" class="player-video flex">
-      <video id="playerVideo" [muted]="true" [src]="store.state.fileInfo.filePath" (loadedmetadata)="$videoFileLoaded()" (timeupdate)="null"></video>
-    </div>
-    <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" [tooltip]="playerCrop" [tooltipKeep]="true"
-      tooltipPlace="bottom" tooltipTheme="lite" tooltipTrigger="mouseenter" class="resizable"></div>
-    <div #playerCrop class="player-crop">
-      <div>
-        <div>
-          <p>W:</p>
-          <input [(ngModel)]="store.state.filterInfo.filterWidth" (input)="videoSetCoordinates('w', $event)"
-            min="0" [max]="store.state.playerInfo.playerWidth" type="number">
-        </div>
-        <div>
-          <p>H:</p>
-          <input [(ngModel)]="store.state.filterInfo.filterHeight" (input)="videoSetCoordinates('h', $event)"
-            min="0" [max]="store.state.playerInfo.playerHeight" type="number">
+<div class="flex">
+  <div id="playerEdit" class="player-edit">
+    <div id="playerContainer" class="player-video" [class]="store.state.fileInfo[0] ? 'flex' : 'hidden'">
+      <div id="$playerContainer" class="player-video flex">
+        <div *ngFor="let file of store.state.fileInfo; index as i" class="contents">
+          <video [hidden]="i != store.i" [muted]="true" [src]="file.filePath" (loadedmetadata)="$videoFileLoaded($event)" (timeupdate)="null"></video>
         </div>
       </div>
-      <span></span>
-      <div>
+      <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" [tooltip]="playerCrop" [tooltipKeep]="true"
+        tooltipPlace="bottom" tooltipTheme="lite" tooltipTrigger="mouseenter" class="resizable"></div>
+      <div #playerCrop class="player-crop">
         <div>
-          <p>X:</p>
-          <input [(ngModel)]="store.state.filterInfo.filterX" type="number" (input)="videoSetCoordinates('x', $event)"
-            min="0" [max]="store.state.playerInfo.playerWidth - store.state.filterInfo.filterWidth">
+          <div>
+            <p>W:</p>
+            <input [(ngModel)]="store.state.filterInfo.filterWidth" (input)="videoSetCoordinates('w', $event)"
+              min="0" [max]="store.state.playerInfo.playerWidth" type="number">
+          </div>
+          <div>
+            <p>H:</p>
+            <input [(ngModel)]="store.state.filterInfo.filterHeight" (input)="videoSetCoordinates('h', $event)"
+              min="0" [max]="store.state.playerInfo.playerHeight" type="number">
+          </div>
         </div>
+        <span></span>
         <div>
-          <p>Y:</p>
-          <input [(ngModel)]="store.state.filterInfo.filterY" type="number" (input)="videoSetCoordinates('y', $event)"
-            min="0" [max]="store.state.playerInfo.playerHeight - store.state.filterInfo.filterHeight">
+          <div>
+            <p>X:</p>
+            <input [(ngModel)]="store.state.filterInfo.filterX" type="number" (input)="videoSetCoordinates('x', $event)"
+              min="0" [max]="store.state.playerInfo.playerWidth - store.state.filterInfo.filterWidth">
+          </div>
+          <div>
+            <p>Y:</p>
+            <input [(ngModel)]="store.state.filterInfo.filterY" type="number" (input)="videoSetCoordinates('y', $event)"
+              min="0" [max]="store.state.playerInfo.playerHeight - store.state.filterInfo.filterHeight">
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="!store.state.fileInfo.filePath" class="player-file">
-    <div>
-      <img [src]="'/assets/images/open.svg'">
-      <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
-      <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
-      <span></span>
+    <div *ngIf="!store.state.fileInfo[0]" class="player-open">
+      <div>
+        <img [src]="'/assets/images/open.svg'">
+        <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
+        <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
+        <span></span>
+      </div>
+      <input title="" type="file" (change)="videoFileOpen($event)" />
     </div>
-    <input type="file" title="" (change)="videoFileOpen($event)" />
   </div>
 </div>
-<div class="player-controls" [class]="!store.state.fileInfo.filePath ? 'pointer-events-none' : ''">
+<div class="player-controls" [class]="!store.state.fileInfo[0] ? 'pointer-events-none' : ''">
   <div class="player-buttons">
     <div class="flex">
-      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.paused || playerInfo.playerVideo.ended ? 'play' : 'pause'" [buttonToggle]="!playerInfo.playerVideo.paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
+      <ui-button buttonColor="dark" [buttonIcon]="(!playerInfo.playerVideo[store.i] || playerInfo.playerVideo[store.i].paused) || playerInfo.playerVideo[store.i]?.ended ? 'play' : 'pause'"
+        [buttonToggle]="playerInfo.playerVideo[store.i] && !playerInfo.playerVideo[store.i].paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="stop" [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate" (click)="videoPlayerStop()"></ui-button>
-      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo.muted || playerInfo.playerVideo.volume == 0 ? 'mute' : 'volume'" [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate" (click)="videoPlayerMute()"></ui-button>
-      <p>{{ (playerInfo.playerVideo.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo.duration || 0) | duration: true }}</p>
+      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo[store.i]?.muted || playerInfo.playerVideo[store.i]?.volume == 0 ? 'mute' : 'volume'"
+        [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate" (click)="videoPlayerMute()"></ui-button>
+      <p>{{ (playerInfo.playerVideo[store.i]?.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo[store.i]?.duration || 0) | duration: true }}</p>
     </div>
     <div>
       <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
@@ -68,8 +74,9 @@
       <ui-button buttonColor="dark" buttonIcon="close" [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate" (click)="videoFileClose()"></ui-button>
     </div>
   </div>
-  <ui-progress [(progressTime)]="playerInfo.playerVideo.currentTime" [progressDuration]="playerInfo.playerVideo.duration"></ui-progress>
+  <ui-progress [progressTime]="playerInfo.playerVideo[store.i]?.currentTime" [progressDuration]="playerInfo.playerVideo[store.i]?.duration"
+    (progressTimeChange)="playerInfo.playerVideo[store.i].currentTime = $event"></ui-progress>
 </div>
-<video-capture #videoCapture [currentTime]="playerInfo.playerVideo.currentTime"></video-capture>
-<video-info #videoInfo *ngIf="store.state.fileInfo.fileLoaded" (loaded)="videoFileLoaded(videoInfo)"></video-info>
-<video-save #videoSave *ngIf="store.state.fileInfo.fileLoaded && $videoInfo" (loaded)="$videoSave = videoSave"></video-save>
+<video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime"></video-capture>
+<video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
+<video-save #videoSave *ngIf="store.state.videoInfo[0]?.videoStreams" (loaded)="$videoSave = videoSave"></video-save>

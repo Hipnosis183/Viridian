@@ -34,6 +34,7 @@ export class VideoPlayerComponent {
       $playerContainer: null,
       playerEdit: null,
       playerResizable: null,
+      // Original values on store to be shareable with services.
       get playerCrop() { return $this.store.state.playerInfo.playerCrop },
       set playerCrop(v) { $this.store.state.playerInfo.playerCrop = v },
       get playerVideo() { return $this.store.state.playerInfo.playerVideo },
@@ -46,7 +47,6 @@ export class VideoPlayerComponent {
     this.playerInfo.playerContainer = document.getElementById('playerContainer');
     this.playerInfo.$playerContainer = document.getElementById('$playerContainer');
     this.playerInfo.playerEdit = document.getElementById('playerEdit');
-    this.playerInfo.playerVideo = document.getElementById('playerVideo');
     // Get crop element and set default position values.
     this.playerInfo.playerCrop = document.querySelector('#playerCrop');
     this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
@@ -99,32 +99,45 @@ export class VideoPlayerComponent {
     }
   }
 
-  videoFileClose(): void {
-    this.store.resetAll();
-    this.filters.filterReset();
-    this.$videoInfo = null;
-    this.$videoSave = null;
-  }
-
-  videoFileOpen(e: any): void {
+  async videoFileOpen(e: any): Promise<void> {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
-      this.store.state.fileInfo.fileExtension = e.target.files[0].path.split('.').pop();
-      this.store.state.fileInfo.filePath = 'file://' + e.target.files[0].path;
-      this.store.state.fileInfo.fileName = e.target.files[0].name;
-      this.store.state.fileInfo.fileType = e.target.files[0].type;
+      // Load video file information into store.
+      const fileInfo: any = {
+        fileExtension: e.target.files[0].path.split('.').pop(),
+        fileName: e.target.files[0].name,
+        filePath: 'file://' + e.target.files[0].path,
+        fileType: e.target.files[0].type
+      }; this.store.state.fileInfo.push(fileInfo);
+      const videoInfo: any = {
+        videoHeight: null,
+        videoStreams: null,
+        videoStreamsText: [],
+        videoWidth: null
+      }; this.store.state.videoInfo.push(videoInfo);
     }
   }
 
-  $videoFileLoaded(): void {
-    this.store.state.fileInfo.fileLoaded = true;
+  videoFileClose(): void {
+    this.store.resetAll();
+    this.filters.filterReset();
+    this.$videoSave = null;
   }
 
-  videoFileLoaded(v: any): void {
-    const stream = this.store.state.videoInfo.videoStreams[1];
+  $videoFileLoaded(e: any): void {
+    // Add video file to list.
+    this.playerInfo.playerVideo.push(e.target);
+    // Update video index with newly opened file.
+    this.store.i = this.playerInfo.playerVideo.length - 1;
+    // Load video information.
+    this.$videoInfo.videoStreamLoad();
+  }
+
+  videoFileLoaded(): void {
+    const stream = this.store.state.videoInfo[this.store.i].videoStreams[1];
     // Store dimensions from the original video.
-    this.store.state.videoInfo.videoWidth = stream.width;
-    this.store.state.videoInfo.videoHeight = stream.height;
+    this.store.state.videoInfo[this.store.i].videoWidth = stream.width;
+    this.store.state.videoInfo[this.store.i].videoHeight = stream.height;
     this.store.state.filterInfo.filterWidth = stream.width;
     this.store.state.filterInfo.filterHeight = stream.height;
     this.store.state.playerInfo.playerWidth = stream.width;
@@ -140,22 +153,21 @@ export class VideoPlayerComponent {
     } this.filters.filterInfo.filterRotation = rotation;
     // Reset and setup positioning of the video container.
     this.videoSetPosition(rotation);
-    this.$videoInfo = v;
   }
 
   videoPlayerMute(): void {
-    this.playerInfo.playerVideo.muted = !this.playerInfo.playerVideo.muted;
+    this.playerInfo.playerVideo[this.store.i].muted = !this.playerInfo.playerVideo[this.store.i].muted;
   }
 
   videoPlayerPlay(): void {
-    if (this.playerInfo.playerVideo.paused || this.playerInfo.playerVideo.ended) {
-      this.playerInfo.playerVideo.play();
-    } else { this.playerInfo.playerVideo.pause(); }
+    if (this.playerInfo.playerVideo[this.store.i].paused || this.playerInfo.playerVideo[this.store.i].ended) {
+      this.playerInfo.playerVideo[this.store.i].play();
+    } else { this.playerInfo.playerVideo[this.store.i].pause(); }
   }
 
   videoPlayerStop(): void {
-    this.playerInfo.playerVideo.pause();
-    this.playerInfo.playerVideo.currentTime = 0;
+    this.playerInfo.playerVideo[this.store.i].pause();
+    this.playerInfo.playerVideo[this.store.i].currentTime = 0;
   }
 
   videoFilterClear(): void {
@@ -185,57 +197,57 @@ export class VideoPlayerComponent {
   }
 
   @HostListener('window:resize')
-  onResize() { this.videoSetPosition(this.filters.filterInfo.filterRotate); }
+  onResize() { if (this.store.state.fileInfo[0]) { this.videoSetPosition(this.filters.filterInfo.filterRotate); } }
 
-  videoSetCoordinates(value: string, event: any): void {
+  videoSetCoordinates(v: string, e: any): void {
     // Get dimension values of video player.
-    const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
-    const videoHeight = this.playerInfo.playerVideo.getBoundingClientRect().height;
+    const videoWidth = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width;
+    const videoHeight = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().height;
     // Update selected coordinate.
-    switch (value) {
+    switch (v) {
       case 'x': { // Control maximum X position input value.
         const w = this.store.state.playerInfo.playerWidth - this.store.state.filterInfo.filterWidth;
-        if (parseInt(event.target.value) > w) { this.change.detectChanges();
-          event.target.value = w; this.store.state.filterInfo.filterX = w; }
+        if (parseInt(e.target.value) > w) { this.change.detectChanges();
+          e.target.value = w; this.store.state.filterInfo.filterX = w; }
         // Update X position value.
-        const x: number = videoWidth * event.target.value / this.store.state.playerInfo.playerWidth;
+        const x: number = videoWidth * e.target.value / this.store.state.playerInfo.playerWidth;
         const y: any = /translate3d\((?<x>.*?)px, (?<y>.*?)px/.exec(this.playerInfo.playerCrop.style.transform);
         this.playerInfo.playerCrop.style.transform = `translate3d(${x}px, ${y.groups.y}px, 0px)`; break;
       }
       case 'y': { // Control maximum Y position input value.
         const h = this.store.state.playerInfo.playerHeight - this.store.state.filterInfo.filterHeight;
-        if (parseInt(event.target.value) > h) { this.change.detectChanges();
-          event.target.value = h; this.store.state.filterInfo.filterY = h; }
+        if (parseInt(e.target.value) > h) { this.change.detectChanges();
+          e.target.value = h; this.store.state.filterInfo.filterY = h; }
         // Update Y position value.
-        const y: number = videoHeight * event.target.value / this.store.state.playerInfo.playerHeight;
+        const y: number = videoHeight * e.target.value / this.store.state.playerInfo.playerHeight;
         const x: any = /translate3d\((?<x>.*?)px, (?<y>.*?)px/.exec(this.playerInfo.playerCrop.style.transform);
         this.playerInfo.playerCrop.style.transform = `translate3d(${x.groups.x}px, ${y}px, 0px)`; break;
       }
       case 'w': { // Control maximum width input value.
-        if (event.target.value > this.store.state.playerInfo.playerWidth) {
-          this.change.detectChanges(); event.target.value = this.store.state.playerInfo.playerWidth;
+        if (e.target.value > this.store.state.playerInfo.playerWidth) {
+          this.change.detectChanges(); e.target.value = this.store.state.playerInfo.playerWidth;
           this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
         // Update width value.
-        const w: number = videoWidth * event.target.value / this.store.state.playerInfo.playerWidth;
+        const w: number = videoWidth * e.target.value / this.store.state.playerInfo.playerWidth;
         this.playerInfo.playerCrop.style.width =  w + 'px';
         // Update X value if new width overflows the original.
-        const x = this.store.state.filterInfo.filterX + parseInt(event.target.value);
+        const x = this.store.state.filterInfo.filterX + parseInt(e.target.value);
         if (x > this.store.state.playerInfo.playerWidth) {
-          this.store.state.filterInfo.filterX = this.store.state.playerInfo.playerWidth - event.target.value;
+          this.store.state.filterInfo.filterX = this.store.state.playerInfo.playerWidth - e.target.value;
           this.videoSetCoordinates('x', { target: { value: this.store.state.filterInfo.filterX }});
         } break;
       }
       case 'h': { // Control maximum height input value.
-        if (event.target.value > this.store.state.playerInfo.playerHeight) {
-          this.change.detectChanges(); event.target.value = this.store.state.playerInfo.playerHeight;
+        if (e.target.value > this.store.state.playerInfo.playerHeight) {
+          this.change.detectChanges(); e.target.value = this.store.state.playerInfo.playerHeight;
           this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
         // Update height value.
-        const h: number = videoHeight * event.target.value / this.store.state.playerInfo.playerHeight;
+        const h: number = videoHeight * e.target.value / this.store.state.playerInfo.playerHeight;
         this.playerInfo.playerCrop.style.height =  h + 'px';
         // Update Y value if new height overflows the original.
-        const y = this.store.state.filterInfo.filterY + parseInt(event.target.value);
+        const y = this.store.state.filterInfo.filterY + parseInt(e.target.value);
         if (y > this.store.state.playerInfo.playerHeight) {
-          this.store.state.filterInfo.filterY = this.store.state.playerInfo.playerHeight - event.target.value;
+          this.store.state.filterInfo.filterY = this.store.state.playerInfo.playerHeight - e.target.value;
           this.videoSetCoordinates('y', { target: { value: this.store.state.filterInfo.filterY }});
         } break;
       }
@@ -245,24 +257,26 @@ export class VideoPlayerComponent {
     }
   }
 
-  videoSetPosition(rotation: number): void {
+  videoSetPosition(r: number): void {
+    // Set number of videos opened for style updates.
+    const k = this.playerInfo.playerVideo.length;
     // Reset DOM elements styling.
     this.playerInfo.playerContainer.removeAttribute('style');
     this.playerInfo.$playerContainer.removeAttribute('style');
     this.playerInfo.playerEdit.removeAttribute('style');
-    this.playerInfo.playerVideo.removeAttribute('style');
-    switch (rotation) {
+    for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].removeAttribute('style'); }
+    switch (r) {
       case 0: case 180: {
         // Define and set rotation attributes.
-        const rotate = rotation == 0 ? null : 'rotate(180deg)';
-        this.playerInfo.playerVideo.style.transform = rotate;
+        const rotate = r == 0 ? null : 'rotate(180deg)';
+        for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].style.transform = rotate; }
         // Check if the video element clips horizontally with the parent container.
-        const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
+        const videoWidth = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width;
         if (videoWidth > this.playerInfo.playerEdit.offsetWidth) {
           this.playerInfo.playerContainer.style.width = '100%';
           this.playerInfo.$playerContainer.style.width = '100%';
           this.playerInfo.playerEdit.style.alignItems = 'center';
-          this.playerInfo.playerVideo.style.width = '100%';
+          for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].style.width = '100%'; }
         } else {
           this.playerInfo.playerContainer.style.height = '100%';
           this.playerInfo.$playerContainer.style.height = '100%';
@@ -276,32 +290,32 @@ export class VideoPlayerComponent {
       }
       case 90: case 270: {
         // Define and set rotation attributes.
-        const rotate = rotation == 90 ? 'rotate(90deg) translateY(-100%)' : 'rotate(270deg) translateX(-100%)';
-        this.playerInfo.playerVideo.style.transform = rotate;
-        this.playerInfo.playerVideo.style.transformOrigin = 'top left';
+        const rotate = r == 90 ? 'rotate(90deg) translateY(-100%)' : 'rotate(270deg) translateX(-100%)';
+        for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].style.transform = rotate;
+          this.playerInfo.playerVideo[i].style.transformOrigin = 'top left'; }
         // Setup styling for clipping calculation.
         this.playerInfo.playerContainer.style.width = '100%';
         this.playerInfo.playerContainer.style.height = '100%';
         this.playerInfo.$playerContainer.style.width = '100%';
         this.playerInfo.$playerContainer.style.height = '100%';
-        this.playerInfo.playerVideo.style.width = (this.playerInfo.playerEdit.offsetHeight - 2) + 'px';
-        this.playerInfo.playerVideo.style.height = 'fit-content';
+        for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].style.height = 'fit-content';
+          this.playerInfo.playerVideo[i].style.width = (this.playerInfo.playerEdit.offsetHeight - 2) + 'px'; }
         // Check if the video element clips horizontally with the parent container.
-        const videoWidth = this.playerInfo.playerVideo.getBoundingClientRect().width;
+        const videoWidth = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width;
         if (videoWidth > this.playerInfo.playerEdit.offsetWidth) {
           // Fit the video element horizontally on the parent.
           this.playerInfo.playerEdit.style.alignItems = 'center';
-          this.playerInfo.playerVideo.style.width = null;
-          this.playerInfo.playerVideo.style.height = this.playerInfo.playerContainer.offsetWidth + 'px';
-          this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
-          this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
+          for (let i = 0; i < k; i++) { this.playerInfo.playerVideo[i].style.width = null;
+            this.playerInfo.playerVideo[i].style.height = this.playerInfo.playerContainer.offsetWidth + 'px'; }
+          this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo[this.store.i].offsetWidth + 'px';
+          this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo[this.store.i].offsetWidth + 'px';
         } else {
           // Fit the video element vertically on the parent.
-          this.playerInfo.playerContainer.style.width = this.playerInfo.playerVideo.offsetHeight + 'px';
-          this.playerInfo.$playerContainer.style.width = this.playerInfo.playerVideo.offsetHeight + 'px';
-          if (this.playerInfo.playerVideo.offsetHeight == this.playerInfo.playerVideo.offsetWidth) {
-            this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
-            this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo.offsetWidth + 'px';
+          this.playerInfo.playerContainer.style.width = this.playerInfo.playerVideo[this.store.i].offsetHeight + 'px';
+          this.playerInfo.$playerContainer.style.width = this.playerInfo.playerVideo[this.store.i].offsetHeight + 'px';
+          if (this.playerInfo.playerVideo[this.store.i].offsetHeight == this.playerInfo.playerVideo[this.store.i].offsetWidth) {
+            this.playerInfo.playerContainer.style.height = this.playerInfo.playerVideo[this.store.i].offsetWidth + 'px';
+            this.playerInfo.$playerContainer.style.height = this.playerInfo.playerVideo[this.store.i].offsetWidth + 'px';
             this.playerInfo.playerEdit.style.alignItems = 'center';
           }
         }
@@ -312,11 +326,11 @@ export class VideoPlayerComponent {
           this.playerInfo.$playerContainer.style.transform += 'scaleX(-1)';
         } break;
       }
-    } this.filters.filterInfo.filterRotate = rotation;
+    } this.filters.filterInfo.filterRotate = r;
     // Update crop tool dimensions on rotate and window resize.
     this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
-    this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo.getBoundingClientRect().width + 'px';
-    this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo.getBoundingClientRect().height + 'px';
+    this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width + 'px';
+    this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().height + 'px';
     // Update crop filter values.
     this.filters.filterInit();
     this.filters.filterCrop();

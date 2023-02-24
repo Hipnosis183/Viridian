@@ -1,5 +1,5 @@
 <ui-modal [modalHidden]="!videoSave.videoSave">
-  <div *ngIf="store.state.fileInfo.fileLoaded" class="save-container">
+  <div *ngIf="store.state.playerInfo.playerVideo[0]" class="save-container">
     <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.FORMAT.FORMATCODEC' | translate">
       <div class="save-section">
         <ui-select [selectLabel]="'VIDEO_SAVE.FORMAT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat"
@@ -156,7 +156,7 @@
       <div class="save-buttons">
         <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">{{ 'VIDEO_SAVE.ERROR_LOG' | translate }}</ui-button>
         <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
-          (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'VIDEO_SAVE.CLOSE' : 'VIDEO_SAVE.OK') | translate }}</ui-button>
+          (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'VIDEO_SAVE.CLOSE' : 'GENERAL.OK') | translate }}</ui-button>
       </div>
       <div *ngIf="videoSave.videoErrorView" class="save-error">
         <span [innerText]="videoSave.videoErrorText"></span>

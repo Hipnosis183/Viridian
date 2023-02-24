@@ -1,4 +1,4 @@
-<ui-modal *ngIf="store.state.videoInfo.videoStreams && videoInfo">
+<ui-modal *ngIf="store.state.videoInfo[store.i]?.videoStreams && videoInfo">
   <table>
     <thead>
       <tr>
@@ -11,12 +11,12 @@
       <tr class="h-4"></tr>
     </thead>
     <tbody>
-      <div *ngFor="let stream of store.state.videoInfo.videoStreams; let i = index" class="contents">
+      <div *ngFor="let stream of store.state.videoInfo[store.i].videoStreams; let i = index" class="contents">
         <div class="contents info-tracks" [class]="stream.view ? 'selected' : ''">
           <tr *ngIf="i == 0" (click)="videoStreamOpen(i)">
             <td></td>
             <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
-            <td>{{ store.state.fileInfo.fileType }}</td>
+            <td>{{ store.state.fileInfo[store.i].fileType }}</td>
             <td>{{ stream.bit_rate / 1000 }} kb/s</td>
             <td>{{ stream.duration | duration }} - {{ stream.size | filesize }}</td>
           </tr>
@@ -31,8 +31,8 @@
         </div>
         <tr>
           <td colspan="100%">
-            <div [hidden]="!stream.view" class="info-details" rendered (rendered)="videoStreamResize($event, i)">
-              <span [innerHtml]="store.state.videoInfo.videoStreamsText[i]" class="space-y-1"></span>
+            <div [hidden]="!stream.view" rendered (rendered)="videoStreamResize($event, i)" class="info-details">
+              <span [innerHtml]="store.state.videoInfo[store.i].videoStreamsText[i]" class="space-y-1"></span>
             </div>
           </td>
         </tr>

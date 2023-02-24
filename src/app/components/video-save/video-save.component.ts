@@ -52,14 +52,14 @@ export class VideoSaveComponent {
 
   ngOnInit(): void {
     // Update default format and all formats list based on file extension.
-    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo.fileExtension))[0];
-    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo.fileExtension));
+    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo[0].fileExtension))[0];
+    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo[0].fileExtension));
     this.loaded.emit();
   }
 
   videoOutputFormat($f: any): void {
     const f: any = Formats.find((f: any) => f.extensions[0] == $f.extensions[0]);
-    const s: any = this.store.state.videoInfo.videoStreams[1];
+    const s: any = this.store.state.videoInfo[0].videoStreams[1];
     // Update default codec and all codecs list based on format.
     let videoCodec = Codecs.filter((v: any) => f.codecs.includes(v.code) && v.code == s.codec_name)[0];
     let videoCodecs = Codecs.filter((v: any) => f.codecs.includes(v.code) && v.code != s.codec_name);
@@ -195,7 +195,7 @@ export class VideoSaveComponent {
 
   videoSaveEncoding(): void {
     // Define encoding options for the selected codec.
-    const stream = this.store.state.videoInfo.videoStreams;
+    const stream = this.store.state.videoInfo[0].videoStreams;
     if ((this.videoSave.$videoFilters.length > 0) || this.videoReencode) {
       if (!this.videoEncoder) { this.videoSave.videoEncoding = ''; return; }
       // Get encoding speed and compression ratio preset.
@@ -230,7 +230,7 @@ export class VideoSaveComponent {
     if (!this.filters.filterInfo.filterClear) { this.videoSave.videoMetadata = ''; return; }
     // Remove general metadata, rotation and encoder tags.
     let metadata = '-map_metadata -1 -metadata:s:v rotate="" -fflags +bitexact';
-    const stream = this.store.state.videoInfo.videoStreams[1];
+    const stream = this.store.state.videoInfo[0].videoStreams[1];
     // Correct aspect ratio if metadata exists, since it can't be removed.
     if (this.utils.findValueInKey(stream, 'aspect_ratio').length > 0) {
       const rotation = this.filters.filterInfo.filterRotate;
@@ -242,12 +242,13 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${this.store.state.fileInfo[0].filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
   }
 
   videoSaveDirectory(): void {
+    // Select output path for processed video file.
     this.ipc.send('dialog-save', { defaultPath: this.videoSave.videoOutput });
-    this.ipc.once('dialog-save', (e: any, r: string) => {
+    this.ipc.once('dialog-save', (err: any, r: string) => {
       this.zone.run(() => { if (r) { this.videoSave.videoOutput = r; } });
     });
   }
@@ -264,10 +265,10 @@ export class VideoSaveComponent {
     this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
     this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
     // Define output path.
-    this.videoSave.videoOutput = (this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0])).slice(7);
+    this.videoSave.videoOutput = (this.store.state.fileInfo[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0])).slice(7);
     // Reset format and encoding values.
-    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo.fileExtension))[0];
-    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo.fileExtension));
+    this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo[0].fileExtension))[0];
+    this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo[0].fileExtension));
     this.videoOutput.videoFormat = this.videoFormat;
     this.videoOutputFormat(this.videoFormat);
     this.videoOutput.videoCodec = this.videoCodec;
@@ -297,19 +298,18 @@ export class VideoSaveComponent {
     this.videoSaveOutput();
     // Detect and adapt command for 2-pass encoding.
     if (this.videoSave.videoEncoding.includes('$pass')) {
-      const pass1 = `ffmpeg -v error -y -noautorotate -i "${this.store.state.fileInfo.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
+      const pass1 = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${this.store.state.fileInfo[0].filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
       const pass2 = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
       this.videoSave.videoCommand = `${pass1} && ${pass2}`;
-    }
-    // Remove extra whitespace.
+    } // Remove extra whitespace.
     this.videoSave.videoCommand = this.videoSave.videoCommand.replace(/\s\s+/g, ' ');
   }
 
   videoSaveRun(): void {
-    // Execute command and listen for a response.
+    // Execute final export command.
     this.videoSave.videoSaving = true;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand, null);
-    this.ipc.once('exec', (e: any, r: string) => {
+    this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
         this.videoSave.videoSaved = true;
         this.videoSave.videoSaving = false;

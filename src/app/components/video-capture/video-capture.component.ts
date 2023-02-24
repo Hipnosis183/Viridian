@@ -29,28 +29,29 @@ export class VideoCaptureComponent {
 
   $videoCapture(): void {
     if (!this.videoCapture.videoCapture) {
-      this.videoCapture.videoOutput = (this.store.state.fileInfo.filePath.replace(/(\.[\w\d_-]+)$/i, '_out.png')).slice(7);
+      this.videoCapture.videoOutput = (this.store.state.fileInfo[this.store.i].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.png')).slice(7);
     } this.videoCapture.videoCapture = !this.videoCapture.videoCapture;
   }
 
   videoCaptureDirectory(): void {
+    // Select output path for frame capture image file.
     this.ipc.send('dialog-save', { defaultPath: this.videoCapture.videoOutput });
-    this.ipc.once('dialog-save', (e: any, r: string) => {
+    this.ipc.once('dialog-save', (err: any, r: string) => {
       this.zone.run(() => { if (r) { this.videoCapture.videoOutput = r; } });
     });
   }
 
   videoCaptureFrame(): void {
-    const stream = this.store.state.videoInfo.videoStreams[1];
+    const stream = this.store.state.videoInfo[this.store.i].videoStreams[1];
     // Get numeric representation of video frame rate.
     const frameRate: number = new Function(`return ${stream.r_frame_rate}`)();
     // Get current time in frames.
     let frameTime: number = Math.round(this.currentTime * frameRate);
     // Accomodate frame time for select filter.
     frameTime = frameTime > 0 ? frameTime - 1 : frameTime;
-    // Execute command and listen for a response.
-    const command: string = `ffmpeg -v error -y -i "${this.store.state.fileInfo.filePath}" -vf "select=eq(n\\,${frameTime})" -vframes 1 -qmin 1 -q:v 1 ${this.videoCapture.videoOutput}`;
+    // Capture current frame to output image file.
+    const command: string = `ffmpeg -v error -y -i "${this.store.state.fileInfo[this.store.i].filePath}" -vf "select=eq(n\\,${frameTime})" -vframes 1 -qmin 1 -q:v 1 ${this.videoCapture.videoOutput}`;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-    this.ipc.once('exec', (e: any, r: string) => { this.zone.run(() => { this.$videoCapture(); }); });
+    this.ipc.once('exec', (err: any, r: string) => { this.zone.run(() => { this.$videoCapture(); }); });
   }
 }
