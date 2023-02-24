@@ -13,6 +13,7 @@ import { VideoCaptureComponent } from './components/video-capture/video-capture.
 import { VideoInfoComponent } from './components/video-info/video-info.component';
 import { VideoPlayerComponent } from './components/video-player/video-player.component';
 import { VideoSaveComponent } from './components/video-save/video-save.component';
+import { VideoSegmentsComponent } from './components/video-segments/video-segments.component';
 
 // UI components.
 import { UiButtonComponent } from './ui/ui-button/ui-button.component';
@@ -56,6 +57,7 @@ function appInitializerFactory(translate: TranslateService) {
     VideoInfoComponent,
     VideoPlayerComponent,
     VideoSaveComponent,
+    VideoSegmentsComponent,
     UiButtonComponent,
     UiGroupBoxComponent,
     UiInputComponent,

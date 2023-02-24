@@ -1,7 +1,8 @@
 {
   "GENERAL": {
     "CODEC": "Codec",
-    "DEFAULT": "Default"
+    "DEFAULT": "Default",
+    "OK": "Ok"
   },
   "VIDEO_INFO": {
     "BITRATE": "Bitrate",
@@ -29,6 +30,7 @@
     "PLAY_PAUSE": "Play | Pause",
     "ROTATE_CW": "Rotate 90º",
     "ROTATE_CCW": "Rotate -90º",
+    "SPLIT_MERGE": "Split | Merge",
     "STOP": "Stop"
   },
   "VIDEO_SAVE": {
@@ -57,7 +59,6 @@
       "FORMATCODEC": "Format and Codec",
       "NONE": "None (Copy Stream)"
     },
-    "OK": "Ok",
     "OUTPUT": "Output",
     "PATH": "File Path",
     "RESET": "Reset",
@@ -73,6 +74,17 @@
       "SCALE": "Scale",
       "SCALING": "Scaling",
       "WIDTH": "Width"
+    }
+  },
+  "VIDEO_SEGMENTS": {
+    "FILES_CLIPS": "Files | Clips",
+    "FILE_ADD": "Add File",
+    "FILE_MOVE_UP": "Move Up",
+    "FILE_MOVE_DOWN": "Move Down",
+    "FILE_REMOVE": "Remove File",
+    "INCOMPATIBLE": {
+      "FIRST": "The selected video file doesn't share the necessary parameters for concatenation with the already opened files.",
+      "SECOND": "Make sure that all files have the same codec, framerate (timebase), width and height values."
     }
   }
 }

@@ -1,5 +1,5 @@
 <div class="flex">
-  <div id="playerEdit" class="player-edit">
+  <div id="playerEdit" class="player-edit" [class]="$videoSegments?.videoSegments ? 'w-[calc(100%-320px)]' : 'w-full'">
     <div id="playerContainer" class="player-video" [class]="store.state.fileInfo[0] ? 'flex' : 'hidden'">
       <div id="$playerContainer" class="player-video flex">
         <div *ngFor="let file of store.state.fileInfo; index as i" class="contents">
@@ -46,6 +46,8 @@
       <input title="" type="file" (change)="videoFileOpen($event)" />
     </div>
   </div>
+  <video-segments #videoSegments (added)="videoFileOpen($event)" (inited)="$videoSegments = videoSegments"
+    (loaded)="videoSetPosition(filters.filterInfo.filterRotate)" (removed)="videoFileClose()"></video-segments>
 </div>
 <div class="player-controls" [class]="!store.state.fileInfo[0] ? 'pointer-events-none' : ''">
   <div class="player-buttons">
@@ -59,6 +61,7 @@
     </div>
     <div>
       <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="segments" [buttonToggle]="$videoSegments.videoSegments" [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate" (click)="$videoSegments.$videoSegments()"></ui-button>
       <div class="player-separator"></div>
       <ui-button buttonColor="dark" buttonIcon="list" [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate" (click)="$videoInfo.$videoInfo()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>

@@ -161,6 +161,7 @@ export class VideoSaveComponent {
     videoAudio: '',
     videoCodec: '',
     videoCommand: '',
+    videoConcat: '',
     videoEditing: false,
     videoEncoding: '',
     videoErrorText: null,
@@ -191,6 +192,11 @@ export class VideoSaveComponent {
   videoSaveCodec(): void {
     // Define video codec to use, or copy stream if the same as input is used.
     this.videoSave.videoCodec = (this.videoSave.$videoFilters.length > 0) || this.videoReencode ? '-c:v ' + this.videoOutput.videoEncoder : '-c:v copy';
+  }
+
+  videoSaveConcat(): void {
+    // Define concatenation of multiple files.
+    this.videoSave.videoConcat = this.store.state.fileInfo.length > 1 ? '-f concat -safe 0' : '';
   }
 
   videoSaveEncoding(): void {
@@ -242,7 +248,8 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${this.store.state.fileInfo[0].filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+    const input = this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath;
+    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
   }
 
   videoSaveDirectory(): void {
@@ -290,6 +297,7 @@ export class VideoSaveComponent {
 
   videoSaveBuild(): void {
     // Build output command.
+    this.videoSaveConcat();
     this.videoSaveAudio();
     this.videoSaveFilters();
     this.videoSaveMetadata();
@@ -298,7 +306,8 @@ export class VideoSaveComponent {
     this.videoSaveOutput();
     // Detect and adapt command for 2-pass encoding.
     if (this.videoSave.videoEncoding.includes('$pass')) {
-      const pass1 = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${this.store.state.fileInfo[0].filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
+      const input = this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath;
+      const pass1 = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
       const pass2 = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
       this.videoSave.videoCommand = `${pass1} && ${pass2}`;
     } // Remove extra whitespace.

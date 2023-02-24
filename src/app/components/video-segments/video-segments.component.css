@@ -1,0 +1,43 @@
+.file-info {
+  @apply flex pointer-events-none space-x-4;
+}
+
+.file-info > div {
+  @apply text-sm whitespace-nowrap;
+}
+
+.file-info > img {
+  @apply bg-slate-1000 border border-slate-700 h-[54px] object-cover w-[96px];
+}
+
+.file-title {
+  @apply flex items-center overflow-hidden pointer-events-none space-x-2 whitespace-nowrap;
+}
+
+.segments-buttons {
+  @apply absolute bg-slate-800 bottom-0 border-t border-t-slate-1000 flex justify-between p-[0.4rem] pb-0 w-full;
+}
+
+.segments-buttons > div {
+  @apply space-x-2;
+}
+
+.segments-container {
+  @apply absolute bg-slate-900 border border-slate-1000 border-l-slate-800 h-[calc(100%-100px)] overflow-hidden right-0 w-[320px];
+}
+
+.segments-container > p {
+  @apply bg-slate-800 border-b border-b-slate-1000 p-2 text-center;
+}
+
+.segments-files {
+  @apply max-h-[calc(100%-90px)] overflow-y-auto;
+}
+
+.segments-files > div > div {
+  @apply hover:bg-slate-750 border-b border-b-slate-800 cursor-pointer h-fit p-4 space-y-4 w-full;
+}
+
+.segments-incompatible {
+  @apply flex flex-col items-center space-y-6 w-[460px] [&>div]:space-y-4 [&_p]:text-center;
+}

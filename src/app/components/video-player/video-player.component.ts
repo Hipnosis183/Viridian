@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, NgZone } from '@angular/core';
 import { DelayService } from 'src/app/services/delay.service';
 import { FiltersService } from 'src/app/services/filters.service';
+import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -19,12 +20,15 @@ export class VideoPlayerComponent {
     private change: ChangeDetectorRef,
     private delay: DelayService,
     public filters: FiltersService,
+    private ipc: IpcService,
     public store: StoreService,
-    public utils: UtilsService
+    public utils: UtilsService,
+    private zone: NgZone
   ) { }
 
   $videoInfo: any;
   $videoSave: any;
+  $videoSegments: any;
 
   playerInfo: any;
   ngOnInit(): void {
@@ -102,25 +106,39 @@ export class VideoPlayerComponent {
   async videoFileOpen(e: any): Promise<void> {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
-      // Load video file information into store.
-      const fileInfo: any = {
-        fileExtension: e.target.files[0].path.split('.').pop(),
-        fileName: e.target.files[0].name,
-        filePath: 'file://' + e.target.files[0].path,
-        fileType: e.target.files[0].type
-      }; this.store.state.fileInfo.push(fileInfo);
-      const videoInfo: any = {
-        videoHeight: null,
-        videoStreams: null,
-        videoStreamsText: [],
-        videoWidth: null
-      }; this.store.state.videoInfo.push(videoInfo);
+      // Generate video thumbnail.
+      const concat: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat.txt');
+      const thumb: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
+      const command: string = `ffmpeg -v error -y -i "file://${e.target.files[0].path}" -vf "select=eq(n\\,0),scale=100:-1" -vframes 1 -qmin 1 -q:v 1 ${thumb}`;
+      this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+      this.ipc.once('exec', (err: any, r: string) => {
+        this.zone.run(() => {
+          // Load video file information into store.
+          const fileInfo: any = {
+            fileConcat: 'file://' + concat,
+            fileExtension: e.target.files[0].path.split('.').pop(),
+            fileName: e.target.files[0].name,
+            filePath: 'file://' + e.target.files[0].path,
+            fileThumb: 'file://' + thumb,
+            fileType: e.target.files[0].type
+          }; this.store.state.fileInfo.push(fileInfo);
+          const videoInfo: any = {
+            videoHeight: null,
+            videoStreams: null,
+            videoStreamsText: [],
+            videoWidth: null
+          }; this.store.state.videoInfo.push(videoInfo);
+          // Update concatenation text file.
+          this.$videoSegments.videoFileConcat();
+        });
+      });
     }
   }
 
   videoFileClose(): void {
     this.store.resetAll();
     this.filters.filterReset();
+    this.$videoSegments.$videoSegments(false);
     this.$videoSave = null;
   }
 

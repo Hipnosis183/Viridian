@@ -3,11 +3,14 @@ import { createStore } from "@stencil/store";
 const { state } = createStore({
   filePaths: {
     ffmpeg: '/home/renzo/Downloads/ffmpeg/',
+    temp: process.cwd() + '/temp/',
   },
   fileInfo: [
+    // fileConcat: null,
     // fileExtension: null,
     // fileName: null,
     // filePath: null,
+    // fileThumb: null,
     // fileType: null,
   ],
   filterInfo: {

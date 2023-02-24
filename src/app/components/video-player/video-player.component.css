@@ -44,7 +44,7 @@
 }
 
 .player-edit {
-  @apply absolute bg-slate-1000 border border-slate-1000 flex h-[calc(100%-100px)] justify-center w-full;
+  @apply absolute bg-slate-1000 border border-slate-1000 flex h-[calc(100%-100px)] justify-center;
 }
 
 .player-open {
