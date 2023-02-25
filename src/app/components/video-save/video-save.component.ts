@@ -69,6 +69,8 @@ export class VideoSaveComponent {
     }
     this.videoCodec = videoCodec;
     this.videoCodecs = videoCodecs;
+    // Update output path with format extension.
+    this.videoSave.videoOutput = this.videoSave.videoOutput.replace(/(\.[\w\d_-]+)$/i, '.' + f.extensions[0]);
   }
 
   videoOutputCodec(): void {
