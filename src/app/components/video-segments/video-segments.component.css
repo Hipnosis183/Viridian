@@ -38,6 +38,6 @@
   @apply hover:bg-slate-750 border-b border-b-slate-800 cursor-pointer h-fit p-4 space-y-4 w-full;
 }
 
-.segments-incompatible {
+.segments-compatibility {
   @apply flex flex-col items-center space-y-6 w-[460px] [&>div]:space-y-4 [&_p]:text-center;
 }

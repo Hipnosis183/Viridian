@@ -27,6 +27,11 @@ export class VideoSegmentsComponent {
 
   ngOnInit(): void { this.inited.emit(); }
 
+  videoCompatible: boolean = false;
+  $videoCompatible(v?: boolean): void {
+    this.videoCompatible = v ?? !this.videoCompatible;
+  }
+
   videoIncompatible: boolean = false;
   $videoIncompatible(v?: boolean): void {
     this.videoIncompatible = v ?? !this.videoIncompatible;
@@ -49,10 +54,14 @@ export class VideoSegmentsComponent {
         const stream = this.store.state.videoInfo[0].videoStreams[1];
         let streams = [JSON.parse(r).format];
         streams = streams.concat(JSON.parse(r).streams);
-        // Add file if the fundamental parameters are the same as the default video.
-        if ((stream.codec_name == streams[1].codec_name) && (stream.time_base == streams[1].time_base)
-          && (stream.height == streams[1].height) && (stream.width == streams[1].width)) { this.added.emit(e); }
-        else { this.$videoIncompatible(); }
+        // Add file if the width and height are the same as the default video.
+        if ((stream.height == streams[1].height) && (stream.width == streams[1].width)) {
+          // Define concat mode to use (demuxer/filter) depending on the codec and timebase.
+          if ((stream.codec_name != streams[1].codec_name) || (stream.time_base != streams[1].time_base)) {
+            this.store.state.filterInfo.filterConcat.push(input);
+            this.$videoCompatible();
+          } this.added.emit(e);
+        } else { this.$videoIncompatible(); }
       });
     });
   }
@@ -109,6 +118,8 @@ export class VideoSegmentsComponent {
       if (this.store.state.fileInfo.length == this.store.i + 1) {
         this.store.i = this.store.i - 1;
       } // Remove selected file from all places.
+      const filterConcat = this.store.state.filterInfo.filterConcat.filter((v: string) => v != this.store.state.fileInfo[i].filePath);
+      this.store.state.filterInfo.filterConcat = filterConcat;
       this.store.state.fileInfo.splice(i, 1);
       this.store.state.videoInfo.splice(i, 1);
       this.store.state.playerInfo.playerVideo.splice(i, 1);

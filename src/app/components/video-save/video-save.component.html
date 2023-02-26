@@ -27,15 +27,19 @@
         <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
           [(selectValue)]="videoOutput.videoEncoder" (selectUpdate)="videoOutputEncoder($event)">
           <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-            <ui-option *ngIf="videoSave.$videoFilters.length == 0 && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name"
+            <ui-option *ngIf="(videoSave.$videoFilters.length == 0 && store.state.filterInfo.filterConcat.length == 0)
+              && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name"
               [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate" [optionSelected]="true" [optionValue]="null"></ui-option>
-            <ui-option *ngIf="videoSave.$videoFilters.length > 0 || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name"
+            <ui-option *ngIf="(videoSave.$videoFilters.length > 0 || store.state.filterInfo.filterConcat.length > 0)
+              || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name"
               [optionLabel]="c.encoders[0]" [optionSelected]="!videoOutput.videoEncoder" [optionValue]="c.encoders[0]"></ui-option>
           </ui-option-group>
-          <ui-option-group *ngIf="(videoSave.$videoFilters.length > 0 || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name)
+          <ui-option-group *ngIf="((videoSave.$videoFilters.length > 0 || store.state.filterInfo.filterConcat.length > 0)
+              || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name)
               && c.encoders.length == 1 ? false : true" [optionLabel]="'VIDEO_SAVE.FORMAT.ENCODERS' | translate">
             <div *ngFor="let e of c.encoders; index as i">
-              <ui-option *ngIf="(videoSave.$videoFilters.length == 0 && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name)
+              <ui-option *ngIf="((videoSave.$videoFilters.length == 0 && store.state.filterInfo.filterConcat.length == 0)
+                && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name)
                 || (c.encoders.length > 0 && i != 0)" [optionLabel]="e" [optionValue]="e"></ui-option>
             </div>
           </ui-option-group>

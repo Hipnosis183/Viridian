@@ -170,6 +170,7 @@ export class VideoSaveComponent {
     videoErrorView: false,
     $videoFilters: [],
     videoFilters: '',
+    videoInput: '',
     videoMetadata: '',
     videoOutput: '',
     videoSaving: false,
@@ -188,7 +189,7 @@ export class VideoSaveComponent {
 
   videoSaveAudio(): void {
     // Define removal of audio streams.
-    this.videoSave.videoAudio = this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy';
+    this.videoSave.videoAudio = this.store.state.filterInfo.filterConcat.length == 0 ? this.filters.filterInfo.filterNoAudio ? '-an' : '-c:a copy' : '';
   }
 
   videoSaveCodec(): void {
@@ -198,7 +199,7 @@ export class VideoSaveComponent {
 
   videoSaveConcat(): void {
     // Define concatenation of multiple files.
-    this.videoSave.videoConcat = this.store.state.fileInfo.length > 1 ? '-f concat -safe 0' : '';
+    this.videoSave.videoConcat = (this.store.state.fileInfo.length > 1) && this.store.state.filterInfo.filterConcat.length == 0 ? '-f concat -safe 0' : '';
   }
 
   videoSaveEncoding(): void {
@@ -230,7 +231,20 @@ export class VideoSaveComponent {
     if (this.filters.filterRotate()) { this.videoSave.$videoFilters.push(this.filters.filterRotate()); }
     if (this.filters.filterInfo.filterCrop) { this.videoSave.$videoFilters.push(this.filters.filterCrop()); }
     if (this.filters.filterScaler()) { this.videoSave.$videoFilters.push(this.filters.filterScaler()); }
-    this.videoSave.videoFilters = this.videoSave.$videoFilters.length > 0 ? `-filter:v "${this.videoSave.$videoFilters.join()}"` : '';
+    // Manage concatenation filter.
+    const files = this.store.state.fileInfo.length;
+    const filters = this.videoSave.$videoFilters.length > 0 ? this.store.state.filterInfo.filterConcat.length > 0 ? `;[v]${this.videoSave.$videoFilters.join()}[v]` : `${this.videoSave.$videoFilters.join()}` : '';
+    const concatFilter = this.store.state.filterInfo.filterConcat.length > 0 ? this.filters.filterInfo.filterNoAudio ? `concat=n=${files}:v=1[v]${filters}` : `concat=n=${files}:v=1:a=1[v][a]${filters}` : filters;
+    const concatMap = this.store.state.filterInfo.filterConcat.length > 0 ? this.filters.filterInfo.filterNoAudio ? `-map [v]` : `-map [v] -map [a]` : '';
+    this.videoSave.videoFilters = concatFilter ? `-lavfi "${concatFilter}" ${concatMap}` : '';
+  }
+
+  videoSaveInput(): void {
+    // Define input file(s).
+    this.videoSave.videoInput = '';
+    if (this.store.state.filterInfo.filterConcat.length > 0) {
+      for (let i = 0; i < this.store.state.fileInfo.length; i++) { this.videoSave.videoInput += `-i "${this.store.state.fileInfo[i].filePath}" `; }
+    } else { this.videoSave.videoInput = `-i "${this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath}"`; }
   }
 
   videoSaveMetadata(): void {
@@ -250,8 +264,7 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    const input = this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath;
-    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
   }
 
   videoSaveDirectory(): void {
@@ -305,11 +318,11 @@ export class VideoSaveComponent {
     this.videoSaveMetadata();
     this.videoSaveCodec();
     this.videoSaveEncoding();
+    this.videoSaveInput();
     this.videoSaveOutput();
     // Detect and adapt command for 2-pass encoding.
     if (this.videoSave.videoEncoding.includes('$pass')) {
-      const input = this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath;
-      const pass1 = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
+      const pass1 = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
       const pass2 = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
       this.videoSave.videoCommand = `${pass1} && ${pass2}`;
     } // Remove extra whitespace.

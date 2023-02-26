@@ -14,6 +14,7 @@ const { state } = createStore({
     // fileType: null,
   ],
   filterInfo: {
+    filterConcat: [],
     filterHeight: 0,
     filterWidth: 0,
     filterX: 0,

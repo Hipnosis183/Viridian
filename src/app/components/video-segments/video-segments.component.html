@@ -1,5 +1,14 @@
+<ui-modal *ngIf="videoCompatible">
+  <div class="segments-compatibility">
+    <div>
+      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.FIRST' | translate }}</p>
+      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.SECOND' | translate }}</p>
+    </div>
+    <ui-button buttonColor="success" buttonIcon="done" (click)="$videoCompatible()">{{ 'GENERAL.OK' | translate }}</ui-button>
+  </div>
+</ui-modal>
 <ui-modal *ngIf="videoIncompatible">
-  <div class="segments-incompatible">
+  <div class="segments-compatibility">
     <div>
       <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.FIRST' | translate }}</p>
       <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.SECOND' | translate }}</p>

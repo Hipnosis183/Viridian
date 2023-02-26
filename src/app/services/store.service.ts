@@ -10,6 +10,7 @@ export class StoreService {
 
   resetAll(): void {
     this.resetFileInfo();
+    this.resetFilterInfo();
     this.resetPlayerInfo();
     this.resetVideoInfo();
     this.i = 0;
@@ -17,6 +18,16 @@ export class StoreService {
 
   resetFileInfo(): void {
     this.state.fileInfo = [];
+  }
+
+  resetFilterInfo(): void {
+    this.state.filterInfo = {
+      filterConcat: [],
+      filterHeight: 0,
+      filterWidth: 0,
+      filterX: 0,
+      filterY: 0,
+    };
   }
 
   resetPlayerInfo(): void {
