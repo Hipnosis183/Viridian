@@ -56,7 +56,8 @@
             </ui-option-group>
             <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
               <div *ngFor="let e of videoRates; index as i">
-                <ui-option *ngIf="i != 0" [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
+                <ui-option *ngIf="i != 0 && (store.state.fileInfo.length > 1 ? (e.value == 'vbv2' || e.value == 'abr2') ? false : true : true)"
+                  [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
               </div>
             </ui-option-group>
           </div>
