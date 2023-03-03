@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities';
 
 @import 'tippy.js/dist/tippy.css';
+@import 'app/directives/dropdown.directive.css';
 @import 'app/directives/tooltip.directive.css';
 
 @font-face {

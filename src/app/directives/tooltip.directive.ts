@@ -11,7 +11,7 @@ export class TooltipDirective {
   @Input() tooltipKeep?: boolean = false;
   @Input() tooltipOffset?: any = [0, 10];
   @Input() tooltipPlace?: any = 'top';
-  @Input() tooltipTheme?: string = 'tooltip';
+  @Input() tooltipTheme?: string = 'tooltip-dark';
   @Input() tooltipTrigger?: string = 'mouseenter focus';
 
   ngAfterViewInit(): void {
