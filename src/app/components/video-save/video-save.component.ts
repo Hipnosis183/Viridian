@@ -6,6 +6,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 
 // Import formats and codecs list.
 import Codecs from 'src/assets/lists/codecs.json'
+import Cutting from 'src/assets/lists/cutting.json'
 import Encoders from 'src/assets/lists/encoders.json'
 import Encoding from 'src/assets/lists/encoding.json'
 import Formats from 'src/assets/lists/formats.json'
@@ -31,7 +32,8 @@ export class VideoSaveComponent {
 
   videoCodec: any = Codecs[0];
   videoCodecs: any = Codecs;
-  videoEncoder: any = Encoders[0]
+  videoCutting: any = Cutting;
+  videoEncoder: any = Encoders[0];
   videoFormat: any = Formats[0];
   videoFormats: any = Formats;
   videoPresets: any = Encoding.presets;
@@ -39,6 +41,7 @@ export class VideoSaveComponent {
   videoScaler: any = Scaler;
   videoOutput: any = {
     videoBitrate: null,
+    videoCut: null,
     videoCodec: null,
     videoEncoder: null,
     videoLock: true,
@@ -161,7 +164,7 @@ export class VideoSaveComponent {
 
   videoSave: any = {
     videoAudio: '',
-    videoClip: false,
+    videoCut: false,
     videoClips: [],
     videoCodec: '',
     videoCommand: '',
@@ -186,6 +189,8 @@ export class VideoSaveComponent {
     if (!c) { this.filters.filterInit(); }
     // Check and update filters state.
     this.videoSaveReset();
+    // Check and update cut/clip state.
+    this.$videoSaveClip();
     // Open export/save dialog.
     this.videoSave.videoSave = !this.videoSave.videoSave;
   }
@@ -205,9 +210,20 @@ export class VideoSaveComponent {
     this.videoSave.videoConcat = (this.store.state.fileInfo.length > 1) && this.store.state.filterInfo.filterConcat.length == 0 ? '-f concat -safe 0' : '';
   }
 
+  $videoSaveClip(): void {
+    this.videoSave.videoCut = false;
+    for (let [i, file] of this.store.state.fileInfo.entries()) {
+      // Get file total duration time in frames.
+      const frameRate: number = this.store.state.videoInfo[i].videoFrameRate;
+      const duration: number = this.store.state.playerInfo.playerVideo[i].duration * frameRate;
+      // Check if a clip has been added or modified.
+      if ((file.fileClips[0].start != 0 || file.fileClips[0].end != duration)
+        || file.fileClips.length > 1) { this.videoSave.videoCut = true; }
+    }
+  }
+
   videoSaveClip(): void {
     // Define clips creation for available files.
-    this.videoSave.videoClip = false;
     this.videoSave.videoClips = [];
     for (let [i, file] of this.store.state.fileInfo.entries()) {
       // Get file total duration time in frames.
@@ -221,15 +237,47 @@ export class VideoSaveComponent {
         let clips: string[] = [];
         let concat: string = '';
         for (let k = 0; k < file.fileClips.length; k++) {
-          const end: number = file.fileClips[k].end / frameRate;
-          const start: number = file.fileClips[k].start / frameRate;
-          const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_${k}.` + this.videoOutput.videoFormat.extensions[0]);
-          // Add clip creation command to list.
-          clips.push(`ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" -c:v copy -c:a copy "${output}"`);
-          // Add clip output file to temporal file for concatenation.
-          concat += 'file \'' + output + '\'\n';
-          // Add clip output file for later deletion.
-          this.videoSave.videoDelete.push(output);
+          let start: number = file.fileClips[k].start / frameRate;
+          let end: number = file.fileClips[k].end / frameRate;
+          // Smart cut mode.
+          if (this.videoOutput.videoCut == 'smart') {
+            let cutpoint: number = 0;
+            // Detect the point where to split the clip.
+            for (let l = 0; l < this.store.state.videoInfo[i].videoKeyFrames.length; l++) {
+              if (this.store.state.videoInfo[i].videoKeyFrames[l] < end &&
+                this.store.state.videoInfo[i].videoKeyFrames[l] > start) {
+                cutpoint = this.store.state.videoInfo[i].videoKeyFrames[l]; break; }
+            } // Create list with the splitted clips.
+            let splits: any[] = [];
+            splits.push({ start: start, end: cutpoint || end, mode: start == cutpoint ? '-c:v copy -c:a copy': '' });
+            if (cutpoint) { splits.push({ start: cutpoint, end: end, mode: '-c:v copy -c:a copy' }); }
+            for (let [l, clip] of splits.entries()) {
+              const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_${k}_${l}.` + this.videoOutput.videoFormat.extensions[0]);
+              // Add clip creation command to list.
+              clips.push(`ffmpeg -v error -y -noautorotate -ss ${clip.start} -to ${clip.end} -i "${file.filePath}" ${clip.mode} "${output}"`);
+              // Add clip output file to temporal file for concatenation.
+              concat += 'file \'' + output + '\'\n';
+              // Add clip output file for later deletion.
+              this.videoSave.videoDelete.push(output);
+            }
+          } else { // Single cut mode.
+            let mode: string = '';
+            // Manage selected clip mode.
+            if (this.videoOutput.videoCut == 'lossless') { mode = '-c:v copy -c:a copy'; }
+            if (this.videoOutput.videoCut == 'keyframe') { mode = '-c:v copy -c:a copy';
+              // Change clip starting point to the nearest previous keyframe.
+              const videoKeyFrames: any = [...this.store.state.videoInfo[i].videoKeyFrames, duration];
+              for (let l = 0; l < videoKeyFrames.length; l++) {
+                if (videoKeyFrames[l] > start) { start = videoKeyFrames[l-1]; break; }
+              }
+            } const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_${k}.` + this.videoOutput.videoFormat.extensions[0]);
+            // Add clip creation command to list.
+            clips.push(`ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" ${mode} "${output}"`);
+            // Add clip output file to temporal file for concatenation.
+            concat += 'file \'' + output + '\'\n';
+            // Add clip output file for later deletion.
+            this.videoSave.videoDelete.push(output);
+          }
         }
         const input: string = file.fileClip.slice(7);
         const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.videoOutput.videoFormat.extensions[0]);
@@ -238,14 +286,14 @@ export class VideoSaveComponent {
         // Add clip creation commands to final output.
         this.videoSave.videoCommand += clips.join(' && ') + ' && ';
         // Use clip concat output file instead of the original file.
-        this.videoSave.videoClips.push(output); this.videoSave.videoClip = true;
+        this.videoSave.videoClips.push(output);
         // Add clip output file for later deletion.
         this.videoSave.videoDelete.push(output);
         // Create temporal text file for the concatenation process.
         this.ipc.send('write-file', input, concat);
       }
     } // Rebuild concatenation file if available and any clips were made.
-    if (this.videoSave.videoClip) {
+    if (this.videoSave.videoCut) {
       let concat: string = '';
       for (let i = 0; i < this.store.state.fileInfo.length; i++) {
         const filePath: string = this.videoSave.videoClips[i] || this.store.state.fileInfo[i].filePath;
@@ -303,7 +351,7 @@ export class VideoSaveComponent {
         this.videoSave.videoInput += `-i "${filePath}" `;
       }
     } else { // Check if any clips were made and adjust the input file.
-      const fileConcat = this.videoSave.videoClip ? this.store.state.fileInfo[0].fileConcatClip : this.store.state.fileInfo[0].fileConcat;
+      const fileConcat = this.videoSave.videoCut ? this.store.state.fileInfo[0].fileConcatClip : this.store.state.fileInfo[0].fileConcat;
       const filePath = this.videoSave.videoClips[0] || this.store.state.fileInfo[0].filePath;
       this.videoSave.videoInput = `-i "${this.store.state.fileInfo.length > 1 ? fileConcat : filePath}"`;
     }
@@ -348,7 +396,8 @@ export class VideoSaveComponent {
     this.videoOutput.videoScale = 1;
     this.filters.filterInfo.filterHeight = this.store.state.filterInfo.filterHeight;
     this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
-    // Define output path.
+    // Define output values.
+    this.videoOutput.videoCut = Cutting[0].code;
     this.videoSave.videoOutput = (this.store.state.fileInfo[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0])).slice(7);
     // Reset format and encoding values.
     this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo[0].fileExtension))[0];

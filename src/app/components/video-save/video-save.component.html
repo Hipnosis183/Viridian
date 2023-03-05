@@ -127,21 +127,33 @@
         </ui-select>
       </div>
     </ui-group-box>
-    <div class="grid">
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+      <div class="save-section">
         <div class="save-output">
           <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoSave.videoOutput"></ui-input>
           <ui-button buttonColor="dark" buttonIcon="more" (click)="videoSaveDirectory()"></ui-button>
         </div>
-      </ui-group-box>
-      <span class="save-buttons-grid">
-        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
-        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
-        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
-      </span>
-    </div>
+        <div>
+          <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CUT_CLIP' | translate" [(selectValue)]="videoOutput.videoCut">
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+              <ui-option [optionLabel]="videoCutting[0].name" [optionSelected]="true" [optionValue]="videoCutting[0].code"></ui-option>
+            </ui-option-group>
+            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
+              <div *ngFor="let c of videoCutting; index as i">
+                <ui-option *ngIf="i != 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
+              </div>
+            </ui-option-group>
+          </ui-select>
+        </div>
+      </div>
+    </ui-group-box>
   </div>
+  <span class="save-buttons mt-5">
+    <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
+    <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
+    <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+    <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+  </span>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoEditing">
   <textarea [(ngModel)]="videoSave.videoCommand" spellcheck="false"></textarea>

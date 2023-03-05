@@ -1,0 +1,18 @@
+[
+  {
+    "code": "smart",
+    "name": "Smart (Lossy + Lossless)"
+  },
+  {
+    "code": "lossy",
+    "name": "Lossy"
+  },
+  {
+    "code": "lossless",
+    "name": "Lossless (Normal)"
+  },
+  {
+    "code": "keyframe",
+    "name": "Lossless (Key/I-frame)"
+  }
+]

@@ -6,10 +6,6 @@ textarea {
   @apply flex items-center justify-evenly w-full;
 }
 
-.save-buttons-grid {
-  @apply gap-x-8 gap-y-6 grid grid-cols-2 grid-rows-2 h-fit justify-self-center mt-2 w-fit [&>*]:contents;
-}
-
 .save-container {
   @apply gap-x-6 gap-y-8 grid grid-cols-2 grid-rows-2 mt-2;
 }
