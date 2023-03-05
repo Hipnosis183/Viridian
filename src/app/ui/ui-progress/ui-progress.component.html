@@ -1,4 +1,11 @@
 <div id="progress" class="progress-container">
   <progress min="0" [max]="progressDuration | number" [value]="progressTime" (mouseup)="updateProgress($event)"></progress>
-  <div class="progress-thumb"></div>
+  <div class="progress-thumb">
+    <div [hidden]="!progressExtend"></div>
+  </div>
+  <div [hidden]="!progressExtend" class="progress-frames">
+    <div *ngFor="let frame of progressFrames; index as i">
+      <div rendered (rendered)="updateFrame($event, i)"></div>
+    </div>
+  </div>
 </div>

@@ -14,8 +14,29 @@
   @apply ml-2;
 }
 
+.player-clip {
+  @apply bg-slate-1000 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
+}
+
+.player-clip > div > div {
+  @apply absolute border-4 h-8;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.player-clips {
+  @apply absolute bg-slate-800 bottom-[-51px] border border-slate-1000 border-t-0 h-[50px] justify-end pb-0 pt-[0.4rem] px-[15px] w-[calc(100%+2px)];
+}
+
+.player-clips > div:last-child {
+  @apply ml-auto;
+}
+
+.player-clips > div ui-button:not(:first-child) {
+  @apply ml-2;
+}
+
 .player-controls {
-  @apply absolute bottom-0 flex flex-col h-[70px] justify-center mb-4 mx-4 w-[calc(100%-34px)];
+  @apply absolute bottom-0 flex flex-col justify-center mb-4 mx-4 w-[calc(100%-32px)];
 }
 
 .player-crop {
@@ -44,7 +65,7 @@
 }
 
 .player-edit {
-  @apply absolute bg-slate-1000 border border-slate-1000 flex h-[calc(100%-100px)] justify-center;
+  @apply absolute bg-slate-1000 border border-slate-1000 flex justify-center;
 }
 
 .player-open {
@@ -67,8 +88,17 @@
   @apply absolute border-2 border-dashed border-slate-100 h-[calc(100%-36px)] opacity-20 rounded-md w-[calc(100%-36px)];
 }
 
-.player-separator {
-  @apply bg-slate-700 h-7 inline-flex ml-4 mr-2 my-1 w-0.5;
+.player-separator-dark {
+  @apply bg-slate-900;
+}
+
+.player-separator-lite {
+  @apply bg-slate-700;
+}
+
+.player-separator-dark,
+.player-separator-lite {
+  @apply h-7 inline-flex ml-4 mr-2 my-1 w-0.5;
 }
 
 .player-video {

@@ -1,3 +1,17 @@
+.clip {
+  @apply border-4 cursor-pointer h-fit px-4 py-3 space-y-2 w-full [&>*]:pointer-events-none [&>p]:text-sm;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.clip-title {
+  @apply flex items-center overflow-hidden space-x-2 whitespace-nowrap;
+}
+
+.file {
+  @apply hover:bg-slate-750 cursor-pointer h-fit p-4 space-y-4 w-full;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
 .file-info {
   @apply flex pointer-events-none space-x-4;
 }
@@ -15,7 +29,7 @@
 }
 
 .segments-buttons {
-  @apply absolute bg-slate-800 bottom-0 border-t border-t-slate-1000 flex justify-between p-[0.4rem] pb-0 w-full;
+  @apply absolute bg-slate-800 bottom-0 border-t border-t-slate-1000 flex h-[50px] justify-between pb-0 pt-[0.4rem] px-4 w-full;
 }
 
 .segments-buttons > div {
@@ -23,7 +37,7 @@
 }
 
 .segments-container {
-  @apply absolute bg-slate-900 border border-slate-1000 border-l-slate-800 h-[calc(100%-100px)] overflow-hidden right-0 w-[320px];
+  @apply absolute bg-slate-900 border border-slate-1000 border-l-slate-800 h-[calc(100%-136px)] right-0 w-[316px];
 }
 
 .segments-container > p {
@@ -32,10 +46,6 @@
 
 .segments-files {
   @apply max-h-[calc(100%-90px)] overflow-y-auto;
-}
-
-.segments-files > div > div {
-  @apply hover:bg-slate-750 border-b border-b-slate-800 cursor-pointer h-fit p-4 space-y-4 w-full;
 }
 
 .segments-compatibility {

@@ -59,13 +59,13 @@ export class VideoPlayerComponent {
       draggable: true, within: 'parent'
     });
     // Update crop element state on resize event.
-    this.playerInfo.playerResizable.on('resize', () => { this.$resizableOnResize(); });
+    this.playerInfo.playerResizable.on('resize', () => { this.$cropOnResize(); });
     // Update crop element state on drag event.
-    this.playerInfo.playerResizable.draggable.on('drag', () => { this.$resizableOnDrag(); });
+    this.playerInfo.playerResizable.draggable.on('drag', () => { this.$cropOnDrag(); });
   }
 
-  $resizableOnResize = this.delay.throttle(() => this.resizableOnResize(), 100);
-  resizableOnResize(): void {
+  $cropOnResize = this.delay.throttle(() => this.cropOnResize(), 100);
+  cropOnResize(): void {
     // Update crop filter values.
     this.filters.filterInit();
     this.filters.filterCrop();
@@ -84,8 +84,8 @@ export class VideoPlayerComponent {
     }
   }
 
-  $resizableOnDrag = this.delay.throttle(() => this.resizableOnDrag(), 100);
-  resizableOnDrag(): void {
+  $cropOnDrag = this.delay.throttle(() => this.cropOnDrag(), 100);
+  cropOnDrag(): void {
     // Update crop filter values.
     this.filters.filterCrop();
     // Fix precision problems.
@@ -106,24 +106,34 @@ export class VideoPlayerComponent {
   async videoFileOpen(e: any): Promise<void> {
     const file = e.target.files && e.target.files[0];
     if (file.type.indexOf('video') > -1) {
-      // Generate video thumbnail.
+      // Define temporal file paths.
+      const clip: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_clip.txt');
       const concat: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat.txt');
+      const concatClip: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat_clip.txt');
       const thumb: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
+      // Generate video thumbnail.
       const command: string = `ffmpeg -v error -y -i "file://${e.target.files[0].path}" -vf "select=eq(n\\,0),scale=100:-1" -vframes 1 -qmin 1 -q:v 1 ${thumb}`;
       this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
       this.ipc.once('exec', (err: any, r: string) => {
         this.zone.run(() => {
           // Load video file information into store.
           const fileInfo: any = {
+            fileColor: 0,
+            fileClip: 'file://' + clip,
+            fileClips: [],
             fileConcat: 'file://' + concat,
+            fileConcatClip: 'file://' + concatClip,
             fileExtension: e.target.files[0].path.split('.').pop(),
+            fileIndex: 0,
             fileName: e.target.files[0].name,
             filePath: 'file://' + e.target.files[0].path,
             fileThumb: 'file://' + thumb,
             fileType: e.target.files[0].type
           }; this.store.state.fileInfo.push(fileInfo);
           const videoInfo: any = {
+            videoFrameRate: null,
             videoHeight: null,
+            videoKeyFrames: [],
             videoStreams: null,
             videoStreamsText: [],
             videoWidth: null
@@ -171,6 +181,8 @@ export class VideoPlayerComponent {
     } this.filters.filterInfo.filterRotation = rotation;
     // Reset and setup positioning of the video container.
     this.videoSetPosition(rotation);
+    // Create default clip segment.
+    this.$videoSegments.videoClipAdd();
   }
 
   videoPlayerMute(): void {
@@ -215,7 +227,8 @@ export class VideoPlayerComponent {
   }
 
   @HostListener('window:resize')
-  onResize() { if (this.store.state.fileInfo[0]) { this.videoSetPosition(this.filters.filterInfo.filterRotate); } }
+  onResize() { if (this.store.state.fileInfo[0]) { this.videoSetPosition(this.filters.filterInfo.filterRotate);
+    if (this.$videoSegments.videoSegments) { this.$videoSegments.videoClipUpdate(true); }}}
 
   videoSetCoordinates(v: string, e: any): void {
     // Get dimension values of video player.

@@ -161,9 +161,12 @@ export class VideoSaveComponent {
 
   videoSave: any = {
     videoAudio: '',
+    videoClip: false,
+    videoClips: [],
     videoCodec: '',
     videoCommand: '',
     videoConcat: '',
+    videoDelete: [],
     videoEditing: false,
     videoEncoding: '',
     videoErrorText: null,
@@ -200,6 +203,56 @@ export class VideoSaveComponent {
   videoSaveConcat(): void {
     // Define concatenation of multiple files.
     this.videoSave.videoConcat = (this.store.state.fileInfo.length > 1) && this.store.state.filterInfo.filterConcat.length == 0 ? '-f concat -safe 0' : '';
+  }
+
+  videoSaveClip(): void {
+    // Define clips creation for available files.
+    this.videoSave.videoClip = false;
+    this.videoSave.videoClips = [];
+    for (let [i, file] of this.store.state.fileInfo.entries()) {
+      // Get file total duration time in frames.
+      const frameRate: number = this.store.state.videoInfo[i].videoFrameRate;
+      const duration: number = this.store.state.playerInfo.playerVideo[i].duration * frameRate;
+      // Check if a clip has been added or modified.
+      if ((file.fileClips[0].start == 0 && file.fileClips[0].end == duration) && file.fileClips.length == 1) {
+        // Continue without processing the file.
+        this.videoSave.videoClips.push('');
+      } else {
+        let clips: string[] = [];
+        let concat: string = '';
+        for (let k = 0; k < file.fileClips.length; k++) {
+          const end: number = file.fileClips[k].end / frameRate;
+          const start: number = file.fileClips[k].start / frameRate;
+          const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_${k}.` + this.videoOutput.videoFormat.extensions[0]);
+          // Add clip creation command to list.
+          clips.push(`ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" -c:v copy -c:a copy "${output}"`);
+          // Add clip output file to temporal file for concatenation.
+          concat += 'file \'' + output + '\'\n';
+          // Add clip output file for later deletion.
+          this.videoSave.videoDelete.push(output);
+        }
+        const input: string = file.fileClip.slice(7);
+        const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.videoOutput.videoFormat.extensions[0]);
+        // Add clip concatenation command to list.
+        clips.push(`ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" -c:v copy -c:a copy "${output}"`);
+        // Add clip creation commands to final output.
+        this.videoSave.videoCommand += clips.join(' && ') + ' && ';
+        // Use clip concat output file instead of the original file.
+        this.videoSave.videoClips.push(output); this.videoSave.videoClip = true;
+        // Add clip output file for later deletion.
+        this.videoSave.videoDelete.push(output);
+        // Create temporal text file for the concatenation process.
+        this.ipc.send('write-file', input, concat);
+      }
+    } // Rebuild concatenation file if available and any clips were made.
+    if (this.videoSave.videoClip) {
+      let concat: string = '';
+      for (let i = 0; i < this.store.state.fileInfo.length; i++) {
+        const filePath: string = this.videoSave.videoClips[i] || this.store.state.fileInfo[i].filePath;
+        concat += 'file \'' + filePath + '\'\n';
+        // Create temporal text file for the concatenation process.
+      } this.ipc.send('write-file', this.store.state.fileInfo[0].fileConcatClip.slice(7), concat);
+    }
   }
 
   videoSaveEncoding(): void {
@@ -242,9 +295,18 @@ export class VideoSaveComponent {
   videoSaveInput(): void {
     // Define input file(s).
     this.videoSave.videoInput = '';
+    // Check if concatenation filter should be used.
     if (this.store.state.filterInfo.filterConcat.length > 0) {
-      for (let i = 0; i < this.store.state.fileInfo.length; i++) { this.videoSave.videoInput += `-i "${this.store.state.fileInfo[i].filePath}" `; }
-    } else { this.videoSave.videoInput = `-i "${this.store.state.fileInfo.length > 1 ? this.store.state.fileInfo[0].fileConcat : this.store.state.fileInfo[0].filePath}"`; }
+      for (let i = 0; i < this.store.state.fileInfo.length; i++) {
+        // Check if any clips were made and adjust the input file.
+        const filePath = this.videoSave.videoClips[i] || this.store.state.fileInfo[i].filePath;
+        this.videoSave.videoInput += `-i "${filePath}" `;
+      }
+    } else { // Check if any clips were made and adjust the input file.
+      const fileConcat = this.videoSave.videoClip ? this.store.state.fileInfo[0].fileConcatClip : this.store.state.fileInfo[0].fileConcat;
+      const filePath = this.videoSave.videoClips[0] || this.store.state.fileInfo[0].filePath;
+      this.videoSave.videoInput = `-i "${this.store.state.fileInfo.length > 1 ? fileConcat : filePath}"`;
+    }
   }
 
   videoSaveMetadata(): void {
@@ -264,7 +326,7 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    this.videoSave.videoCommand = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+    this.videoSave.videoCommand += `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
   }
 
   videoSaveDirectory(): void {
@@ -311,7 +373,10 @@ export class VideoSaveComponent {
   }
 
   videoSaveBuild(): void {
+    // Reset output command.
+    this.videoSave.videoCommand = '';
     // Build output command.
+    this.videoSaveClip();
     this.videoSaveConcat();
     this.videoSaveAudio();
     this.videoSaveFilters();
@@ -335,6 +400,10 @@ export class VideoSaveComponent {
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand, null);
     this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
+        // Delete temporal clip/concat files.
+        for (let file of this.videoSave.videoDelete) {
+          this.ipc.send('unlink', file.slice(7));
+        } // Update dialog related values.
         this.videoSave.videoSaved = true;
         this.videoSave.videoSaving = false;
         if (r) { this.videoSave.videoErrorText = r; }

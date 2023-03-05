@@ -14,6 +14,14 @@ progress[value]::-webkit-progress-value {
   @apply flex relative;
 }
 
+.progress-frames > div > div {
+  @apply absolute bg-slate-400 h-14 pointer-events-none w-px z-20;
+}
+
 .progress-thumb {
-  @apply absolute bg-slate-200 h-4 -mt-1 rounded-sm w-2;
+  @apply absolute bg-slate-200 h-4 -mt-1 rounded-sm w-2 z-30;
+}
+
+.progress-thumb > div {
+  @apply absolute bg-slate-200 h-[60px] left-1 pointer-events-none w-px;
 }

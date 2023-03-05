@@ -60,7 +60,7 @@ export class VideoInfoComponent {
   videoStreamLoad(): void {
     // Get video file metadata.
     const input: string = this.store.state.fileInfo[this.store.i].filePath;
-    const command: string = `ffprobe -v error -of json -show_format -show_entries streams -i "${input}"`;
+    const command: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${input}"`;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
     this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
@@ -71,7 +71,17 @@ export class VideoInfoComponent {
           this.store.state.videoInfo[this.store.i].videoStreamsText.push(this.videoStreamFormat(streams[i]));
           streams[i].view = null;
         } this.store.state.videoInfo[this.store.i].videoStreams = streams;
-        this.loaded.emit();
+        this.store.state.videoInfo[this.store.i].videoFrameRate = new Function(`return ${streams[1].r_frame_rate}`)();
+        // Get video stream key/i-frames.
+        const command: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=pts_time -of json -i "${input}"`;
+        this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+        this.ipc.once('exec', (err: any, r: string) => {
+          this.zone.run(() => {
+            let frames = JSON.parse(r).frames;
+            this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.map((v: any) => v.pts_time);
+            this.loaded.emit();
+          });
+        });
       });
     });
   }

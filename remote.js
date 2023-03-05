@@ -1,6 +1,6 @@
 const { dialog, ipcMain } = require('electron');
 const { exec } = require('child_process');
-const { writeFile } = require('fs');
+const { unlink, writeFile } = require('fs');
 const { dirname } = require('path');
 
 ipcMain.on('dialog-save', async (e, ...a) => {
@@ -10,6 +10,12 @@ ipcMain.on('dialog-save', async (e, ...a) => {
 ipcMain.on('exec', (e, ...a) => {
   exec(a[0], a[1], (error, stdout, stderr) => {
     e.reply('exec', error ? error : stdout);
+  });
+});
+
+ipcMain.on('unlink', (e, ...a) => {
+  unlink(a[0], (error, stdout, stderr) => {
+    e.reply('unlink', error ? error : stdout);
   });
 });
 

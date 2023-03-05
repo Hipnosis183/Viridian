@@ -77,18 +77,29 @@
     }
   },
   "VIDEO_SEGMENTS": {
+    "CLIP_ADD": "Add Clip",
+    "CLIP_REMOVE": "Remove Clip",
+    "CLIP_NAV_START": "Navigate to Start of Clip",
+    "CLIP_NAV_END": "Navigate to End of Clip",
+    "CLIP_SET_START": "Set Clip Start",
+    "CLIP_SET_END": "Set Clip End",
+    "CLIP_SNAP_START": "Snap Start to Nearest Clip End",
+    "CLIP_SNAP_END": "Snap End to Nearest Clip Start",
     "COMPATIBLE": {
       "FIRST": "The selected video file doesn't share the necessary parameters for lossless concatenation with the already opened files.",
       "SECOND": "The concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase."
     },
     "FILES_CLIPS": "Files | Clips",
     "FILE_ADD": "Add File",
-    "FILE_MOVE_UP": "Move Up",
-    "FILE_MOVE_DOWN": "Move Down",
+    "FILE_MOVE_UP": "Move File Up",
+    "FILE_MOVE_DOWN": "Move File Down",
     "FILE_REMOVE": "Remove File",
     "INCOMPATIBLE": {
       "FIRST": "The selected video file doesn't share the necessary parameters for concatenation with the already opened files.",
       "SECOND": "Make sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."
-    }
+    },
+    "SEGMENT_ADD": "Add File/Clip",
+    "SEGMENT_REMOVE": "Remove File/Clip",
+    "TIME": "Time"
   }
 }
