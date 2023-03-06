@@ -3,7 +3,7 @@
 }
 
 .modal-container {
-  @apply fixed flex h-full items-center justify-center left-0 top-0 w-full z-20;
+  @apply fixed flex h-full items-center justify-center left-0 top-0 w-full z-40;
 }
 
 .modal-container.hide {
