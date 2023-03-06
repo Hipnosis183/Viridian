@@ -49,6 +49,13 @@ export class VideoSegmentsComponent {
     if (v == undefined) { setTimeout(() => { this.loaded.emit(); }); }
   }
 
+  videoSplit: number = 2;
+  $videoSplit(e: any): void {
+    if (this.videoSplit < 2) { this.videoSplit = 2; }
+    if (this.videoSplit > 100) { this.videoSplit = 100; }
+    e.target.value = this.videoSplit;
+  }
+
   async videoFileAdd(e: any): Promise<void> {
     // Get video file metadata.
     const input: string = 'file://' + e.target.files[0].path;
@@ -134,17 +141,19 @@ export class VideoSegmentsComponent {
     }
   }
 
-  videoClipAdd(): void {
+  videoClipAdd(s?: number, e?: number): void {
     // Get current and total duration time in frames.
     const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
     const currentTime: number = this.store.state.playerInfo.playerVideo[this.store.i].currentTime * frameRate;
     const duration: number = this.store.state.playerInfo.playerVideo[this.store.i].duration * frameRate;
     // Create and store clip object into file information.
-    const fileClip: any = { color: 0, start: currentTime, end: duration };
-    this.store.state.fileInfo[this.store.i].fileClips.push(fileClip);
+    const fileClip: any = { color: 0, start: s ?? currentTime, end: e ?? duration };
+    const i = this.store.state.fileInfo[this.store.i].fileIndex;
+    this.store.state.fileInfo[this.store.i].fileClips.splice(i + 1, 0, fileClip);
     // Update currently selected clip index.
-    const i = this.store.state.fileInfo[this.store.i].fileClips.length - 1;
-    this.store.state.fileInfo[this.store.i].fileIndex = i;
+    this.store.state.fileInfo[this.store.i].fileIndex += 1;
+    // Remove split data if there's any.
+    if (this.videoClipSplit.length > 0) { this.videoClipSplit.shift(); }
   }
 
   videoClipChange(i: number, k: number): void {
@@ -155,7 +164,7 @@ export class VideoSegmentsComponent {
   videoClipCreate(e: any): void {
     // Wait for next cycle so Angular doesn't complain about values changing before checking.
     setTimeout(() => {
-      const i = this.store.state.fileInfo[this.store.i].fileClips.length - 1;
+      const i = this.store.state.fileInfo[this.store.i].fileIndex;
       // Set default position values for the clip element.
       e.style.transform = 'translate3d(0px, 0px, 0px)';
       // Create a resizable instance from the clip element.
@@ -176,6 +185,10 @@ export class VideoSegmentsComponent {
       this.store.state.fileInfo[this.store.i].fileColor = color == this.store.state.colorInfo.length - 1 ? 0 : color + 1;
       // Update clip elements display dimentions.
       this.videoClipUpdate();
+      // Create split clips if there's any.
+      if (this.videoClipSplit.length > 0) {
+        this.videoClipAdd(this.videoClipSplit[0].start, this.videoClipSplit[0].end);
+      }
     })
   }
 
@@ -200,6 +213,30 @@ export class VideoSegmentsComponent {
     this.store.state.fileInfo[this.store.i].fileClips[i].end = end;
   }
 
+  videoClipMoveDown(): void {
+    // Avoid moving file if it's already at the bottom.
+    const i = this.store.state.fileInfo[this.store.i].fileIndex;
+    if ((i + 1) < this.store.state.fileInfo[this.store.i].fileClips.length) {
+      // Update selected clip position.
+      const clip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
+      this.store.state.fileInfo[this.store.i].fileClips.splice(i + 1, 0, clip);
+      // Update current index.
+      this.store.state.fileInfo[this.store.i].fileIndex += 1;
+    }
+  }
+
+  videoClipMoveUp(): void {
+    // Avoid moving file if it's already at the top.
+    const i = this.store.state.fileInfo[this.store.i].fileIndex;
+    if (i > 0) {
+      // Update selected clip position.
+      const clip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
+      this.store.state.fileInfo[this.store.i].fileClips.splice(i - 1, 0, clip);
+      // Update current index.
+      this.store.state.fileInfo[this.store.i].fileIndex -= 1;
+    }
+  }
+
   videoClipNavigate(e: number): void {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     // Set the start/end of the selected clip as the current time.
@@ -220,17 +257,49 @@ export class VideoSegmentsComponent {
     }
   }
 
-  videoClipSet(e: number): void {
+  videoClipSet(e: number, v?: number): void {
     // Get current time in frames.
     const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
     const currentTime: number = this.store.state.playerInfo.playerVideo[this.store.i].currentTime * frameRate;
     // Create new clip if the selected time is bigger than the end time.
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
-    if (e && currentTime > this.store.state.fileInfo[this.store.i].fileClips[i].end) {
+    if (e && currentTime >= this.store.state.fileInfo[this.store.i].fileClips[i].end) {
       this.videoClipAdd();
     } else { // Update start/end time with the current time.
-      this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'] = currentTime;
+      this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'] = v ?? currentTime;
       this.videoClipUpdate();
+    }
+  }
+
+  videoClipSplit: any[] = [];
+  $videoClipSplit(e: number): void {
+    const i = this.store.state.fileInfo[this.store.i].fileIndex;
+    const fileClip: any = this.store.state.fileInfo[this.store.i].fileClips[i];
+    // Get current time in frames.
+    const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
+    const currentTime: number = this.store.state.playerInfo.playerVideo[this.store.i].currentTime * frameRate;
+    if (e) { // Split selected clip at the current time.
+      if (currentTime > fileClip.start && currentTime < fileClip.end) {
+        // Set split data to use during the process.
+        const end = fileClip.end;
+        // Update current clip end time.
+        this.videoClipSet(0);
+        // Create clip starting from current time.
+        this.videoClipAdd(currentTime, end);
+      } // Split selected clip in an even amount of clips.
+    } else {
+      // Calculate length for the clips.
+      const length = (fileClip.end - fileClip.start) / this.videoSplit;
+      // Update current clip end time.
+      this.videoClipSet(0, fileClip.start + length);
+      // Create clips of even length and desired amount.
+      for (let k = 0; k < this.videoSplit - 1; k++) {
+        // Set split data to use during the process.
+        const start = fileClip.start + length * (k + 1);
+        const end = start + length;
+        this.videoClipSplit.push({ start: start, end: end });
+      } // Create clip with the given time values.
+      this.videoClipAdd(this.videoClipSplit[0].start, this.videoClipSplit[0].end);
     }
   }
 

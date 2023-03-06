@@ -80,6 +80,8 @@
   "VIDEO_SEGMENTS": {
     "CLIP_ADD": "Add Clip",
     "CLIP_REMOVE": "Remove Clip",
+    "CLIP_MOVE_UP": "Move Clip Up",
+    "CLIP_MOVE_DOWN": "Move Clip Down",
     "CLIP_NAV_START": "Navigate to Start of Clip",
     "CLIP_NAV_END": "Navigate to End of Clip",
     "CLIP_SET_START": "Set Clip Start",
@@ -99,8 +101,13 @@
       "FIRST": "The selected video file doesn't share the necessary parameters for concatenation with the already opened files.",
       "SECOND": "Make sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."
     },
-    "SEGMENT_ADD": "Add File/Clip",
-    "SEGMENT_REMOVE": "Remove File/Clip",
+    "SEGMENT_ADD": "Add File/Clip...",
+    "SEGMENT_MOVE_UP": "Move Up File/Clip...",
+    "SEGMENT_MOVE_DOWN": "Move Down File/Clip...",
+    "SEGMENT_REMOVE": "Remove File/Clip...",
+    "SPLIT": "Split Clip...",
+    "SPLIT_CURRENT": "Split at Current Time",
+    "SPLIT_NUMBER": "Split into {{ number }} Clips",
     "TIME": "Time"
   }
 }

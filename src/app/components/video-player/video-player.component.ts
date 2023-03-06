@@ -124,7 +124,7 @@ export class VideoPlayerComponent {
             fileConcat: 'file://' + concat,
             fileConcatClip: 'file://' + concatClip,
             fileExtension: e.target.files[0].path.split('.').pop(),
-            fileIndex: 0,
+            fileIndex: -1,
             fileName: e.target.files[0].name,
             filePath: 'file://' + e.target.files[0].path,
             fileThumb: 'file://' + thumb,

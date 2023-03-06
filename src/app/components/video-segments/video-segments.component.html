@@ -65,8 +65,18 @@
       </div>
     </div>
     <div>
-      <ui-button buttonColor="dark" buttonIcon="move" [buttonTooltip]="'VIDEO_SEGMENTS.FILE_MOVE_UP' | translate" (click)="videoFileMoveUp()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="move" buttonIconClass="-scale-y-100" [buttonTooltip]="'VIDEO_SEGMENTS.FILE_MOVE_DOWN' | translate" (click)="videoFileMoveDown()"></ui-button>
+      <ui-button buttonColor="dark" buttonIcon="move" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_UP' | translate" [dropdown]="segmentMoveUp"></ui-button>
+      <div #segmentMoveUp>
+        <span (click)="videoFileMoveUp()">{{ 'VIDEO_SEGMENTS.FILE_MOVE_UP' | translate }}</span>
+        <div class="tippy-separator"></div>
+        <span (click)="videoClipMoveUp()">{{ 'VIDEO_SEGMENTS.CLIP_MOVE_UP' | translate }}</span>
+      </div>
+      <ui-button buttonColor="dark" buttonIcon="move" buttonIconClass="-scale-y-100" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN' | translate" [dropdown]="segmentMoveDown"></ui-button>
+      <div #segmentMoveDown>
+        <span (click)="videoFileMoveDown()">{{ 'VIDEO_SEGMENTS.FILE_MOVE_DOWN' | translate }}</span>
+        <div class="tippy-separator"></div>
+        <span (click)="videoClipMoveDown()">{{ 'VIDEO_SEGMENTS.CLIP_MOVE_DOWN' | translate }}</span>
+      </div>
     </div>
   </div>
   <input #videoAdd hidden title="" type="file" (change)="videoFileAdd($event)" (click)="videoAdd.value = ''" />

@@ -101,6 +101,14 @@
   @apply h-7 inline-flex ml-4 mr-2 my-1 w-0.5;
 }
 
+.player-split {
+  @apply flex justify-center mb-1.5 mt-1;
+}
+
+.player-split input {
+  @apply bg-slate-900 border border-slate-700 p-0.5 pl-2.5 rounded-[4px] text-center w-[80px];
+}
+
 .player-video {
   @apply overflow-hidden relative;
 }
