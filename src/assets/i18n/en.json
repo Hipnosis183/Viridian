@@ -115,6 +115,10 @@
       "SECOND": "The concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase."
     },
     "FILES_CLIPS": "Files | Clips",
+    "FRAME_ADVANCE": {
+      "PREV": "Previous Frame",
+      "NEXT": "Next Frame"
+    },
     "INCOMPATIBLE": {
       "FIRST": "The selected video file doesn't share the necessary parameters for concatenation with the already opened files.",
       "SECOND": "Make sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."

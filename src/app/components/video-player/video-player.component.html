@@ -38,6 +38,10 @@
     </div>
     <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-clips">
       <div>
+        <ui-button buttonColor="dark" buttonIcon="next" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" (click)="videoPlayerFrame(0)"></ui-button>
+        <ui-button buttonColor="dark" buttonIcon="next" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" (click)="videoPlayerFrame(1)"></ui-button>
+      </div>
+      <div>
         <ui-button buttonColor="dark" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
         <div #clipSplit>
           <div dropdownIgnore class="player-split">

@@ -185,6 +185,18 @@ export class VideoPlayerComponent {
     this.$videoSegments.videoClipAdd();
   }
 
+  videoPlayerFrame(v: number): void {
+    const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
+    const currentTime: number = this.playerInfo.playerVideo[this.store.i].currentTime;
+    const duration: number = this.playerInfo.playerVideo[this.store.i].duration;
+    // Calculate time value for previous/next frame.
+    const frameTime: any = (Math.round(currentTime * frameRate) + (v ? 1 : -1)) / frameRate;
+    // Update current time with new frame value.
+    if (frameTime < 0) { this.playerInfo.playerVideo[this.store.i].currentTime =  0; }
+    else if (frameTime > duration) { this.playerInfo.playerVideo[this.store.i].currentTime =  duration; }
+    else { this.playerInfo.playerVideo[this.store.i].currentTime = frameTime; }
+  }
+
   videoPlayerMute(): void {
     this.playerInfo.playerVideo[this.store.i].muted = !this.playerInfo.playerVideo[this.store.i].muted;
   }
