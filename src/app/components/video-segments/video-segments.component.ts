@@ -218,8 +218,8 @@ export class VideoSegmentsComponent {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     if ((i + 1) < this.store.state.fileInfo[this.store.i].fileClips.length) {
       // Update selected clip position.
-      const clip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
-      this.store.state.fileInfo[this.store.i].fileClips.splice(i + 1, 0, clip);
+      const fileClip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
+      this.store.state.fileInfo[this.store.i].fileClips.splice(i + 1, 0, fileClip);
       // Update current index.
       this.store.state.fileInfo[this.store.i].fileIndex += 1;
     }
@@ -230,19 +230,30 @@ export class VideoSegmentsComponent {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     if (i > 0) {
       // Update selected clip position.
-      const clip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
-      this.store.state.fileInfo[this.store.i].fileClips.splice(i - 1, 0, clip);
+      const fileClip = this.store.state.fileInfo[this.store.i].fileClips.splice(i, 1)[0];
+      this.store.state.fileInfo[this.store.i].fileClips.splice(i - 1, 0, fileClip);
       // Update current index.
       this.store.state.fileInfo[this.store.i].fileIndex -= 1;
     }
   }
 
-  videoClipNavigate(e: number): void {
+  videoClipNavigate(e: number, m: number): void {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
-    // Set the start/end of the selected clip as the current time.
     const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
-    const currentTime: number = this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'];
-    this.store.state.playerInfo.playerVideo[this.store.i].currentTime = currentTime / frameRate;
+    if (m) { // Set the start/end of the selected clip as the current time.
+      const currentTime: number = this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'];
+      this.store.state.playerInfo.playerVideo[this.store.i].currentTime = currentTime / frameRate;
+    } else { // Set the nearest keyframe as the current time.
+      const currentTime: number = this.store.state.playerInfo.playerVideo[this.store.i].currentTime;
+      const duration: number = this.store.state.playerInfo.playerVideo[this.store.i].duration * frameRate
+      const videoKeyFrames: any = [...this.store.state.videoInfo[this.store.i].videoKeyFrames, duration / frameRate];
+      for (let k = 0; k < videoKeyFrames.length; k++) { // Previous Keyframe.
+        if (e && (videoKeyFrames[k] >= currentTime) && (videoKeyFrames[k] > 0)) {
+          this.store.state.playerInfo.playerVideo[this.store.i].currentTime = videoKeyFrames[k - 1]; break; }
+        if (!e && (videoKeyFrames[k] > currentTime)) { // Next Keyframe.
+          this.store.state.playerInfo.playerVideo[this.store.i].currentTime = videoKeyFrames[k]; break; }
+      }
+    }
   }
 
   videoClipRemove(): void {
@@ -303,25 +314,38 @@ export class VideoSegmentsComponent {
     }
   }
 
-  videoClipSnap(e: number): void {
+  videoClipSnap(e: number, m: number): void {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     // Get total duration time in frames.
     const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
     const duration: number = this.store.state.playerInfo.playerVideo[this.store.i].duration * frameRate;
-    if (e) {
-      let nearest: number = 0;
-      for (let [k, clip] of this.store.state.fileInfo[this.store.i].fileClips.entries()) {
-        if (k != i && clip.end < this.store.state.fileInfo[this.store.i].fileClips[i].end) {
-          if (clip.end > nearest) { nearest = clip.end; }
-        } // Update selected clip start time with nearest clip end value.
-      } this.store.state.fileInfo[this.store.i].fileClips[i].start = nearest;
+    if (m) {
+      if (e) {
+        let nearest: number = 0;
+        for (let [k, clip] of this.store.state.fileInfo[this.store.i].fileClips.entries()) {
+          if (k != i && clip.end < this.store.state.fileInfo[this.store.i].fileClips[i].end) {
+            if (clip.end > nearest) { nearest = clip.end; }
+          } // Update selected clip start time with nearest clip end value.
+        } this.store.state.fileInfo[this.store.i].fileClips[i].start = nearest;
+      } else {
+        let nearest: number = duration;
+        for (let [k, clip] of this.store.state.fileInfo[this.store.i].fileClips.entries()) {
+          if (k != i && clip.start > this.store.state.fileInfo[this.store.i].fileClips[i].start) {
+            if (clip.start < nearest) { nearest = clip.start; }
+          } // Update selected clip end time with nearest clip start value.
+        } this.store.state.fileInfo[this.store.i].fileClips[i].end = nearest;
+      }
     } else {
-      let nearest: number = duration;
-      for (let [k, clip] of this.store.state.fileInfo[this.store.i].fileClips.entries()) {
-        if (k != i && clip.start > this.store.state.fileInfo[this.store.i].fileClips[i].start) {
-          if (clip.start < nearest) { nearest = clip.start; }
-        } // Update selected clip end time with nearest clip start value.
-      } this.store.state.fileInfo[this.store.i].fileClips[i].end = nearest;
+      let nearest: number = 0;
+      let distance: number = duration;
+      const videoKeyFrames: any = [...this.store.state.videoInfo[this.store.i].videoKeyFrames, duration / frameRate];
+      for (let k = 0; k < videoKeyFrames.length; k++) {
+        const keyframe = videoKeyFrames[k] * frameRate;
+        const length = Math.abs(this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'] - keyframe);
+        if (length < Math.abs(distance)) {
+          distance = length; nearest = keyframe;
+        } // Update selected clip start/end time with nearest keyframe value.
+      } this.store.state.fileInfo[this.store.i].fileClips[i][e ? 'start': 'end'] = nearest;
     } this.videoClipUpdate();
   }
 

@@ -8,7 +8,7 @@
   @apply flex flex-col !important;
 }
 .tippy-box[data-theme ~= 'dropdown'] > .tippy-content span {
-  @apply bg-slate-800 hover:bg-slate-600 cursor-pointer flex items-center min-h-[32px] px-3;
+  @apply bg-slate-800 hover:bg-slate-600 cursor-pointer flex items-center justify-center min-h-[32px] px-3;
   transition: background-color 0.2s;
 }
 .tippy-box[data-theme ~= 'dropdown'] .tippy-separator {

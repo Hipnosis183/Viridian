@@ -38,23 +38,43 @@
     </div>
     <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-clips">
       <div>
-        <ui-button buttonColor="dark" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.SPLIT' | translate" [dropdown]="clipSplit"></ui-button>
+        <ui-button buttonColor="dark" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
         <div #clipSplit>
           <div dropdownIgnore class="player-split">
             <input dropdownIgnore [(ngModel)]="$videoSegments.videoSplit" (input)="$videoSegments.$videoSplit($event)" min="2" [max]="100" type="number">
           </div>
-          <span (click)="$videoSegments.$videoClipSplit(0)" class="flex justify-center">{{ 'VIDEO_SEGMENTS.SPLIT_NUMBER' | translate: { number: $videoSegments.videoSplit } }}</span>
+          <span (click)="$videoSegments.$videoClipSplit(0)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: $videoSegments.videoSplit } }}</span>
           <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.$videoClipSplit(1)">{{ 'VIDEO_SEGMENTS.SPLIT_CURRENT' | translate }}</span>
+          <span (click)="$videoSegments.$videoClipSplit(1)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</span>
         </div>
         <div class="player-separator-dark"></div>
-        <ui-button buttonColor="dark" buttonIcon="clip-set" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET_START' | translate" (click)="$videoSegments.videoClipSet(1)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="clip-set" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET_END' | translate" (click)="$videoSegments.videoClipSet(0)"></ui-button>
+        <ui-button buttonColor="dark" buttonIcon="clip-set" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate" (click)="$videoSegments.videoClipSet(1)"></ui-button>
+        <ui-button buttonColor="dark" buttonIcon="clip-set" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate" (click)="$videoSegments.videoClipSet(0)"></ui-button>
         <div class="player-separator-dark"></div>
-        <ui-button buttonColor="dark" buttonIcon="clip-nav" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV_START' | translate" (click)="$videoSegments.videoClipNavigate(1)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="clip-nav" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV_END' | translate" (click)="$videoSegments.videoClipNavigate(0)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="clip-snap" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP_START' | translate" (click)="$videoSegments.videoClipSnap(1)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="clip-snap" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP_END' | translate" (click)="$videoSegments.videoClipSnap(0)"></ui-button>
+        <ui-button buttonColor="dark" buttonIcon="clip-nav" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavStart"></ui-button>
+        <div #clipNavStart>
+          <span (click)="$videoSegments.videoClipNavigate(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</span>
+          <div class="tippy-separator"></div>
+          <span (click)="$videoSegments.videoClipNavigate(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</span>
+        </div>
+        <ui-button buttonColor="dark" buttonIcon="clip-nav" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavEnd"></ui-button>
+        <div #clipNavEnd>
+          <span (click)="$videoSegments.videoClipNavigate(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</span>
+          <div class="tippy-separator"></div>
+          <span (click)="$videoSegments.videoClipNavigate(0, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</span>
+        </div>
+        <ui-button buttonColor="dark" buttonIcon="clip-snap" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate" [dropdown]="clipSnapStart"></ui-button>
+        <div #clipSnapStart>
+          <span (click)="$videoSegments.videoClipSnap(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</span>
+          <div class="tippy-separator"></div>
+          <span (click)="$videoSegments.videoClipSnap(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</span>
+        </div>
+        <ui-button buttonColor="dark" buttonIcon="clip-snap" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate" [dropdown]="clipSnapEnd"></ui-button>
+        <div #clipSnapEnd>
+          <span (click)="$videoSegments.videoClipSnap(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</span>
+          <div class="tippy-separator"></div>
+          <span (click)="$videoSegments.videoClipSnap(0, 0)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</span>
+        </div>
       </div>
     </div>
     <div *ngIf="!store.state.fileInfo[0]" class="player-open">

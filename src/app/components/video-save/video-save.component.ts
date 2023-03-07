@@ -266,7 +266,7 @@ export class VideoSaveComponent {
             if (this.videoOutput.videoCut == 'lossless') { mode = '-c:v copy -c:a copy'; }
             if (this.videoOutput.videoCut == 'keyframe') { mode = '-c:v copy -c:a copy';
               // Change clip starting point to the nearest previous keyframe.
-              const videoKeyFrames: any = [...this.store.state.videoInfo[i].videoKeyFrames, duration];
+              const videoKeyFrames: any = [...this.store.state.videoInfo[i].videoKeyFrames, duration / frameRate];
               for (let l = 0; l < videoKeyFrames.length; l++) {
                 if (videoKeyFrames[l] > start) { start = videoKeyFrames[l-1]; break; }
               }
