@@ -102,7 +102,10 @@
         [buttonToggle]="playerInfo.playerVideo[store.i] && !playerInfo.playerVideo[store.i].paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="stop" [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate" (click)="videoPlayerStop()"></ui-button>
       <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo[store.i]?.muted || playerInfo.playerVideo[store.i]?.volume == 0 ? 'mute' : 'volume'"
-        [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate" (click)="videoPlayerMute()"></ui-button>
+        [tooltip]="playerVolume" [tooltipDelay]="[0, 0]" [tooltipKeep]="true" (click)="videoPlayerMute()"></ui-button>
+      <div #playerVolume>
+        <ui-slider *ngIf="playerInfo.playerVideo[store.i]" [sliderValue]="playerInfo.playerVideo[store.i].volume * 100" (sliderValueChange)="videoPlayerVolume($event / 100)" [sliderVertical]="true"></ui-slider>
+      </div>
       <p>{{ (playerInfo.playerVideo[store.i]?.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo[store.i]?.duration || 0) | duration: true }}</p>
     </div>
     <div>

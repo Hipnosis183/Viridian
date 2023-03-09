@@ -212,6 +212,10 @@ export class VideoPlayerComponent {
     this.playerInfo.playerVideo[this.store.i].currentTime = 0;
   }
 
+  videoPlayerVolume(v: number): void {
+    this.playerInfo.playerVideo[this.store.i].volume = v;
+  }
+
   videoFilterClear(): void {
     this.filters.filterInfo.filterClear = !this.filters.filterInfo.filterClear;
   }
