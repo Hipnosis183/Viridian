@@ -59,9 +59,17 @@ export class VideoPlayerComponent {
       draggable: true, within: 'parent'
     });
     // Update crop element state on resize event.
-    this.playerInfo.playerResizable.on('resize', () => { this.$cropOnResize(); });
+    this.playerInfo.playerResizable.on('resize', () => { this.$cropOnResize();
+    // Update tooltip positioning.
+    if (this.playerInfo.playerCrop._tippy.popperInstance) {
+      this.playerInfo.playerCrop._tippy.popperInstance.update();
+    }});
     // Update crop element state on drag event.
-    this.playerInfo.playerResizable.draggable.on('drag', () => { this.$cropOnDrag(); });
+    this.playerInfo.playerResizable.draggable.on('drag', () => { this.$cropOnDrag();
+    // Update tooltip positioning.
+    if (this.playerInfo.playerCrop._tippy.popperInstance) {
+      this.playerInfo.playerCrop._tippy.popperInstance.update();
+    }});
   }
 
   $cropOnResize = this.delay.throttle(() => this.cropOnResize(), 100);
@@ -78,10 +86,6 @@ export class VideoPlayerComponent {
       this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
     if (this.store.state.filterInfo.filterHeight > this.store.state.playerInfo.playerHeight) {
       this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
-    // Update tooltip positioning.
-    if (this.playerInfo.playerCrop._tippy.popperInstance) {
-      this.playerInfo.playerCrop._tippy.popperInstance.update();
-    }
   }
 
   $cropOnDrag = this.delay.throttle(() => this.cropOnDrag(), 100);
@@ -97,10 +101,6 @@ export class VideoPlayerComponent {
       this.store.state.filterInfo.filterWidth = this.store.state.playerInfo.playerWidth; }
     if (this.store.state.filterInfo.filterHeight > this.store.state.playerInfo.playerHeight) {
       this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
-    // Update tooltip positioning.
-    if (this.playerInfo.playerCrop._tippy.popperInstance)  {
-      this.playerInfo.playerCrop._tippy.popperInstance.update();
-    }
   }
 
   async videoFileOpen(e: any): Promise<void> {
