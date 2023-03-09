@@ -1,0 +1,21 @@
+.slider-container {
+  @apply flex h-[14px] items-center justify-center w-[146px];
+}
+
+.slider-container.vertical {
+  @apply h-[146px] w-[14px] !important;
+}
+
+.slider-container input {
+  @apply appearance-none cursor-pointer flex h-[7px] rounded-full;
+  background: linear-gradient(to right, #0f172a 0%, #0f172a 50%, #f1f5f9 50%, #f1f5f9 100%);
+}
+
+.slider-container.vertical input {
+  transform: rotate(270deg);
+}
+
+.slider-container input::-webkit-slider-thumb {
+  @apply appearance-none bg-white h-4 rounded-full w-4;
+  border: solid 1px #0f172a;
+}

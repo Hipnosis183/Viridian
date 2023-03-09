@@ -24,6 +24,7 @@ import { UiProgressComponent } from './ui/ui-progress/ui-progress.component';
 import { UiSelectComponent } from './ui/ui-select/ui-select.component';
 import { UiOptionComponent } from './ui/ui-select/ui-option/ui-option.component';
 import { UiOptionGroupComponent } from './ui/ui-select/ui-option-group/ui-option-group.component';
+import { UiSliderComponent } from './ui/ui-slider/ui-slider.component';
 
 // Directives.
 import { DropdownDirective } from './directives/dropdown.directive';
@@ -67,6 +68,7 @@ function appInitializerFactory(translate: TranslateService) {
     UiSelectComponent,
     UiOptionComponent,
     UiOptionGroupComponent,
+    UiSliderComponent,
     DropdownDirective,
     RenderedDirective,
     TooltipDirective,
