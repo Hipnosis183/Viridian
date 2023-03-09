@@ -183,7 +183,7 @@ export class VideoSegmentsComponent {
       this.store.state.fileInfo[this.store.i].fileClips[i].e = e;
       // Update color assignment value index.
       this.store.state.fileInfo[this.store.i].fileColor = color == this.store.state.colorInfo.length - 1 ? 0 : color + 1;
-      // Update clip elements display dimentions.
+      // Update clip elements display dimensions.
       this.videoClipUpdate();
       // Create split clips if there's any.
       if (this.videoClipSplit.length > 0) {
@@ -192,9 +192,9 @@ export class VideoSegmentsComponent {
     })
   }
 
-  $clipOnDrag = this.delay.throttle(() => this.clipOnResize('drag'), 100);
-  $clipOnResize = this.delay.throttle(() => this.clipOnResize('resize'), 100);
-  clipOnResize(e: string): void {
+  $clipOnDrag = this.delay.throttle(() => this.clipOnResize(), 100);
+  $clipOnResize = this.delay.throttle(() => this.clipOnResize(), 100);
+  clipOnResize(): void {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     const fileClip: any = this.store.state.fileInfo[this.store.i].fileClips[i];
     // Get clip bar element.
@@ -205,9 +205,10 @@ export class VideoSegmentsComponent {
     // Calculate clip element position and dimensions from the real time values.
     const re = /translate3d\((?<x>.*?)px, (?<y>.*?)px/;
     const res: any = re.exec(fileClip.e.style.transform);
-    let start = res.groups.x * duration / playerClip.offsetWidth; let end;
-    if (e == 'drag') { end = start + fileClip.end - fileClip.start; }
-    if (e == 'resize') { end = (parseInt(res.groups.x) + fileClip.e.offsetWidth) * duration / playerClip.offsetWidth; }
+    let start: number = (+res.groups.x) * duration / playerClip.offsetWidth;
+    let end: number = ((+res.groups.x) + fileClip.e.getBoundingClientRect().width) * duration / playerClip.offsetWidth;
+    // Fix precision problems when end value overflows duration time.
+    if (end > duration) { start = duration - start; end = duration; }
     // Update clip object timing values.
     this.store.state.fileInfo[this.store.i].fileClips[i].start = start;
     this.store.state.fileInfo[this.store.i].fileClips[i].end = end;
