@@ -78,6 +78,12 @@
     }
   },
   "VIDEO_SEGMENTS": {
+    "CLIP_MANUAL": {
+      "END": "End Time",
+      "LENGTH": "Length",
+      "POSITION": "Position",
+      "START": "Start Time"
+    },
     "CLIP_NAV": {
       "": "Navigate to...",
       "START": {

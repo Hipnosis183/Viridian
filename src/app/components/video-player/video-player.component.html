@@ -36,10 +36,11 @@
         </div>
       </div>
     </div>
-    <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-clips">
-      <div>
+    <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-segments">
+      <div class="flex">
         <ui-button buttonColor="dark" buttonIcon="next" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" (click)="videoPlayerFrame(0)"></ui-button>
         <ui-button buttonColor="dark" buttonIcon="next" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" (click)="videoPlayerFrame(1)"></ui-button>
+        <p>{{ (playerInfo.playerVideo[store.i]?.currentTime * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }} / {{ (playerInfo.playerVideo[store.i]?.duration * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }}</p>
       </div>
       <div>
         <ui-button buttonColor="dark" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
@@ -124,11 +125,61 @@
   </div>
   <ui-progress [progressTime]="playerInfo.playerVideo[store.i]?.currentTime" [progressDuration]="playerInfo.playerVideo[store.i]?.duration" [progressExtend]="$videoSegments?.videoSegments"
     [progressFrames]="store.state.videoInfo[store.i]?.videoKeyFrames" (progressTimeChange)="playerInfo.playerVideo[store.i].currentTime = $event"></ui-progress>
-  <div id="playerClip" class="player-clip" [class]="!$videoSegments?.videoSegments ? store.state.fileInfo[0]?.fileClips[0]?.e ? 'hidden' : 'flex mt-0' : 'flex h-8 mt-4'">
+  <div id="playerClip" class="player-clips" [class]="!$videoSegments?.videoSegments ? store.state.fileInfo[0]?.fileClips[0]?.e ? 'hidden' : 'flex mt-0' : 'flex h-8 mt-4'">
     <div *ngFor="let file of store.state.fileInfo; index as i" [hidden]="i != store.i">
-      <div *ngFor="let clip of file.fileClips; index as k" rendered (rendered)="$videoSegments.videoClipCreate($event)"
-      [ngStyle]="{ 'border-color': k == file.fileIndex ? store.state.colorInfo[file.fileClips[k].color][500] : store.state.colorInfo[file.fileClips[k].color][700] }"
-      (mousedown)="store.state.fileInfo[i].fileIndex = k" [class]="k == file.fileIndex ? 'cursor-move opacity-90 z-10' : 'cursor-pointer opacity-80'"></div>
+      <div *ngFor="let clip of file.fileClips; index as k">
+        <div #playerClip rendered (rendered)="$videoSegments.videoClipCreate($event)" (mousedown)="store.state.fileInfo[i].fileIndex = k"
+          [tooltip]="playerClip_" tooltipFollow="horizontal" [tooltipKeep]="true" tooltipPlace="bottom" tooltipTheme="tooltip-lite" tooltipTrigger="mouseenter"
+          [ngStyle]="{ 'border-color': k == file.fileIndex ? store.state.colorInfo[file.fileClips[k].color][500] : store.state.colorInfo[file.fileClips[k].color][700] }"
+          [class]="k == file.fileIndex ? 'cursor-move opacity-90 z-10' : 'cursor-pointer opacity-80'"></div>
+        <div #playerClip_ class="player-clip">
+          <div>
+            <div>
+              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate">-->[</p>
+              <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+                (input)="$videoSegments.videoClipManualInput(0, $event, k, playerClip)"
+                (keyup)="$videoSegments.videoClipManualKeyUp(0, $event, k, playerClip)"
+                (keydown)="$videoSegments.videoClipManualKeyDown()">
+            </div>
+            <div>
+              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate">[--></p>
+              <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+                (input)="$videoSegments.videoClipManualInput(1, $event, k, playerClip)"
+                (keyup)="$videoSegments.videoClipManualKeyUp(1, $event, k, playerClip)"
+                (keydown)="$videoSegments.videoClipManualKeyDown()">
+            </div>
+            <div>
+              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate"><--]</p>
+              <input [ngModel]="clip.end / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+                (input)="$videoSegments.videoClipManualInput(2, $event, k, playerClip)"
+                (keyup)="$videoSegments.videoClipManualKeyUp(2, $event, k, playerClip)"
+                (keydown)="$videoSegments.videoClipManualKeyDown()">
+            </div>
+            <div>
+              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate"><--></p>
+              <input [ngModel]="(clip.end - clip.start) / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+                (input)="$videoSegments.videoClipManualInput(3, $event, k, playerClip)"
+                (keyup)="$videoSegments.videoClipManualKeyUp(3, $event, k, playerClip)"
+                (keydown)="$videoSegments.videoClipManualKeyDown()">
+            </div>
+          </div>
+          <span></span>
+          <div>
+            <div>
+              <input [ngModel]="clip.start | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
+            </div>
+            <div>
+              <input [ngModel]="clip.start | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
+            </div>
+            <div>
+              <input [ngModel]="clip.end | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
+            </div>
+            <div>
+              <input [ngModel]="(clip.end - clip.start) | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

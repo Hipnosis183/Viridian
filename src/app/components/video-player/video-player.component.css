@@ -15,24 +15,50 @@
 }
 
 .player-clip {
-  @apply bg-slate-1000 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
+  @apply flex py-1 space-x-2.5;
+}
+
+.player-clip > div {
+  @apply flex flex-col space-y-2;
 }
 
 .player-clip > div > div {
-  @apply absolute border-4 h-8;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply flex items-center space-x-2;
+}
+
+.player-clip > span {
+  @apply bg-slate-200 h-[136px] w-px;
+}
+
+.player-clip input {
+  @apply h-7 p-0.5 pl-1 rounded text-slate-900;
+  border: solid 1px #ccc;
+}
+
+.player-clip input[type="number"] {
+  @apply w-[106px];
+}
+
+.player-clip input[type="time"] {
+  @apply w-[136px];
+}
+
+.player-clip input[type="time"]::-webkit-calendar-picker-indicator {
+  @apply hover:bg-slate-200 cursor-pointer rounded;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.player-clip p {
+  @apply mr-[2px] text-center text-slate-900 w-[26px] !important;
 }
 
 .player-clips {
-  @apply absolute bg-slate-800 bottom-[-51px] border border-slate-1000 border-t-0 h-[50px] justify-end pb-0 pt-[0.4rem] px-[15px] w-[calc(100%+2px)];
+  @apply bg-slate-1000 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
 }
 
-.player-clips > div:last-child {
-  @apply ml-auto;
-}
-
-.player-clips > div ui-button:not(:first-child) {
-  @apply ml-2;
+.player-clips > div > div > div:first-child {
+  @apply absolute border-4 h-8;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
 .player-controls {
@@ -56,7 +82,7 @@
 }
 
 .player-crop input {
-  @apply p-0.5 pl-1 rounded-[4px] text-slate-900 w-[80px];
+  @apply p-0.5 pl-1 rounded text-slate-900 w-[80px];
   border: solid 1px #ccc;
 }
 
@@ -88,6 +114,22 @@
   @apply absolute border-2 border-dashed border-slate-100 h-[calc(100%-36px)] opacity-20 rounded-md w-[calc(100%-36px)];
 }
 
+.player-segments {
+  @apply absolute bg-slate-800 bottom-[-51px] border border-slate-1000 border-t-0 h-[50px] justify-end pb-0 pt-[0.4rem] px-[15px] w-[calc(100%+2px)];
+}
+
+.player-segments > div:last-child {
+  @apply ml-auto;
+}
+
+.player-segments > div:first-child p {
+  @apply ml-4 mt-1.5;
+}
+
+.player-segments > div ui-button:not(:first-child) {
+  @apply ml-2;
+}
+
 .player-separator-dark {
   @apply bg-slate-900;
 }
@@ -106,7 +148,7 @@
 }
 
 .player-split input {
-  @apply bg-slate-900 border border-slate-700 p-0.5 pl-2.5 rounded-[4px] text-center w-[80px];
+  @apply bg-slate-900 border border-slate-700 p-0.5 pl-2.5 rounded text-center w-[80px];
 }
 
 .player-video {

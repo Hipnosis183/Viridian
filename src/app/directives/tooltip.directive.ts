@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, SimpleChanges } from '@angular/core';
-import tippy from 'tippy.js';
+import tippy, { followCursor } from 'tippy.js';
 
 @Directive({ selector: '[tooltip]' })
 
@@ -8,6 +8,7 @@ export class TooltipDirective {
   constructor(private elementRef: ElementRef) { }
 
   @Input() tooltip!: any;
+  @Input() tooltipFollow?: any = false;
   @Input() tooltipKeep?: boolean = false;
   @Input() tooltipOffset?: any = [0, 10];
   @Input() tooltipPlace?: any = 'top';
@@ -20,14 +21,15 @@ export class TooltipDirective {
         appendTo: () => document.body,
         animation: 'fade',
         content: this.tooltip,
-        delay: this.tooltipKeep ? [0, 0] : [800, 200],
+        delay: this.tooltipKeep ? [400, 100] : [800, 200],
         duration: [200, 200],
+        followCursor: this.tooltipFollow,
         hideOnClick: this.tooltipKeep ? false : true,
         interactive: this.tooltipKeep ? true : false,
-        interactiveBorder: 80,
-        moveTransition: 'transform 0.2s linear',
+        interactiveBorder: 10,
         offset: this.tooltipOffset,
         placement: this.tooltipPlace,
+        plugins: [followCursor],
         theme: this.tooltipTheme,
         trigger: this.tooltipTrigger,
       });

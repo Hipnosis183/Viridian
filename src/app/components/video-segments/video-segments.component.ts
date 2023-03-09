@@ -214,6 +214,85 @@ export class VideoSegmentsComponent {
     this.store.state.fileInfo[this.store.i].fileClips[i].end = end;
   }
 
+  videoClipManual: number = 0;
+  videoClipManualKeyDown(): void {
+    // Avoid processing on input event if a key is pressed.
+    this.videoClipManual = 1;
+  }
+
+  videoClipManualInput(m: number, v: any, i: number, e: any): void {
+    // Process input only if modified from input time panel.
+    if (!this.videoClipManual) {
+      // Add missing key code from event.
+      v.keyCode = 0;
+      this.videoClipManualKeyUp(m, v, i, e);
+      this.videoClipManual = 0;
+    }
+  }
+
+  videoClipManualKeyUp(m: number, v: any, i: number, e: any): void {
+    this.videoClipManual = 0;
+    const fileClip: any = this.store.state.fileInfo[this.store.i].fileClips[i];
+    const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
+    const duration: number = this.store.state.playerInfo.playerVideo[this.store.i].duration * frameRate;
+    // Get input time in frames.
+    const t = v.target.value.split(':'); let time;
+    const input = Math.round(((+t[0]) * 60 * 60 + (+t[1]) * 60 + (+t[2])) * frameRate * 1000) / 1000;
+    switch (m) {
+      case 0: { // Update clip start time maintaining end time (X axis).
+        let timeClip: number = 0;
+        // Control wrapping of time when using down arrow.
+        if (v.keyCode == 40) {
+          timeClip = (input > fileClip.end ? 0 : input) - fileClip.start;
+          fileClip.start += timeClip; fileClip.end += timeClip;
+        } else {
+          if (input - fileClip.start + fileClip.end > duration) {
+            timeClip = duration - fileClip.end;
+            fileClip.start += timeClip; fileClip.end += timeClip;
+          } else {
+            timeClip = input - fileClip.start;
+            fileClip.start += timeClip; fileClip.end += timeClip; }
+        } time = fileClip.start; break;
+      }
+      case 1: { // Update clip start time.
+        // Control wrapping of time when using down arrow.
+        if (v.keyCode == 40) {
+          if (input > fileClip.end) { fileClip.start = 0; }
+          else { fileClip.start = input; }
+        } else {
+          if (input > fileClip.end) { fileClip.start = fileClip.end; }
+          else { fileClip.start = input; }
+        } time = fileClip.start; break;
+      }
+      case 2: { // Update clip end time.
+        if (input > duration) { fileClip.end = duration; }
+        else if (input < fileClip.start) { fileClip.end = fileClip.start; }
+        else { fileClip.end = input; }
+        time = fileClip.end; break;
+      }
+      case 3: { // Update clip start/end time from length.
+        if (fileClip.start + input > duration) { fileClip.end = duration; }
+        else { fileClip.end = fileClip.start + input; }
+        time = fileClip.end - fileClip.start; break;
+      }
+    } // Update input value with fixed time and update clip dimensions/position.
+    v.target.value = new Date(Math.round(time / frameRate * 1000)).toISOString().substring(11, 23);
+    this.videoClipUpdate();
+    // Update tooltip positioning.
+    if (e._tippy.popperInstance) { e._tippy.popperInstance.update(); }
+    return time;
+  }
+
+  videoClipManualFrame(m: number, v: any, i: number, e: any): void {
+    const frameRate: number = this.store.state.videoInfo[this.store.i].videoFrameRate;
+    const frameTime: number = Math.round(v.target.value / frameRate * 1000);
+    const value = { // Fix input value to be formatted correctly.
+      target: { value: new Date(frameTime).toISOString().substring(11, 23) },
+      keyCode: 0
+    }; // Update time values with corrected input.
+    v.target.value = this.videoClipManualKeyUp(m, value, i, e);
+  }
+
   videoClipMoveDown(): void {
     // Avoid moving file if it's already at the bottom.
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
