@@ -77,8 +77,9 @@ export class VideoInfoComponent {
         this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
         this.ipc.once('exec', (err: any, r: string) => {
           this.zone.run(() => {
-            let frames = JSON.parse(r).frames;
-            this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.map((v: any) => v.pts_time);
+            let frames = JSON.parse(r).frames.map((v: any) => v.pts_time);
+            // Sort keyframes to ensure they are in order.
+            this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.sort((a: number, b: number) => { return a - b; });
             this.loaded.emit();
           });
         });

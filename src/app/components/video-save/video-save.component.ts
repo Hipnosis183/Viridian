@@ -245,12 +245,12 @@ export class VideoSaveComponent {
             // Detect the point where to split the clip.
             for (let l = 0; l < this.store.state.videoInfo[i].videoKeyFrames.length; l++) {
               if (this.store.state.videoInfo[i].videoKeyFrames[l] < end &&
-                this.store.state.videoInfo[i].videoKeyFrames[l] > start) {
-                cutpoint = this.store.state.videoInfo[i].videoKeyFrames[l]; break; }
+                this.store.state.videoInfo[i].videoKeyFrames[l] >= start) {
+                cutpoint = (+this.store.state.videoInfo[i].videoKeyFrames[l]); break; }
             } // Create list with the splitted clips.
             let splits: any[] = [];
-            splits.push({ start: start, end: cutpoint || end, mode: start == cutpoint ? '-c:v copy -c:a copy': '' });
-            if (cutpoint) { splits.push({ start: cutpoint, end: end, mode: '-c:v copy -c:a copy' }); }
+            splits.push({ start: start, end: start == cutpoint ? end : cutpoint || end, mode: start == cutpoint ? '-c:v copy -c:a copy': '' });
+            if (cutpoint && start != cutpoint) { splits.push({ start: cutpoint, end: end, mode: '-c:v copy -c:a copy' }); }
             for (let [l, clip] of splits.entries()) {
               const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_${k}_${l}.` + this.videoOutput.videoFormat.extensions[0]);
               // Add clip creation command to list.

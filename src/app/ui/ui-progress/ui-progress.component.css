@@ -15,7 +15,7 @@ progress[value]::-webkit-progress-value {
 }
 
 .progress-frames > div > div {
-  @apply absolute bg-slate-400 h-14 pointer-events-none w-px z-20;
+  @apply absolute bg-slate-400/50 h-14 pointer-events-none w-px z-20;
 }
 
 .progress-thumb {
