@@ -72,7 +72,7 @@ export class VideoPlayerComponent {
     }});
   }
 
-  $cropOnResize = this.delay.throttle(() => this.cropOnResize(), 100);
+  $cropOnResize = this.delay.throttle(() => this.cropOnResize(), 10);
   cropOnResize(): void {
     // Update crop filter values.
     this.filters.filterInit();
@@ -88,7 +88,7 @@ export class VideoPlayerComponent {
       this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
   }
 
-  $cropOnDrag = this.delay.throttle(() => this.cropOnDrag(), 100);
+  $cropOnDrag = this.delay.throttle(() => this.cropOnDrag(), 10);
   cropOnDrag(): void {
     // Update crop filter values.
     this.filters.filterCrop();

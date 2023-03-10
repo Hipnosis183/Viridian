@@ -192,8 +192,8 @@ export class VideoSegmentsComponent {
     })
   }
 
-  $clipOnDrag = this.delay.throttle(() => this.clipOnResize(), 100);
-  $clipOnResize = this.delay.throttle(() => this.clipOnResize(), 100);
+  $clipOnDrag = this.delay.throttle(() => this.clipOnResize(), 10);
+  $clipOnResize = this.delay.throttle(() => this.clipOnResize(), 10);
   clipOnResize(): void {
     const i = this.store.state.fileInfo[this.store.i].fileIndex;
     const fileClip: any = this.store.state.fileInfo[this.store.i].fileClips[i];
