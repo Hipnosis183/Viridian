@@ -15,7 +15,7 @@
 }
 
 .modal-modal {
-  @apply bg-slate-850 border border-slate-700 p-6 relative rounded-lg;
+  @apply bg-slate-850 border border-slate-700 p-4 relative rounded-lg;
 }
 
 .modal-overlay {

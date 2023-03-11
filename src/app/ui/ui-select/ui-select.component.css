@@ -1,5 +1,5 @@
 label {
-  @apply flex mb-1 ml-1 text-slate-100;
+  @apply flex mb-1 ml-1 text-[15px] text-slate-100;
 }
 
 :host {
@@ -9,7 +9,7 @@ label {
 .select-input.closed,
 .select-input.open-i,
 .select-input.open {
-  @apply hover:bg-slate-700 border flex h-10 relative w-full;
+  @apply hover:bg-slate-700 border flex h-9 relative w-full;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
@@ -35,7 +35,7 @@ label {
 
 .select-options-i {
   @apply absolute bg-slate-900 border border-b-0 border-slate-700 overflow-hidden rounded-t w-full z-50;
-  transform: translateY(calc(-100% - 40px));
+  transform: translateY(calc(-100% - 36px));
 }
 
 .select-options > div,

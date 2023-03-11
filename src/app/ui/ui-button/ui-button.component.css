@@ -1,5 +1,5 @@
 button {
-  @apply cursor-pointer px-4 py-2 rounded;
+  @apply cursor-pointer rounded;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
@@ -148,9 +148,9 @@ button.dark.outlined.active {
 }
 
 button.button-text {
-  @apply flex items-center pl-1.5 py-0.5 [&>img]:h-9 [&>img]:mr-1;
+  @apply flex items-center pl-1 pr-4 [&>img]:h-9;
 }
 
 button.button-icon {
-  @apply p-0 [&>img]:h-9;
+  @apply [&>img]:h-9;
 }

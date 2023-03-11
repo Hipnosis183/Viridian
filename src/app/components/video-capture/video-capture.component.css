@@ -1,13 +1,13 @@
 .capture-buttons {
-  @apply flex justify-evenly;
+  @apply flex justify-evenly mt-5;
 }
 
 .capture-output {
-  @apply flex mb-6 space-x-2;
+  @apply flex space-x-2;
 }
 
 :host ::ng-deep .capture-output ui-button {
-  @apply flex items-end pb-2 [&_img]:h-6 [&_img]:w-9 !important;
+  @apply flex items-end pb-1.5 [&_img]:h-6 [&_img]:w-8 !important;
 }
 
 :host ::ng-deep .capture-output ui-input {

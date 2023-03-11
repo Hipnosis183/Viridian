@@ -1,5 +1,5 @@
 input {
-  @apply bg-slate-900 hover:bg-slate-700 cursor-text flex h-10 px-3 rounded text-slate-100 w-full;
+  @apply bg-slate-900 hover:bg-slate-700 cursor-text flex h-9 px-3 rounded text-slate-100 w-full;
   transition: background-color 0.2s ease-in-out;
 }
 
@@ -9,5 +9,5 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 label {
-  @apply flex mb-1 ml-1 text-slate-100;
+  @apply flex mb-1 ml-1 text-[15px] text-slate-100;
 }
