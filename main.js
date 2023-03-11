@@ -12,8 +12,8 @@ const createPaths = (mk) => {
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: 1080,
+    height: 680,
     show: false,
     webPreferences: {
       contextIsolation: false,
