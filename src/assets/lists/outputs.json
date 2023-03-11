@@ -1,0 +1,12 @@
+{
+  "concat": [
+    { "code": "merge", "name": "Merge Everything" },
+    { "code": "clips", "name": "Individual Clips" }
+  ],
+  "cut": [
+    { "code": "smart", "name": "Smart (Lossy + Lossless)" },
+    { "code": "lossy", "name": "Lossy" },
+    { "code": "lossless", "name": "Lossless (Normal)" },
+    { "code": "keyframe", "name": "Lossless (Key/I-frame)" }
+  ]
+}

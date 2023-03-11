@@ -35,7 +35,8 @@
   },
   "VIDEO_SAVE": {
     "CANCEL": "Cancel",
-    "CUT_CLIP": "Cut Mode",
+    "CLIP_CUT": "Cut Mode",
+    "CLIP_CONCAT": "Concatenation Mode",
     "CLOSE": "Close",
     "EDIT": "Manual",
     "ENCODING": {

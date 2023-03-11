@@ -56,7 +56,7 @@
             </ui-option-group>
             <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
               <div *ngFor="let e of videoRates; index as i">
-                <ui-option *ngIf="i != 0 && (store.state.fileInfo.length > 1 ? (e.value == 'vbv2' || e.value == 'abr2') ? false : true : true)"
+                <ui-option *ngIf="i != 0 && (videoSave.videoCut ? (e.value == 'vbv2' || e.value == 'abr2') ? false : true : true)"
                   [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
               </div>
             </ui-option-group>
@@ -129,21 +129,25 @@
     </ui-group-box>
     <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
       <div class="save-section">
+        <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CLIP_CONCAT' | translate" [(selectValue)]="videoOutput.videoConcat">
+          <div *ngFor="let c of videoConcat; index as i">
+            <ui-option *ngIf="i == 0" [optionLabel]="c.name" [optionSelected]="true" [optionValue]="c.code"></ui-option>
+            <ui-option *ngIf="i > 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
+          </div>
+        </ui-select>
+        <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CLIP_CUT' | translate" [(selectValue)]="videoOutput.videoCut">
+          <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+            <ui-option [optionLabel]="videoCut[0].name" [optionSelected]="true" [optionValue]="videoCut[0].code"></ui-option>
+          </ui-option-group>
+          <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
+            <div *ngFor="let c of videoCut; index as i">
+              <ui-option *ngIf="i != 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
+            </div>
+          </ui-option-group>
+        </ui-select>
         <div class="save-output">
           <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoSave.videoOutput"></ui-input>
           <ui-button buttonColor="dark" buttonIcon="more" (click)="videoSaveDirectory()"></ui-button>
-        </div>
-        <div>
-          <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CUT_CLIP' | translate" [(selectValue)]="videoOutput.videoCut">
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-              <ui-option [optionLabel]="videoCutting[0].name" [optionSelected]="true" [optionValue]="videoCutting[0].code"></ui-option>
-            </ui-option-group>
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
-              <div *ngFor="let c of videoCutting; index as i">
-                <ui-option *ngIf="i != 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
-              </div>
-            </ui-option-group>
-          </ui-select>
         </div>
       </div>
     </ui-group-box>
