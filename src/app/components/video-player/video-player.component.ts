@@ -112,7 +112,7 @@ export class VideoPlayerComponent {
       const concatClip: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat_clip.txt');
       const thumb: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
       // Generate video thumbnail.
-      const command: string = `ffmpeg -v error -y -i "file://${e.target.files[0].path}" -vf "select=eq(n\\,0),scale=100:-1" -vframes 1 -qmin 1 -q:v 1 ${thumb}`;
+      const command: string = `ffmpeg -v error -y -i "file://${e.target.files[0].path}" -vf "select=eq(n\\,0),scale=100:-1" -vframes 1 -qmin 1 -q:v 1 "${thumb}"`;
       this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
       this.ipc.once('exec', (err: any, r: string) => {
         this.zone.run(() => {
