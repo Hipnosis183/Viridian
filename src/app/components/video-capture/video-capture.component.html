@@ -1,5 +1,5 @@
 <ui-modal [modalHidden]="!videoCapture.videoCapture">
-  <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+  <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate" class="flex mt-1">
     <div class="capture-output">
       <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoCapture.videoOutput"></ui-input>
       <ui-button buttonColor="dark" buttonIcon="more" (click)="videoCaptureDirectory()"></ui-button>

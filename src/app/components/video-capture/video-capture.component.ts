@@ -50,7 +50,7 @@ export class VideoCaptureComponent {
     // Accomodate frame time for select filter.
     frameTime = frameTime > 0 ? frameTime - 1 : frameTime;
     // Capture current frame to output image file.
-    const command: string = `ffmpeg -v error -y -i "${this.store.state.fileInfo[this.store.i].filePath}" -vf "select=eq(n\\,${frameTime})" -vframes 1 -qmin 1 -q:v 1 ${this.videoCapture.videoOutput}`;
+    const command: string = `ffmpeg -v error -y -i "${this.store.state.fileInfo[this.store.i].filePath}" -vf "select=eq(n\\,${frameTime})" -vframes 1 -qmin 1 -q:v 1 "${this.videoCapture.videoOutput}"`;
     this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
     this.ipc.once('exec', (err: any, r: string) => { this.zone.run(() => { this.$videoCapture(); }); });
   }
