@@ -169,16 +169,16 @@
           <span></span>
           <div>
             <div>
-              <input [ngModel]="clip.start | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
+              <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
             </div>
             <div>
-              <input [ngModel]="clip.start | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
+              <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
             </div>
             <div>
-              <input [ngModel]="clip.end | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
+              <input [ngModel]="clip.end | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
             </div>
             <div>
-              <input [ngModel]="(clip.end - clip.start) | number: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
+              <input [ngModel]="(clip.end - clip.start) | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
             </div>
           </div>
         </div>

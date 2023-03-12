@@ -34,7 +34,8 @@ import { TooltipDirective } from './directives/tooltip.directive';
 // Pipes.
 import { DurationPipe } from './pipes/duration.pipe';
 import { ExpressionPipe } from './pipes/expression.pipe';
-import { FileSizePipe } from './pipes/filesize.pipe';
+import { FileSizePipe } from './pipes/file-size.pipe';
+import { NumberInputPipe } from './pipes/number-input.pipe';
 
 // Translate service setup.
 import { Injector, APP_INITIALIZER } from '@angular/core';
@@ -75,6 +76,7 @@ function appInitializerFactory(translate: TranslateService) {
     DurationPipe,
     ExpressionPipe,
     FileSizePipe,
+    NumberInputPipe,
   ],
   imports: [
     AppRoutingModule,

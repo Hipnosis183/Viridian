@@ -1,5 +1,5 @@
 <div id="progress" class="progress-container">
-  <progress min="0" [max]="progressDuration | number" [value]="progressTime" (mouseup)="updateProgress($event)"></progress>
+  <progress min="0" [max]="progressDuration | numberInput" [value]="progressTime" (mouseup)="updateProgress($event)"></progress>
   <div class="progress-thumb">
     <div [hidden]="!progressExtend"></div>
   </div>

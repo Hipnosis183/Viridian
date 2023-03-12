@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 const unitsShort = ['B', 'KB', 'MB', 'GB'];
 const unitsLong = ['Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes'];
 
-@Pipe({ name: 'filesize' })
+@Pipe({ name: 'fileSize' })
 
 export class FileSizePipe implements PipeTransform {
 

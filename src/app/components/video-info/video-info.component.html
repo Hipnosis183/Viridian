@@ -18,7 +18,7 @@
             <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
             <td>{{ store.state.fileInfo[store.i].fileType }}</td>
             <td>{{ stream.bit_rate / 1000 }} kb/s</td>
-            <td>{{ stream.duration | duration }} - {{ stream.size | filesize }}</td>
+            <td>{{ stream.duration | duration }} - {{ stream.size | fileSize }}</td>
           </tr>
           <tr *ngIf="i != 0" (click)="videoStreamOpen(i)">
             <td>{{ stream.index }}</td>
