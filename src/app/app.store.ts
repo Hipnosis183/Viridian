@@ -45,6 +45,8 @@ const { state } = createStore({
   playerInfo: {
     playerCrop: null,
     playerIndex: 0,
+    playerLoaded: [],
+    playerLoading: [],
     playerVideo: [],
     playerHeight: 0,
     playerWidth: 0,

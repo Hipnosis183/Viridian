@@ -135,6 +135,8 @@ export class VideoSegmentsComponent {
       this.store.state.filterInfo.filterConcat = filterConcat;
       this.store.state.fileInfo.splice(i, 1);
       this.store.state.videoInfo.splice(i, 1);
+      this.store.state.playerInfo.playerLoaded.splice(i, 1);
+      this.store.state.playerInfo.playerLoading.splice(i, 1);
       this.store.state.playerInfo.playerVideo.splice(i, 1);
       // Update concatenation text file.
       this.videoFileConcat();

@@ -25,6 +25,7 @@
     "FLIP_H": "Flip Horizontally",
     "FLIP_V": "Flip Vertically",
     "LIST": "File Tracks",
+    "LOADING": "Loading File...",
     "MUTE": "Mute",
     "NO_AUDIO": "Remove Audio",
     "PLAY_PAUSE": "Play | Pause",

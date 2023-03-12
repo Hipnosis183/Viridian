@@ -94,6 +94,14 @@
   @apply absolute bg-slate-1000 border border-slate-1000 flex justify-center;
 }
 
+.player-loading {
+  @apply flex flex-col items-center space-y-4;
+}
+
+.player-loading > img {
+  @apply bg-slate-1000 border border-slate-700 h-[120px] object-cover rounded w-[200px];
+}
+
 .player-open {
   @apply h-full w-full;
 }

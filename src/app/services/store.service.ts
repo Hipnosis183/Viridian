@@ -34,6 +34,8 @@ export class StoreService {
     this.state.playerInfo = {
       playerCrop: this.state.playerInfo.playerCrop,
       playerIndex: 0,
+      playerLoaded: [],
+      playerLoading: [],
       playerVideo: [],
       playerHeight: 0,
       playerWidth: 0,
