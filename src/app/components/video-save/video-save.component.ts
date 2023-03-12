@@ -158,6 +158,14 @@ export class VideoSaveComponent {
     } this.$videoReencode();
   }
 
+  videoFilterClear(): void {
+    this.filters.filterInfo.filterClear = !this.filters.filterInfo.filterClear;
+  }
+
+  videoFilterNoAudio(): void {
+    this.filters.filterInfo.filterNoAudio = !this.filters.filterInfo.filterNoAudio;
+  }
+
   videoReencode: boolean = false;
   $videoReencode(): void {
     this.videoSaveFilters();
@@ -189,6 +197,8 @@ export class VideoSaveComponent {
   $videoSave(c: boolean = false): void {
     // Setup values for the scale filter and video export.
     if (!c) { this.filters.filterInit(); }
+    this.filters.filterInfo.filterClear = false;
+    this.filters.filterInfo.filterNoAudio = false;
     // Check and update filters state.
     this.videoSaveReset();
     // Check and update cut/clip state.

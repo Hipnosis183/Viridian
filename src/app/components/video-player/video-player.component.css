@@ -107,7 +107,7 @@
 }
 
 .player-open > div {
-  @apply absolute flex flex-col h-full items-center justify-center w-full [&>h1]:text-2xl [&>h1]:font-medium [&>p]:opacity-60;
+  @apply absolute flex-col h-full items-center justify-center w-full [&>h1]:text-2xl [&>h1]:font-medium [&>p]:opacity-60;
 }
 
 .player-open img {

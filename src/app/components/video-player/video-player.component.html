@@ -90,7 +90,7 @@
       </div>
     </div>
     <div *ngIf="!store.state.playerInfo.playerLoaded[0]" class="player-open">
-      <div>
+      <div [class]="store.state.playerInfo.playerLoading[store.state.fileInfo.length - 1] ? 'hidden' : 'flex'">
         <img [src]="'/assets/images/open.svg'">
         <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
         <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
@@ -118,10 +118,7 @@
     <div>
       <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="segments" [buttonToggle]="$videoSegments.videoSegments" [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate" (click)="$videoSegments.$videoSegments()"></ui-button>
-      <div class="player-separator-lite"></div>
       <ui-button buttonColor="dark" buttonIcon="list" [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate" (click)="$videoInfo.$videoInfo()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear" [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio" [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate" (click)="videoFilterNoAudio()"></ui-button>
       <div class="player-separator-lite"></div>
       <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate" (click)="videoFilterRotate(false)"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="rotate" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate" (click)="videoFilterRotate(true)"></ui-button>

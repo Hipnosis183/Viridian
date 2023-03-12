@@ -7,7 +7,31 @@ textarea {
 }
 
 .save-container {
+  @apply flex space-x-4;
+}
+
+.save-error {
+  @apply bg-slate-900 border border-slate-850 max-h-[50vh] overflow-auto p-4 w-full whitespace-nowrap;
+}
+
+.save-options {
   @apply gap-x-4 gap-y-5 grid grid-cols-2 grid-rows-2 mt-1;
+}
+
+.save-output {
+  @apply flex space-x-2;
+}
+
+:host ::ng-deep .save-output ui-button {
+  @apply flex items-end pb-1.5 [&_img]:h-6 [&_img]:w-8 !important;
+}
+
+.save-saving {
+  @apply w-[350px] [&_p]:text-center;
+}
+
+.save-saving > div {
+  @apply flex flex-col items-center justify-center space-y-8;
 }
 
 .save-section {
@@ -22,22 +46,18 @@ textarea {
   @apply flex items-end [&_button]:w-max;
 }
 
-.save-saving {
-  @apply w-[350px] [&_p]:text-center;
+.save-separator {
+  @apply bg-slate-600 h-px w-full;
 }
 
-.save-saving > div {
-  @apply flex flex-col items-center justify-center space-y-8;
+.save-side {
+  @apply flex flex-col justify-end mb-3 space-y-4;
 }
 
-.save-error {
-  @apply bg-slate-900 border border-slate-850 max-h-[50vh] overflow-auto p-4 w-full whitespace-nowrap;
+.save-side > span {
+  @apply flex justify-around -mb-2;
 }
 
-.save-output {
-  @apply flex space-x-2;
-}
-
-:host ::ng-deep .save-output ui-button {
-  @apply flex items-end pb-1.5 [&_img]:h-6 [&_img]:w-8 !important;
+:host ::ng-deep .save-side > ui-button > button {
+  @apply w-full;
 }

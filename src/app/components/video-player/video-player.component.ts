@@ -220,16 +220,8 @@ export class VideoPlayerComponent {
     this.playerInfo.playerVideo[this.store.i].volume = v;
   }
 
-  videoFilterClear(): void {
-    this.filters.filterInfo.filterClear = !this.filters.filterInfo.filterClear;
-  }
-
   videoFilterCrop(): void {
     this.filters.filterInfo.filterCrop = !this.filters.filterInfo.filterCrop;
-  }
-
-  videoFilterNoAudio(): void {
-    this.filters.filterInfo.filterNoAudio = !this.filters.filterInfo.filterNoAudio;
   }
 
   videoFilterFlip(v: boolean): void {
