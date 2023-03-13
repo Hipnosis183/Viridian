@@ -1,21 +1,3 @@
-<ui-modal *ngIf="videoCompatible">
-  <div class="segments-compatibility">
-    <div>
-      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.FIRST' | translate }}</p>
-      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.SECOND' | translate }}</p>
-    </div>
-    <ui-button buttonColor="success" buttonIcon="done" (click)="$videoCompatible()">{{ 'GENERAL.OK' | translate }}</ui-button>
-  </div>
-</ui-modal>
-<ui-modal *ngIf="videoIncompatible">
-  <div class="segments-compatibility">
-    <div>
-      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.FIRST' | translate }}</p>
-      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.SECOND' | translate }}</p>
-    </div>
-    <ui-button buttonColor="success" buttonIcon="done" (click)="$videoIncompatible()">{{ 'GENERAL.OK' | translate }}</ui-button>
-  </div>
-</ui-modal>
 <div [hidden]="!videoSegments" class="segments-container">
   <p>{{ 'VIDEO_SEGMENTS.FILES_CLIPS' | translate }}</p>
   <div class="segments-files">
@@ -79,5 +61,5 @@
       </div>
     </div>
   </div>
-  <input #videoAdd hidden title="" type="file" (change)="videoFileAdd($event)" (click)="videoAdd.value = ''" />
+  <input #videoAdd hidden title="" type="file" multiple (change)="videoFileAdd($event)" (click)="videoAdd.value = ''" />
 </div>

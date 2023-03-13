@@ -103,44 +103,86 @@ export class VideoPlayerComponent {
       this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
   }
 
-  async videoFileOpen(e: any): Promise<void> {
-    const file = e.target.files && e.target.files[0];
-    if (file.type.indexOf('video') > -1) {
-      // Define temporal file paths.
-      const clip: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_clip.txt');
-      const concat: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat.txt');
-      const concatClip: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_concat_clip.txt');
-      const thumb: string = this.store.state.filePaths.temp + e.target.files[0].name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
-      // Generate video thumbnail.
-      const command: string = `ffmpeg -v error -y -i "file://${e.target.files[0].path}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${thumb}"`;
+  videoFileOpen: any[] = [];
+  videoFileOpenT: number = 0;
+  $videoFileOpen(e: any): void {
+    this.videoFileOpenT = Object.values(e.target.files).length;
+    this.videoFileOpen = Object.values(e.target.files).slice(1);
+    this.videoFileLoad(e.target.files[0]);
+  }
+
+  videoFileCompatible: boolean = false;
+  videoFileIncompatible: boolean = false;
+  videoFileCompatibility(): void {
+    this.videoFileCompatible = false;
+    this.videoFileIncompatible = false;
+  }
+
+  videoFileLoad(e: any): void {
+    // Check if open file is a valid video file.
+    if (e.type.indexOf('video') > -1) {
+      this.store.state.playerInfo.playerLoaded = false;
+      // Get video file metadata.
+      const input: string = 'file://' + e.path;
+      const command: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${input}"`;
       this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
       this.ipc.once('exec', (err: any, r: string) => {
         this.zone.run(() => {
-          // Load video file information into store.
-          const fileInfo: any = {
-            fileColor: 0,
-            fileClip: 'file://' + clip,
-            fileClips: [],
-            fileConcat: 'file://' + concat,
-            fileConcatClip: 'file://' + concatClip,
-            fileExtension: e.target.files[0].path.split('.').pop(),
-            fileIndex: -1,
-            fileName: e.target.files[0].name,
-            filePath: 'file://' + e.target.files[0].path,
-            fileThumb: 'file://' + thumb,
-            fileType: e.target.files[0].type
-          }; this.store.state.fileInfo.push(fileInfo);
-          const videoInfo: any = {
-            videoFrameRate: null,
-            videoHeight: null,
-            videoKeyFrames: [],
-            videoStreams: null,
-            videoStreamsText: [],
-            videoWidth: null
-          }; this.store.state.videoInfo.push(videoInfo);
-          this.store.state.playerInfo.playerLoading.push(true);
-          // Update concatenation text file.
-          this.$videoSegments.videoFileConcat();
+          // Get general format and streams/tracks information.
+          const videos = this.store.state.videoInfo.length;
+          const stream = this.store.state.videoInfo[0]?.videoStreams[1];
+          let streams = [JSON.parse(r).format];
+          streams = streams.concat(JSON.parse(r).streams);
+          // Add file if the width and height are the same as the default video.
+          if (videos == 0 || ((stream.height == streams[1].height) && (stream.width == streams[1].width))) {
+            // Define concat mode to use (demuxer/filter) depending on the codec and timebase.
+            if (videos > 0 && ((stream.codec_name != streams[1].codec_name) || (stream.time_base != streams[1].time_base))) {
+              this.store.state.filterInfo.filterConcat.push(input);
+              this.videoFileCompatible = true;
+            } // Define temporal file paths.
+            const clip: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_clip.txt');
+            const concat: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_concat.txt');
+            const concatClip: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_concat_clip.txt');
+            const thumb: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
+            // Generate video thumbnail.
+            const command: string = `ffmpeg -v error -y -i "file://${e.path}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${thumb}"`;
+            this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+            this.ipc.once('exec', (err: any, r: string) => {
+              this.zone.run(() => {
+                // Load video file information into store.
+                const fileInfo: any = {
+                  fileColor: 0,
+                  fileClip: 'file://' + clip,
+                  fileClips: [],
+                  fileConcat: 'file://' + concat,
+                  fileConcatClip: 'file://' + concatClip,
+                  fileExtension: e.path.split('.').pop(),
+                  fileIndex: -1,
+                  fileName: e.name,
+                  filePath: 'file://' + e.path,
+                  fileThumb: 'file://' + thumb,
+                  fileType: e.type
+                }; this.store.state.fileInfo.push(fileInfo);
+                const videoInfo: any = {
+                  videoFrameRate: null,
+                  videoHeight: null,
+                  videoKeyFrames: [],
+                  videoStreams: null,
+                  videoStreamsText: [],
+                  videoWidth: null
+                }; this.store.state.videoInfo.push(videoInfo);
+                this.store.state.playerInfo.playerLoading = true;
+                // Update concatenation text file.
+                this.$videoSegments.videoFileConcat();
+              });
+            });
+          } else { this.videoFileIncompatible = true;
+            if (this.videoFileOpen.length == 0) {
+              // Set opened files as fully loaded.
+              this.store.state.playerInfo.playerLoaded = true;
+              this.store.state.playerInfo.playerLoading = false;
+            }
+          }
         });
       });
     }
@@ -184,9 +226,16 @@ export class VideoPlayerComponent {
     this.videoSetPosition(rotation);
     // Create default clip segment.
     this.$videoSegments.videoClipAdd();
-    // Set opened file as fully loaded.
-    this.store.state.playerInfo.playerLoaded[this.store.i] = true;
-    this.store.state.playerInfo.playerLoading[this.store.i] = false;
+    // Open split/merge panel if multiple files are open.
+    if (this.store.state.fileInfo.length > 1) {
+      setTimeout(() => { this.$videoSegments.videoSegments = true; });
+    } // Load remaining files if there are any.
+    if (this.videoFileOpen.length > 0) {
+      this.videoFileLoad(this.videoFileOpen.shift());
+    } else { // Set opened files as fully loaded.
+      this.store.state.playerInfo.playerLoaded = true;
+      this.store.state.playerInfo.playerLoading = false;
+    }
   }
 
   videoPlayerFrame(v: number): void {

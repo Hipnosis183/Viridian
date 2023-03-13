@@ -1,15 +1,29 @@
-<ui-modal *ngIf="store.state.playerInfo.playerLoading[store.state.fileInfo.length - 1]">
+<ui-modal *ngIf="store.state.playerInfo.playerLoading">
   <div class="player-loading">
     <img [src]="store.state.fileInfo[store.state.fileInfo.length - 1].fileThumb">
-    <p>{{ 'VIDEO_PLAYER.LOADING' | translate }}</p>
+    <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.videoFileOpenT - this.videoFileOpen.length, total: this.videoFileOpenT } }}</p>
+  </div>
+</ui-modal>
+<ui-modal *ngIf="store.state.playerInfo.playerLoaded && (videoFileCompatible || videoFileIncompatible)">
+  <div class="player-compatibility">
+    <div *ngIf="videoFileCompatible">
+      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.FIRST' | translate }}</p>
+      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.SECOND' | translate }}</p>
+    </div>
+    <span *ngIf="videoFileCompatible && videoFileIncompatible"></span>
+    <div *ngIf="videoFileIncompatible">
+      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.FIRST' | translate }}</p>
+      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.SECOND' | translate }}</p>
+    </div>
+    <ui-button buttonColor="success" buttonIcon="done" (click)="videoFileCompatibility()">{{ 'GENERAL.OK' | translate }}</ui-button>
   </div>
 </ui-modal>
 <div class="flex">
   <div id="playerEdit" class="player-edit" [class]="videoSegments.videoSegments ? 'h-[calc(100%-186px)] w-[calc(100%-316px)]' : 'h-[calc(100%-100px)] w-full'">
-    <div id="playerContainer" class="player-video" [class]="store.state.playerInfo.playerLoaded[0] ? 'flex' : 'hidden'">
+    <div id="playerContainer" class="player-video" [class]="store.state.playerInfo.playerLoaded ? 'flex' : 'hidden'">
       <div id="$playerContainer" class="player-video flex">
         <div *ngFor="let file of store.state.fileInfo; index as i" class="contents">
-          <video [hidden]="!store.state.playerInfo.playerLoaded[i] || i != store.i" [muted]="true"
+          <video [hidden]="!store.state.playerInfo.playerLoaded || i != store.i" [muted]="true"
             [src]="file.filePath" (loadedmetadata)="$videoFileLoaded($event)" (timeupdate)="null"></video>
         </div>
       </div>
@@ -89,20 +103,20 @@
         </div>
       </div>
     </div>
-    <div *ngIf="!store.state.playerInfo.playerLoaded[0]" class="player-open">
-      <div [class]="store.state.playerInfo.playerLoading[store.state.fileInfo.length - 1] ? 'hidden' : 'flex'">
+    <div *ngIf="!store.state.playerInfo.playerLoaded" class="player-open">
+      <div [class]="store.state.playerInfo.playerLoading ? 'hidden' : 'flex'">
         <img [src]="'/assets/images/open.svg'">
         <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
         <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
         <span></span>
       </div>
-      <input title="" type="file" (change)="videoFileOpen($event)" />
+      <input title="" type="file" multiple (change)="$videoFileOpen($event)" />
     </div>
   </div>
-  <video-segments #videoSegments (added)="videoFileOpen($event)" (inited)="$videoSegments = videoSegments"
+  <video-segments #videoSegments (added)="$videoFileOpen($event)" (inited)="$videoSegments = videoSegments"
     (loaded)="videoSetPosition(filters.filterInfo.filterRotate)" (removed)="videoFileClose()"></video-segments>
 </div>
-<div class="player-controls" [ngClass]="[videoSegments.videoSegments ? 'h-[106px]' : 'h-[70px]', !store.state.playerInfo.playerLoaded[0] ? 'pointer-events-none' : '']">
+<div class="player-controls" [ngClass]="[videoSegments.videoSegments ? 'h-[106px]' : 'h-[70px]', !store.state.playerInfo.playerLoaded ? 'pointer-events-none' : '']">
   <div class="player-buttons">
     <div class="flex">
       <ui-button buttonColor="dark" [buttonIcon]="(!playerInfo.playerVideo[store.i] || playerInfo.playerVideo[store.i].paused) || playerInfo.playerVideo[store.i]?.ended ? 'play' : 'pause'"
@@ -192,4 +206,4 @@
 </div>
 <video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime"></video-capture>
 <video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
-<video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded[0]" (loaded)="$videoSave = videoSave"></video-save>
+<video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded" (loaded)="$videoSave = videoSave"></video-save>

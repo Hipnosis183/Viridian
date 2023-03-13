@@ -56,27 +56,10 @@ export class VideoSegmentsComponent {
     e.target.value = this.videoSplit;
   }
 
-  async videoFileAdd(e: any): Promise<void> {
-    // Get video file metadata.
-    const input: string = 'file://' + e.target.files[0].path;
-    const command: string = `ffprobe -v error -of json -show_format -show_entries streams -i "${input}"`;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-    this.ipc.once('exec', (err: any, r: string) => {
-      this.zone.run(() => {
-        // Get general format and streams/tracks information.
-        const stream = this.store.state.videoInfo[0].videoStreams[1];
-        let streams = [JSON.parse(r).format];
-        streams = streams.concat(JSON.parse(r).streams);
-        // Add file if the width and height are the same as the default video.
-        if ((stream.height == streams[1].height) && (stream.width == streams[1].width)) {
-          // Define concat mode to use (demuxer/filter) depending on the codec and timebase.
-          if ((stream.codec_name != streams[1].codec_name) || (stream.time_base != streams[1].time_base)) {
-            this.store.state.filterInfo.filterConcat.push(input);
-            this.$videoCompatible();
-          } this.added.emit(e);
-        } else { this.$videoIncompatible(); }
-      });
-    });
+  videoFileCompatible: boolean = false;
+  videoFileIncompatible: boolean = false;
+  videoFileAdd(e: any): void {
+    this.added.emit(e);
   }
 
   videoFileChange(i: number): void {
@@ -135,8 +118,6 @@ export class VideoSegmentsComponent {
       this.store.state.filterInfo.filterConcat = filterConcat;
       this.store.state.fileInfo.splice(i, 1);
       this.store.state.videoInfo.splice(i, 1);
-      this.store.state.playerInfo.playerLoaded.splice(i, 1);
-      this.store.state.playerInfo.playerLoading.splice(i, 1);
       this.store.state.playerInfo.playerVideo.splice(i, 1);
       // Update concatenation text file.
       this.videoFileConcat();

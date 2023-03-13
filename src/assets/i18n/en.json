@@ -19,13 +19,13 @@
     "CROP": "Crop Video",
     "DONE": "Export Video",
     "FILE_OPEN": {
-      "TITLE": "Select video file",
-      "SUB": "or drag and drop it here"
+      "TITLE": "Select video file(s)",
+      "SUB": "or drag and drop here"
     },
     "FLIP_H": "Flip Horizontally",
     "FLIP_V": "Flip Vertically",
     "LIST": "File Tracks",
-    "LOADING": "Loading File...",
+    "LOADING": "Loading File... ({{ current }}/{{ total }})",
     "MUTE": "Mute",
     "NO_AUDIO": "Remove Audio",
     "PLAY_PAUSE": "Play | Pause",
@@ -119,7 +119,7 @@
       "NUMBER": "Into {{ number }} Clips"
     },
     "COMPATIBLE": {
-      "FIRST": "The selected video file doesn't share the necessary parameters for lossless concatenation with the already opened files.",
+      "FIRST": "One or more of the files don't share the necessary parameters to use lossless concatenation with the already opened ones, but they were added anyways.",
       "SECOND": "The concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase."
     },
     "FILES_CLIPS": "Files | Clips",
@@ -128,13 +128,13 @@
       "NEXT": "Next Frame"
     },
     "INCOMPATIBLE": {
-      "FIRST": "The selected video file doesn't share the necessary parameters for concatenation with the already opened files.",
+      "FIRST": "One or more of the files don't share the necessary parameters to use concatenation with the already opened ones, and haven't been added to the list.",
       "SECOND": "Make sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."
     },
     "SEGMENT_ADD": {
-      "": "Add File/Clip...",
+      "": "Add Files/Clip...",
       "CLIP": "Add Clip",
-      "FILE": "Add File"
+      "FILE": "Add Files"
     },
     "SEGMENT_MOVE_UP": {
       "": "Move Up File/Clip...",

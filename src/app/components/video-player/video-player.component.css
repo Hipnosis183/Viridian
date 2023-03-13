@@ -61,6 +61,18 @@
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
+.player-compatibility {
+  @apply flex flex-col items-center space-y-4 w-[460px] [&>div]:space-y-2 [&_p]:text-center;
+}
+
+.player-compatibility > span {
+  @apply bg-slate-600 h-px w-full;
+}
+
+.player-compatibility > ui-button {
+  @apply mt-5 !important;
+}
+
 .player-controls {
   @apply absolute bottom-0 flex flex-col justify-center mb-4 mx-4 w-[calc(100%-32px)];
 }

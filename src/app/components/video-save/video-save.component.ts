@@ -538,7 +538,7 @@ export class VideoSaveComponent {
     });
   }
 
-  async videoSaveExport(): Promise<void> {
+  videoSaveExport(): void {
     this.videoSaveBuild();
     this.videoSaveRun();
   }
