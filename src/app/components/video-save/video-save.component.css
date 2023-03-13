@@ -51,13 +51,17 @@ textarea {
 }
 
 .save-side {
-  @apply flex flex-col justify-end mb-3 space-y-4;
+  @apply flex flex-col justify-between mb-3 mt-1 [&_b]:ml-1;
 }
 
-.save-side > span {
+.save-side > div {
+  @apply flex flex-col space-y-4;
+}
+
+.save-side > div > span {
   @apply flex justify-around -mb-2;
 }
 
-:host ::ng-deep .save-side > ui-button > button {
+:host ::ng-deep .save-side > div > ui-button > button {
   @apply w-full;
 }

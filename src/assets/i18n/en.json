@@ -62,6 +62,8 @@
       "FORMATCODEC": "Format and Codec",
       "NONE": "None (Copy Stream)"
     },
+    "LOSSY": "Lossy",
+    "LOSSLESS": "Lossless",
     "OUTPUT": "Output",
     "PATH": "File Path",
     "RESET": "Reset",
@@ -77,7 +79,8 @@
       "SCALE": "Scale",
       "SCALING": "Scaling",
       "WIDTH": "Width"
-    }
+    },
+    "STATUS": "Status"
   },
   "VIDEO_SEGMENTS": {
     "CLIP_MANUAL": {

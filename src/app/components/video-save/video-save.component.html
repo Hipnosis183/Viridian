@@ -1,18 +1,25 @@
 <ui-modal [modalHidden]="!videoSave.videoSave">
   <div class="save-container">
     <div class="save-side">
-      <span>
-        <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear"
-          [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio"
-          [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate" (click)="videoFilterNoAudio()"></ui-button>
-      </span>
-      <div class="save-separator"></div>
-      <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
-      <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
-      <div class="save-separator"></div>
-      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
-      <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.STATUS' | translate">
+        <b [class]="videoReencode ? 'text-red-500' : videoSave.videoCut ? videoOutput.videoCut == 'smart' ? 'text-yellow-400' : videoOutput.videoCut == 'lossy' ? 'text-red-500' : 'text-green-500' : 'text-green-500'">
+          {{ videoReencode ? ('VIDEO_SAVE.LOSSY' | translate) : videoSave.videoCut ? videoOutput.videoCut == 'smart' ? ('VIDEO_SAVE.LOSSLESS' | translate)
+          : videoOutput.videoCut == 'lossy' ? ('VIDEO_SAVE.LOSSY' | translate) : ('VIDEO_SAVE.LOSSLESS' | translate) : ('VIDEO_SAVE.LOSSLESS' | translate) }}</b>
+      </ui-group-box>
+      <div>
+        <span>
+          <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear"
+            [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>
+          <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio"
+            [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate" (click)="videoFilterNoAudio()"></ui-button>
+        </span>
+        <div class="save-separator"></div>
+        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
+        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
+        <div class="save-separator"></div>
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+      </div>
     </div>
     <div *ngIf="store.state.playerInfo.playerVideo[0]" class="save-options">
       <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.FORMAT.FORMATCODEC' | translate">

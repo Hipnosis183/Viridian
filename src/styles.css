@@ -24,7 +24,7 @@ div, h1, p, span {
   @apply text-slate-100;
 }
 
-p {
+p, b {
   @apply cursor-default;
 }
 
