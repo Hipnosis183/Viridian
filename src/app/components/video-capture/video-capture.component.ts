@@ -1,4 +1,4 @@
-import { Component, Input, NgZone } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, Output } from '@angular/core';
 import { FiltersService } from 'src/app/services/filters.service';
 import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
@@ -21,6 +21,9 @@ export class VideoCaptureComponent {
   ) { }
 
   @Input() currentTime = 0;
+  @Output() inited = new EventEmitter;
+
+  ngOnInit(): void { this.inited.emit(); }
 
   videoCapture: any = {
     videoCapture: false,

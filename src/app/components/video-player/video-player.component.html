@@ -103,17 +103,17 @@
         </div>
       </div>
     </div>
-    <div *ngIf="!store.state.playerInfo.playerLoaded" class="player-open">
+    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded" class="player-open">
       <div [class]="store.state.playerInfo.playerLoading ? 'hidden' : 'flex'">
         <img [src]="'/assets/images/open.svg'">
         <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
         <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
         <span></span>
       </div>
-      <input title="" type="file" multiple (change)="$videoFileOpen($event)" />
+      <input title="" type="file" multiple (change)="$videoFileOpen($event.target.files)" />
     </div>
   </div>
-  <video-segments #videoSegments (added)="$videoFileOpen($event)" (inited)="$videoSegments = videoSegments"
+  <video-segments #videoSegments (added)="$videoFileOpen($event.target.files)" (inited)="$videoSegments = videoSegments"
     (loaded)="videoSetPosition(filters.filterInfo.filterRotate)" (removed)="videoFileClose()"></video-segments>
 </div>
 <div class="player-controls" [ngClass]="[videoSegments.videoSegments ? 'h-[106px]' : 'h-[70px]', !store.state.playerInfo.playerLoaded ? 'pointer-events-none' : '']">
@@ -204,6 +204,6 @@
     </div>
   </div>
 </div>
-<video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime"></video-capture>
+<video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime" (inited)="$videoCapture = videoCapture"></video-capture>
 <video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
 <video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded" (loaded)="$videoSave = videoSave"></video-save>

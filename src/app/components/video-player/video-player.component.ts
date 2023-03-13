@@ -26,6 +26,7 @@ export class VideoPlayerComponent {
     private zone: NgZone
   ) { }
 
+  $videoCapture: any;
   $videoInfo: any;
   $videoSave: any;
   $videoSegments: any;
@@ -103,12 +104,21 @@ export class VideoPlayerComponent {
       this.store.state.filterInfo.filterHeight = this.store.state.playerInfo.playerHeight; }
   }
 
+  @HostListener('dragover', ['$event']) onDragOver(e: any) { e.preventDefault(); }
+  @HostListener('drop', ['$event']) onDrop(e: any) {
+    e.preventDefault(); e.stopPropagation();
+    // Disallow adding files if any dialog is open.
+    if (!this.store.state.playerInfo.playerLoading && !this.videoFileCompatible && !this.videoFileIncompatible &&
+      !this.$videoInfo.videoInfo && !this.$videoSave?.videoSave.videoSave && !this.$videoCapture.videoCapture.videoCapture) {
+        this.$videoFileOpen(e.dataTransfer.files); }
+  }
+
   videoFileOpen: any[] = [];
   videoFileOpenT: number = 0;
   $videoFileOpen(e: any): void {
-    this.videoFileOpenT = Object.values(e.target.files).length;
-    this.videoFileOpen = Object.values(e.target.files).slice(1);
-    this.videoFileLoad(e.target.files[0]);
+    this.videoFileOpenT = Object.values(e).length;
+    this.videoFileOpen = Object.values(e).slice(1);
+    this.videoFileLoad(e[0]);
   }
 
   videoFileCompatible: boolean = false;
@@ -177,8 +187,10 @@ export class VideoPlayerComponent {
               });
             });
           } else { this.videoFileIncompatible = true;
-            if (this.videoFileOpen.length == 0) {
-              // Set opened files as fully loaded.
+            // Load remaining files if there are any.
+            if (this.videoFileOpen.length > 0) {
+              this.videoFileLoad(this.videoFileOpen.shift());
+            } else { // Set opened files as fully loaded.
               this.store.state.playerInfo.playerLoaded = true;
               this.store.state.playerInfo.playerLoading = false;
             }
