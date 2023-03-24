@@ -145,7 +145,8 @@
     </div>
   </div>
   <ui-progress [progressTime]="playerInfo.playerVideo[store.i]?.currentTime" [progressDuration]="playerInfo.playerVideo[store.i]?.duration" [progressExtend]="videoSegments.videoSegments"
-    [progressFrames]="store.state.videoInfo[store.i]?.videoKeyFrames" (progressTimeChange)="playerInfo.playerVideo[store.i].currentTime = $event"></ui-progress>
+    [progressHover]="store.state.fileInfo[store.i]?.fileThumbs || []" [progressInterval]="store.state.fileInfo[store.i]?.fileInterval || 0" [progressFrames]="store.state.videoInfo[store.i]?.videoKeyFrames"
+    (progressTimeChange)="playerInfo.playerVideo[store.i].currentTime = $event"></ui-progress>
   <div id="playerClip" class="player-clips" [class]="!videoSegments.videoSegments ? store.state.fileInfo[0]?.fileClips[0]?.e ? 'hidden' : 'flex mt-0' : 'flex h-8 mt-4'">
     <div *ngFor="let file of store.state.fileInfo; index as i" [hidden]="i != store.i">
       <div *ngFor="let clip of file.fileClips; index as k">

@@ -1,7 +1,6 @@
 const { dialog, ipcMain } = require('electron');
 const { exec } = require('child_process');
-const { unlink, writeFile } = require('fs');
-const { dirname } = require('path');
+const { mkdir, readdir, unlink, writeFile } = require('fs');
 
 ipcMain.on('dialog-save', async (e, ...a) => {
   e.reply('dialog-save', dialog.showSaveDialogSync(a[0]));
@@ -10,6 +9,18 @@ ipcMain.on('dialog-save', async (e, ...a) => {
 ipcMain.on('exec', (e, ...a) => {
   exec(a[0], a[1], (error, stdout, stderr) => {
     e.reply('exec', error ? error : stdout);
+  });
+});
+
+ipcMain.on('mkdir', (e, ...a) => {
+  mkdir(a[0], { recursive: true }, (error, stdout, stderr) => {
+    e.reply('mkdir', error ? error : stdout);
+  });
+});
+
+ipcMain.on('read-dir', (e, ...a) => {
+  readdir(a[0], (error, stdout, stderr) => {
+    e.reply('read-dir', error ? error : stdout);
   });
 });
 
@@ -23,22 +34,4 @@ ipcMain.on('write-file', (e, ...a) => {
   writeFile(a[0], a[1], (error, stdout, stderr) => {
     e.reply('write-file', error ? error : stdout);
   });
-});
-
-ipcMain.handle('exec', async (e, ...a) => {
-  exec(a[0], a[1], (error, stdout, stderr) => {
-    return error ? error : stdout;
-  });
-});
-
-ipcMain.handle('basename', async (e, ...a) => {
-  return basename(a[0]);
-});
-
-ipcMain.handle('dirname', async (e, ...a) => {
-  return dirname(a[0]);
-});
-
-ipcMain.handle('extname', async (e, ...a) => {
-  return extname(a[0]);
 });

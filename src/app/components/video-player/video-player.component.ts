@@ -149,41 +149,44 @@ export class VideoPlayerComponent {
             if (videos > 0 && ((stream.codec_name != streams[1].codec_name) || (stream.time_base != streams[1].time_base))) {
               this.store.state.filterInfo.filterConcat.push(input);
               this.videoFileCompatible = true;
-            } // Define temporal file paths.
-            const clip: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_clip.txt');
-            const concat: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_concat.txt');
-            const concatClip: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_concat_clip.txt');
-            const thumb: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '_thumb.jpg');
-            // Generate video thumbnail.
-            const command: string = `ffmpeg -v error -y -i "file://${e.path}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${thumb}"`;
-            this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
-            this.ipc.once('exec', (err: any, r: string) => {
-              this.zone.run(() => {
-                // Load video file information into store.
-                const fileInfo: any = {
-                  fileColor: 0,
-                  fileClip: 'file://' + clip,
-                  fileClips: [],
-                  fileConcat: 'file://' + concat,
-                  fileConcatClip: 'file://' + concatClip,
-                  fileExtension: e.path.split('.').pop(),
-                  fileIndex: -1,
-                  fileName: e.name,
-                  filePath: 'file://' + e.path,
-                  fileThumb: 'file://' + thumb,
-                  fileType: e.type
-                }; this.store.state.fileInfo.push(fileInfo);
-                const videoInfo: any = {
-                  videoFrameRate: null,
-                  videoHeight: null,
-                  videoKeyFrames: [],
-                  videoStreams: null,
-                  videoStreamsText: [],
-                  videoWidth: null
-                }; this.store.state.videoInfo.push(videoInfo);
-                this.store.state.playerInfo.playerLoading = true;
-                // Update concatenation text file.
-                this.$videoSegments.videoFileConcat();
+            } // Create cache directory for the file.
+            const fileTemp: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '/');
+            this.ipc.send('mkdir', `${fileTemp}thumbs`);
+            this.ipc.once('mkdir', (err: any, r: string) => {
+              // Generate main video thumbnail.
+              const command: string = `ffmpeg -v error -y -i "file://${e.path}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${fileTemp}thumb.jpg"`;
+              this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+              this.ipc.once('exec', (err: any, r: string) => {
+                // Get all generated thumbnail files.
+                this.zone.run(() => {
+                  // Load video file information into store.
+                  const fileInfo: any = {
+                    fileColor: 0,
+                    fileClip: `file://${fileTemp}clip.txt`,
+                    fileClips: [],
+                    fileConcat: `file://${fileTemp}concat.txt`,
+                    fileConcatClip: `file://${fileTemp}concat_clip.txt`,
+                    fileExtension: e.path.split('.').pop(),
+                    fileIndex: -1,
+                    fileName: e.name,
+                    filePath: `file://${e.path}`,
+                    fileTemp: `file://${fileTemp}`,
+                    fileThumb: `file://${fileTemp}thumb.jpg`,
+                    fileThumbs: [],
+                    fileType: e.type
+                  }; this.store.state.fileInfo.push(fileInfo);
+                  const videoInfo: any = {
+                    videoFrameRate: null,
+                    videoHeight: null,
+                    videoKeyFrames: [],
+                    videoStreams: null,
+                    videoStreamsText: [],
+                    videoWidth: null
+                  }; this.store.state.videoInfo.push(videoInfo);
+                  this.store.state.playerInfo.playerLoading = true;
+                  // Update concatenation text file.
+                  this.$videoSegments.videoFileConcat();
+                });
               });
             });
           } else { this.videoFileIncompatible = true;

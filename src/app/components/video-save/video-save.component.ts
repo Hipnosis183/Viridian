@@ -325,7 +325,7 @@ export class VideoSaveComponent {
       const duration: number = this.store.state.playerInfo.playerVideo[i].duration * frameRate;
       // Process all available clips for the selected file.
       for (let k = 0; k < file.fileClips.length; k++) {
-        const input: string = this.store.state.filePaths.temp + file.fileName.replace(/(\.[\w\d_-]+)$/i, `_${k}.txt`);
+        const input: string = file.fileTemp.slice(7) + `clip_${k}.txt`;
         const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_clip_${k}.` + this.videoOutput.videoFormat.extensions[0]);
         let start: number = file.fileClips[k].start / frameRate;
         let end: number = file.fileClips[k].end / frameRate;

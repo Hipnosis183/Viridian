@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges } from '@angular/core';
+import { DelayService } from 'src/app/services/delay.service';
 
 @Component({
   selector: 'ui-progress',
@@ -8,9 +9,13 @@ import { Component, EventEmitter, HostListener, Input, Output, SimpleChanges } f
 
 export class UiProgressComponent {
 
+  constructor(private delay: DelayService) { }
+
   @Input() progressDuration: number = 0;
   @Input() progressExtend: boolean = false;
   @Input() progressFrames: number[] = [];
+  @Input() progressHover: any = [];
+  @Input() progressInterval: number = 10;
   @Input() progressTime: number = 0;
   @Output() progressTimeChange = new EventEmitter;
 
@@ -25,6 +30,24 @@ export class UiProgressComponent {
     const p: any = document.getElementById('progress');
     for (let i = 0; i < this.progressFrames.length; i++) {
       this.updateFrame(p.childNodes[2].childNodes[i].childNodes[0], i); }
+  }
+
+  $progressHover: any = { line: 0, time: 0, thumb: null };
+  $updateHover = this.delay.throttle((e: any) => this.updateHover(e), 10);
+  updateHover(e: any): void {
+    // Update hover mark position.
+    if (this.progressExtend) {
+      const l: any = document.getElementById('progress-line');
+      l.style.left = `${e.layerX}px`;
+    } // Update hover tooltip time.
+    const p: any = document.getElementById('progress');
+    this.$progressHover.time = e.layerX * this.progressDuration / p.childNodes[0].offsetWidth;
+    // Update hover tooltip thumbnail.
+    if (this.progressHover.length) {
+      const i: number = Math.round(this.$progressHover.time / this.progressInterval);
+      const l: number = this.progressHover.length;
+      this.$progressHover.thumb = this.progressHover[i >= l ? l - 1 : i];
+    }
   }
 
   updateProgress(e: any): void {

@@ -1,14 +1,7 @@
 const { app, BrowserWindow } = require('electron');
-const { mkdirSync, rmSync } = require('node:fs');
 
 const args = process.argv.slice(1);
 const serve = args.some((val) => val === '--serve');
-
-const createPaths = (mk) => {
-  const pathTemp = process.cwd() + '/temp/';
-  rmSync(pathTemp, { recursive: true, force: true });
-  if (mk) { mkdirSync(pathTemp); }
-}
 
 const createWindow = () => {
   const win = new BrowserWindow({
@@ -46,18 +39,12 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', () => {
-  createPaths(true);
-  createWindow();
-});
+app.on('ready', () => { createWindow(); });
 
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with 'Cmd + Q'.
-  if (process.platform !== 'darwin') {
-    createPaths(false);
-    app.quit();
-  }
+  if (process.platform !== 'darwin') { app.quit(); }
 });
 
 // IPC listeners for remote access of node modules.

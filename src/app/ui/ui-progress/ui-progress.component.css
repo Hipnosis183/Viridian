@@ -11,11 +11,27 @@ progress[value]::-webkit-progress-value {
 }
 
 .progress-container {
-  @apply flex relative;
+  @apply flex pointer-events-none relative;
 }
 
 .progress-frames > div > div {
   @apply absolute bg-slate-400/50 h-14 pointer-events-none w-px z-20;
+}
+
+.progress-hover {
+  @apply -mx-[9px] -my-[5px];
+}
+
+.progress-hover img {
+  @apply object-cover rounded-t-sm w-[120px];
+}
+
+.progress-hover p {
+  @apply my-2 px-3 text-center text-slate-900;
+}
+
+.progress-line {
+  @apply absolute bg-slate-200 h-[56px] pointer-events-none top-[50px] w-px z-40;
 }
 
 .progress-thumb {
@@ -24,4 +40,8 @@ progress[value]::-webkit-progress-value {
 
 .progress-thumb > div {
   @apply absolute bg-slate-200 h-[60px] left-1 pointer-events-none w-px;
+}
+
+.progress-tooltip {
+  @apply absolute cursor-pointer h-6 -mt-3 w-full;
 }

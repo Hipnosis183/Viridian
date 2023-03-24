@@ -76,11 +76,34 @@ export class VideoInfoComponent {
         const command: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=pts_time -of json -i "${input}"`;
         this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
         this.ipc.once('exec', (err: any, r: string) => {
-          this.zone.run(() => {
-            let frames = JSON.parse(r).frames.map((v: any) => v.pts_time);
-            // Sort keyframes to ensure they are in order.
-            this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.sort((a: number, b: number) => { return a - b; });
-            this.loaded.emit();
+          // Sort keyframes to ensure they are in order.
+          let frames = JSON.parse(r).frames.map((v: any) => v.pts_time);
+          this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.sort((a: number, b: number) => { return a - b; });
+          // Check if file thumbnails were already generated.
+          this.ipc.send('read-dir', `${this.store.state.fileInfo[this.store.i].fileTemp.slice(7)}thumbs`);
+          this.ipc.once('read-dir', (err: any, r: string) => {
+            this.zone.run(async () => {
+              // Get seek intervals for thumbnail generation.
+              const fileInfo: any = this.store.state.fileInfo[this.store.i];
+              const interval: number = (streams[1].duration < 30) ? 2 : (streams[1].duration < 60) ? 4 : (streams[1].duration < 60 * 5) ? 10 : (streams[1].duration < 60 * 10) ? 20 : (streams[1].duration < 60 * 30) ? 30 : (streams[1].duration < 60 * 60) ? 60 : 120;
+              let inputs = [], outputs = [];
+              for (let i = 0; i < Math.floor(streams[1].duration / interval) + 1; i++) {
+                // Take a second from last seek to avoid frames not being extracted.
+                const l: number = i == Math.floor(streams[1].duration / interval) ? interval * i - 1 : interval * i;
+                const output: string = `${fileInfo.fileTemp}thumbs/${i.toString().padStart(4, '0')}.jpg`;
+                inputs.push(`-ss ${l} -i "${fileInfo.filePath}"`);
+                outputs.push(`-map ${i}:v -vframes 1 -vf "scale=120:-1" "${output}"`);
+                // Store thumbnail path into file information.
+                this.store.state.fileInfo[this.store.i].fileThumbs.push(output);
+              } this.store.state.fileInfo[this.store.i].fileInterval = interval;
+              // Generate small video thumbnails.
+              if (!r.length) {
+                const command: string = `ffmpeg -v error -y ${inputs.join(' ')} ${outputs.join(' ')}`;
+                this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+                this.ipc.once('exec', (err: any, r: string) => {
+                  this.zone.run(() => { this.loaded.emit(); });});
+              } else { this.loaded.emit(); }
+            });
           });
         });
       });
