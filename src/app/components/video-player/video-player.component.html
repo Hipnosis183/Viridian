@@ -156,49 +156,37 @@
           [class]="k == file.fileIndex ? 'cursor-move opacity-90 z-10' : 'cursor-pointer opacity-80'"></div>
         <div #playerClip_ class="player-clip">
           <div>
-            <div>
-              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate">-->[</p>
-              <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-                (input)="$videoSegments.videoClipManualInput(0, $event, k, playerClip)"
-                (keyup)="$videoSegments.videoClipManualKeyUp(0, $event, k, playerClip)"
-                (keydown)="$videoSegments.videoClipManualKeyDown()">
-            </div>
-            <div>
-              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate">[--></p>
-              <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-                (input)="$videoSegments.videoClipManualInput(1, $event, k, playerClip)"
-                (keyup)="$videoSegments.videoClipManualKeyUp(1, $event, k, playerClip)"
-                (keydown)="$videoSegments.videoClipManualKeyDown()">
-            </div>
-            <div>
-              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate"><--]</p>
-              <input [ngModel]="clip.end / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-                (input)="$videoSegments.videoClipManualInput(2, $event, k, playerClip)"
-                (keyup)="$videoSegments.videoClipManualKeyUp(2, $event, k, playerClip)"
-                (keydown)="$videoSegments.videoClipManualKeyDown()">
-            </div>
-            <div>
-              <p [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate"><--></p>
-              <input [ngModel]="(clip.end - clip.start) / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-                (input)="$videoSegments.videoClipManualInput(3, $event, k, playerClip)"
-                (keyup)="$videoSegments.videoClipManualKeyUp(3, $event, k, playerClip)"
-                (keydown)="$videoSegments.videoClipManualKeyDown()">
-            </div>
+            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate" src="../assets/images/clip-h-set.svg">
+            <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+              (input)="$videoSegments.videoClipManualInput(1, $event, k, playerClip)"
+              (keyup)="$videoSegments.videoClipManualKeyUp(1, $event, k, playerClip)"
+              (keydown)="$videoSegments.videoClipManualKeyDown()">
+            <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
+          </div>
+          <div>
+            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate" src="../assets/images/clip-h-set.svg" class="rotate-180">
+            <input [ngModel]="clip.end / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+              (input)="$videoSegments.videoClipManualInput(2, $event, k, playerClip)"
+              (keyup)="$videoSegments.videoClipManualKeyUp(2, $event, k, playerClip)"
+              (keydown)="$videoSegments.videoClipManualKeyDown()">
+            <input [ngModel]="clip.end | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
           </div>
           <span></span>
           <div>
-            <div>
-              <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
-            </div>
-            <div>
-              <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
-            </div>
-            <div>
-              <input [ngModel]="clip.end | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
-            </div>
-            <div>
-              <input [ngModel]="(clip.end - clip.start) | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
-            </div>
+            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate" src="../assets/images/clip-h-pos.svg">
+            <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+              (input)="$videoSegments.videoClipManualInput(0, $event, k, playerClip)"
+              (keyup)="$videoSegments.videoClipManualKeyUp(0, $event, k, playerClip)"
+              (keydown)="$videoSegments.videoClipManualKeyDown()">
+            <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
+          </div>
+          <div>
+            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate" src="../assets/images/clip-h-len.svg">
+            <input [ngModel]="(clip.end - clip.start) / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
+              (input)="$videoSegments.videoClipManualInput(3, $event, k, playerClip)"
+              (keyup)="$videoSegments.videoClipManualKeyUp(3, $event, k, playerClip)"
+              (keydown)="$videoSegments.videoClipManualKeyDown()">
+            <input [ngModel]="(clip.end - clip.start) | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
           </div>
         </div>
       </div>

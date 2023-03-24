@@ -15,19 +15,15 @@
 }
 
 .player-clip {
-  @apply flex py-1 space-x-2.5;
+  @apply flex flex-col -mx-px py-1 space-y-2;
 }
 
 .player-clip > div {
-  @apply flex flex-col space-y-2;
-}
-
-.player-clip > div > div {
   @apply flex items-center space-x-2;
 }
 
 .player-clip > span {
-  @apply bg-slate-200 h-[136px] w-px;
+  @apply bg-zinc-300 h-px opacity-80 w-[calc(100%-8px)];
 }
 
 .player-clip input {
@@ -36,7 +32,7 @@
 }
 
 .player-clip input[type="number"] {
-  @apply w-[106px];
+  @apply w-[96px];
 }
 
 .player-clip input[type="time"] {
@@ -46,10 +42,6 @@
 .player-clip input[type="time"]::-webkit-calendar-picker-indicator {
   @apply hover:bg-slate-200 cursor-pointer rounded;
   transition: background-color 0.2s ease-in-out;
-}
-
-.player-clip p {
-  @apply mr-[2px] text-center text-slate-900 w-[26px] !important;
 }
 
 .player-clips {
