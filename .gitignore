@@ -12,3 +12,8 @@ npm-debug.log
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# App
+/temp
+.todo
+.wiki
