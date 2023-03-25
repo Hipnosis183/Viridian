@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "video-editor": {
+    "viridian": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:application": {
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "video-editor:build:production"
+              "browserTarget": "viridian:build:production"
             },
             "development": {
-              "browserTarget": "video-editor:build:development"
+              "browserTarget": "viridian:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,11 +79,11 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "video-editor:build"
+            "browserTarget": "viridian:build"
           }
         }
       }
     }
   },
-  "defaultProject": "video-editor"
+  "defaultProject": "viridian"
 }
