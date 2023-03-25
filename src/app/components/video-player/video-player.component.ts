@@ -238,7 +238,7 @@ export class VideoPlayerComponent {
       case 180: case -180: { rotation = 180; break; }
     } this.filters.filterInfo.filterRotation = rotation;
     // Reset and setup positioning of the video container.
-    this.videoSetPosition(rotation);
+    setTimeout(() => { this.videoSetPosition(rotation); });
     // Create default clip segment.
     this.$videoSegments.videoClipAdd();
     // Open split/merge panel if multiple files are open.
@@ -291,7 +291,7 @@ export class VideoPlayerComponent {
   videoFilterFlip(v: boolean): void {
     if (v) { this.filters.filterInfo.filterFlipV = !this.filters.filterInfo.filterFlipV; }
     else { this.filters.filterInfo.filterFlipH = !this.filters.filterInfo.filterFlipH; }
-    this.videoSetPosition(this.filters.filterInfo.filterRotate);
+    this.videoSetPosition(this.filters.filterInfo.filterRotate, v ? 'v' : 'h');
   }
 
   videoFilterRotate(c: boolean): void {
@@ -364,7 +364,7 @@ export class VideoPlayerComponent {
     }
   }
 
-  videoSetPosition(r: number): void {
+  videoSetPosition(r: number, f: string = ''): void {
     // Set number of videos opened for style updates.
     const k = this.playerInfo.playerVideo.length;
     // Reset DOM elements styling.
@@ -433,13 +433,83 @@ export class VideoPlayerComponent {
           this.playerInfo.$playerContainer.style.transform += 'scaleX(-1)';
         } break;
       }
-    } this.filters.filterInfo.filterRotate = r;
-    // Update crop tool dimensions on rotate and window resize.
-    this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
-    this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width + 'px';
-    this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().height + 'px';
+    } // Get values for crop update on resize/rotation.
+    const filterInfo = JSON.parse(JSON.stringify(this.store.state.filterInfo));
+    const filterRotate = this.filters.filterInfo.filterRotate;
+    this.filters.filterInfo.filterRotate = r;
+    // Update crop tool dimensions on resize.
+    if (filterRotate == r) {
+      this.videoSetCoordinates('w', { target: { value: this.store.state.filterInfo.filterWidth }});
+      this.videoSetCoordinates('h', { target: { value: this.store.state.filterInfo.filterHeight }});
+      this.videoSetCoordinates('x', { target: { value: this.store.state.filterInfo.filterX }});
+      this.videoSetCoordinates('y', { target: { value: this.store.state.filterInfo.filterY }});
+    }
+    // Disable crop tool correction if file has rotation metadata.
+    if (this.filters.$filterRotate() != r) {
+      this.playerInfo.playerCrop.style.transform = 'translate3d(0px, 0px, 0px)';
+      this.playerInfo.playerCrop.style.width = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().width + 'px';
+      this.playerInfo.playerCrop.style.height = this.playerInfo.playerVideo[this.store.i].getBoundingClientRect().height + 'px';
+    }
     // Update crop filter values.
     this.filters.filterInit();
     this.filters.filterCrop();
+    if (this.filters.$filterRotate() != r) { return; }
+    // Update crop tool dimensions on rotate.
+    if (filterRotate != r) {
+      const videoHeight = this.store.state.videoInfo[0].videoHeight;
+      const videoWidth = this.store.state.videoInfo[0].videoWidth;
+      // Swap dimensions of the crop filter.
+      this.store.state.filterInfo.filterWidth = filterInfo.filterHeight;
+      this.store.state.filterInfo.filterHeight = filterInfo.filterWidth;
+      switch (r) {
+        case 0: {
+          if (filterRotate == 270) { this.store.state.filterInfo.filterY = filterInfo.filterX;
+            this.store.state.filterInfo.filterX = videoWidth - (filterInfo.filterY + filterInfo.filterHeight);
+          } else { this.store.state.filterInfo.filterX = filterInfo.filterY;
+            this.store.state.filterInfo.filterY = videoHeight - (filterInfo.filterX + filterInfo.filterWidth);
+          } break;
+        }
+        case 90: {
+          if (filterRotate == 0) { this.store.state.filterInfo.filterY = filterInfo.filterX;
+            this.store.state.filterInfo.filterX = videoHeight - (filterInfo.filterY + filterInfo.filterHeight);
+          } else { this.store.state.filterInfo.filterX = filterInfo.filterY;
+            this.store.state.filterInfo.filterY = videoWidth - (filterInfo.filterX + filterInfo.filterWidth);
+          } break;
+        }
+        case 180: {
+          if (filterRotate == 90) { this.store.state.filterInfo.filterY = filterInfo.filterX;
+            this.store.state.filterInfo.filterX = videoWidth - (filterInfo.filterY + filterInfo.filterHeight);
+          } else { this.store.state.filterInfo.filterX = filterInfo.filterY;
+            this.store.state.filterInfo.filterY = videoHeight - (filterInfo.filterX + filterInfo.filterWidth);
+          } break;
+        }
+        case 270: {
+          if (filterRotate == 180) { this.store.state.filterInfo.filterY = filterInfo.filterX;
+            this.store.state.filterInfo.filterX = videoHeight - (filterInfo.filterY + filterInfo.filterHeight);
+          } else { this.store.state.filterInfo.filterX = filterInfo.filterY;
+            this.store.state.filterInfo.filterY = videoWidth - (filterInfo.filterX + filterInfo.filterWidth);
+          } break;
+        }
+      } // Update crop tool with corrected values.
+      this.videoSetCoordinates('w', { target: { value: this.store.state.filterInfo.filterWidth }});
+      this.videoSetCoordinates('h', { target: { value: this.store.state.filterInfo.filterHeight }});
+      this.videoSetCoordinates('x', { target: { value: this.store.state.filterInfo.filterX }});
+      this.videoSetCoordinates('y', { target: { value: this.store.state.filterInfo.filterY }});
+    }
+    if (f) { // Update crop tool dimensions on flip.
+      if (f == 'h') {
+        const videoWidth = this.store.state.videoInfo[0].videoWidth;
+        if (r == 0 || r == 180) {
+          this.store.state.filterInfo.filterX = videoWidth - (filterInfo.filterX + filterInfo.filterWidth);
+        } else { this.store.state.filterInfo.filterY = videoWidth - (filterInfo.filterY + filterInfo.filterHeight); }
+      } else if (f == 'v') {
+        const videoHeight = this.store.state.videoInfo[0].videoHeight;
+        if (r == 0 || r == 180) {
+          this.store.state.filterInfo.filterY = videoHeight - (filterInfo.filterY + filterInfo.filterHeight);
+        } else { this.store.state.filterInfo.filterX = videoHeight - (filterInfo.filterX + filterInfo.filterWidth); }
+      } // Update crop tool with corrected values.
+      this.videoSetCoordinates('x', { target: { value: this.store.state.filterInfo.filterX }});
+      this.videoSetCoordinates('y', { target: { value: this.store.state.filterInfo.filterY }});
+    }
   }
 }
