@@ -73,11 +73,11 @@ export class VideoInfoComponent {
         } this.store.state.videoInfo[this.store.i].videoStreams = streams;
         this.store.state.videoInfo[this.store.i].videoFrameRate = new Function(`return ${streams[1].r_frame_rate}`)();
         // Get video stream key/i-frames.
-        const command: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=pts_time -of json -i "${input}"`;
+        const command: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=key_frame,pts_time -of json -i "${input}"`;
         this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
         this.ipc.once('exec', (err: any, r: string) => {
           // Sort keyframes to ensure they are in order.
-          let frames = JSON.parse(r).frames.map((v: any) => v.pts_time);
+          let frames = JSON.parse(r).frames.filter((v: any) => v.key_frame == 1).map((v: any) => v.pts_time);
           this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.sort((a: number, b: number) => { return a - b; });
           // Check if file thumbnails were already generated.
           this.ipc.send('read-dir', `${this.store.state.fileInfo[this.store.i].fileTemp.slice(7)}thumbs`);
