@@ -1,6 +1,7 @@
 # Angular
 /.angular
 /dist
+/release
 
 # Node
 /node_modules
