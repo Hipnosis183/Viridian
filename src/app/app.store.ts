@@ -3,7 +3,7 @@ import DefaultColors from 'tailwindcss/colors'
 
 const { state } = createStore({
   filePaths: {
-    ffmpeg: '/home/renzo/Downloads/ffmpeg/',
+    ffmpeg: process.cwd() + '/ffmpeg/',
     temp: process.cwd() + '/temp/',
   },
   colorInfo: [

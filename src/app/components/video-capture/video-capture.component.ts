@@ -32,7 +32,7 @@ export class VideoCaptureComponent {
 
   $videoCapture(): void {
     if (!this.videoCapture.videoCapture) {
-      this.videoCapture.videoOutput = (this.store.state.fileInfo[this.store.i].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.png')).slice(7);
+      this.videoCapture.videoOutput = (this.store.state.fileInfo[this.store.i].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.png'));
     } this.videoCapture.videoCapture = !this.videoCapture.videoCapture;
   }
 

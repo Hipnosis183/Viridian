@@ -292,7 +292,7 @@ export class VideoSaveComponent {
             this.videoSave.videoDelete.push(output);
           }
         }
-        const input: string = file.fileClip.slice(7);
+        const input: string = file.fileClip;
         const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.videoOutput.videoFormat.extensions[0]);
         // Add clip concatenation command to list.
         clips.push(`ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" -c:v copy -c:a copy "${output}"`);
@@ -312,7 +312,7 @@ export class VideoSaveComponent {
         const filePath: string = this.videoSave.videoClips[i] || this.store.state.fileInfo[i].filePath;
         concat += 'file \'' + filePath + '\'\n';
         // Create temporal text file for the concatenation process.
-      } this.ipc.send('write-file', this.store.state.fileInfo[0].fileConcatClip.slice(7), concat);
+      } this.ipc.send('write-file', this.store.state.fileInfo[0].fileConcatClip, concat);
     }
   }
 
@@ -325,7 +325,7 @@ export class VideoSaveComponent {
       const duration: number = this.store.state.playerInfo.playerVideo[i].duration * frameRate;
       // Process all available clips for the selected file.
       for (let k = 0; k < file.fileClips.length; k++) {
-        const input: string = file.fileTemp.slice(7) + `clip_${k}.txt`;
+        const input: string = file.fileTemp + `clip_${k}.txt`;
         const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_clip_${k}.` + this.videoOutput.videoFormat.extensions[0]);
         let start: number = file.fileClips[k].start / frameRate;
         let end: number = file.fileClips[k].end / frameRate;
@@ -441,7 +441,7 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    this.videoSave.videoCommand += `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "file://${this.videoSave.videoOutput}"`;
+    this.videoSave.videoCommand += `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${this.videoSave.videoOutput}"`;
   }
 
   videoSaveDirectory(): void {
@@ -465,7 +465,7 @@ export class VideoSaveComponent {
     this.filters.filterInfo.filterWidth = this.store.state.filterInfo.filterWidth;
     // Define output values.
     this.videoOutput.videoCut = Outputs.cut[0].code;
-    this.videoSave.videoOutput = (this.store.state.fileInfo[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0])).slice(7);
+    this.videoSave.videoOutput = (this.store.state.fileInfo[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.videoOutput.videoFormat.extensions[0]));
     // Reset format and encoding values.
     this.videoFormat = Formats.filter((v: any) => v.extensions.includes(this.store.state.fileInfo[0].fileExtension))[0];
     this.videoFormats = Formats.filter((v: any) => !v.extensions.includes(this.store.state.fileInfo[0].fileExtension));
@@ -529,7 +529,7 @@ export class VideoSaveComponent {
       this.zone.run(() => {
         // Delete temporal clip/concat files.
         for (let file of this.videoSave.videoDelete) {
-          this.ipc.send('unlink', file.slice(7));
+          this.ipc.send('unlink', file);
         } // Update dialog related values.
         this.videoSave.videoSaved = true;
         this.videoSave.videoSaving = false;

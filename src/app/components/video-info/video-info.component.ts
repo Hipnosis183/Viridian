@@ -80,7 +80,7 @@ export class VideoInfoComponent {
           let frames = JSON.parse(r).frames.filter((v: any) => v.key_frame == 1).map((v: any) => v.pts_time);
           this.store.state.videoInfo[this.store.i].videoKeyFrames = frames.sort((a: number, b: number) => { return a - b; });
           // Check if file thumbnails were already generated.
-          this.ipc.send('read-dir', `${this.store.state.fileInfo[this.store.i].fileTemp.slice(7)}thumbs`);
+          this.ipc.send('read-dir', `${this.store.state.fileInfo[this.store.i].fileTemp}thumbs`);
           this.ipc.once('read-dir', (err: any, r: string) => {
             this.zone.run(async () => {
               // Get seek intervals for thumbnail generation.
@@ -94,7 +94,7 @@ export class VideoInfoComponent {
                 inputs.push(`-ss ${l} -i "${fileInfo.filePath}"`);
                 outputs.push(`-map ${i}:v -vframes 1 -vf "scale=120:-1" "${output}"`);
                 // Store thumbnail path into file information.
-                this.store.state.fileInfo[this.store.i].fileThumbs.push(output);
+                this.store.state.fileInfo[this.store.i].fileThumbs.push(`file://${output}`);
               } this.store.state.fileInfo[this.store.i].fileInterval = interval;
               // Generate small video thumbnails.
               if (!r.length) {

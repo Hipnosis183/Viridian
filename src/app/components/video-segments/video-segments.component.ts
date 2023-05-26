@@ -75,7 +75,7 @@ export class VideoSegmentsComponent {
     for (let i = 0; i < this.store.state.fileInfo.length; i++) {
       concat += 'file \'' + this.store.state.fileInfo[i].filePath + '\'\n';
       // Create temporal text file for the concatenation process.
-    } this.ipc.send('write-file', this.store.state.fileInfo[0].fileConcat.slice(7), concat);
+    } this.ipc.send('write-file', this.store.state.fileInfo[0].fileConcat, concat);
   }
 
   videoFileMoveDown(): void {
