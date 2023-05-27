@@ -32,6 +32,14 @@ video {
   @apply max-w-none;
 }
 
+::-webkit-scrollbar {
+  @apply bg-transparent w-3 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-600 bg-clip-content border-4 border-solid border-transparent rounded-full !important;
+}
+
 .resizable {
   @apply absolute border border-white cursor-all-scroll overflow-hidden;
   box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);
