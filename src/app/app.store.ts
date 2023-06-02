@@ -6,6 +6,11 @@ const { state } = createStore({
     ffmpeg: process.cwd() + '/ffmpeg/',
     temp: process.cwd() + '/temp/',
   },
+  settings: {
+    general: {
+      createThumbs: JSON.parse(localStorage.getItem('general.createThumbs') || 'false'),
+    }
+  },
   colorInfo: [
     DefaultColors.blue,
     DefaultColors.red,

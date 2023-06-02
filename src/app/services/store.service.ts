@@ -8,6 +8,15 @@ export class StoreService {
   i: number = store.playerInfo.playerIndex;
   state: any = store;
 
+  resetSettings(): void {
+    localStorage.clear();
+    this.state.settings = {
+      general: {
+        createThumbs: false,
+      }
+    };
+  }
+
   resetAll(): void {
     this.resetFileInfo();
     this.resetFilterInfo();

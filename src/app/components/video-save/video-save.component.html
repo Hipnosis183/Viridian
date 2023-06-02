@@ -17,7 +17,7 @@
         <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
         <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
         <div class="save-separator"></div>
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
         <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
       </div>
     </div>
@@ -180,7 +180,7 @@
   <textarea [(ngModel)]="videoSave.videoCommand" spellcheck="false"></textarea>
   <div class="save-buttons">
     <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveRun()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-    <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.CANCEL' | translate }}</ui-button>
+    <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
   </div>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">
@@ -198,7 +198,7 @@
       <div class="save-buttons">
         <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">{{ 'VIDEO_SAVE.ERROR_LOG' | translate }}</ui-button>
         <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
-          (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'VIDEO_SAVE.CLOSE' : 'GENERAL.OK') | translate }}</ui-button>
+          (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'GENERAL.CLOSE' : 'GENERAL.OK') | translate }}</ui-button>
       </div>
       <div *ngIf="videoSave.videoErrorView" class="save-error">
         <span [innerText]="videoSave.videoErrorText"></span>

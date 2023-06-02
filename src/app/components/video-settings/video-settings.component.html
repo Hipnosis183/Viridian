@@ -1,0 +1,30 @@
+<ui-modal *ngIf="videoSettings">
+  <div class="settings-container">
+    <div class="settings-panel">
+      <div class="settings-type">
+        <div (click)="$settingIndex(0)" [class]="settingIndex == 0 ? 'bg-slate-900' : ''">
+          <img src="assets/images/settings.svg">
+          <p>{{ 'VIDEO_SETTINGS.SETTINGS.0' | translate }}</p>
+        </div>
+      </div>
+      <div class="settings-separator"></div>
+      <div class="settings-buttons">
+        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="store.resetSettings()">{{ 'VIDEO_SETTINGS.RESTORE' | translate }}</ui-button>
+        <ui-button buttonColor="secondary" buttonIcon="done" (click)="$videoSettings()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
+      </div>
+    </div>
+    <div class="w-[400px]">
+      <div class="settings-title">
+        <p>{{ 'VIDEO_SETTINGS.TITLE' | translate: { title: 'VIDEO_SETTINGS.SETTINGS.' + settingIndex | translate } }}</p>
+      </div>
+      <div class="settings-options">
+        <div *ngIf="settingIndex == 0">
+          <div [tooltip]="'VIDEO_SETTINGS.CREATE_THUMBS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
+            <p>{{ 'VIDEO_SETTINGS.CREATE_THUMBS.NAME' | translate }}</p>
+            <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(value)]="store.state.settings.general.createThumbs"></ui-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ui-modal>

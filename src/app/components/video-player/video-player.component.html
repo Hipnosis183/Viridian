@@ -130,6 +130,8 @@
       <p>{{ (playerInfo.playerVideo[store.i]?.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo[store.i]?.duration || 0) | duration: true }}</p>
     </div>
     <div>
+      <ui-button buttonColor="dark" buttonIcon="settings" [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate" (click)="videoSettings.$videoSettings()" class="pointer-events-auto"></ui-button>
+      <div class="player-separator-lite"></div>
       <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="segments" [buttonToggle]="$videoSegments.videoSegments" [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate" (click)="$videoSegments.$videoSegments()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="list" [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate" (click)="$videoInfo.$videoInfo()"></ui-button>
@@ -196,3 +198,4 @@
 <video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime" (inited)="$videoCapture = videoCapture"></video-capture>
 <video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
 <video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded" (loaded)="$videoSave = videoSave"></video-save>
+<video-settings #videoSettings></video-settings>

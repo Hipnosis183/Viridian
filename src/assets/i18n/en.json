@@ -1,5 +1,7 @@
 {
   "GENERAL": {
+    "CANCEL": "Cancel",
+    "CLOSE": "Close",
     "CODEC": "Codec",
     "DEFAULT": "Default",
     "OK": "Ok"
@@ -31,14 +33,13 @@
     "PLAY_PAUSE": "Play | Pause",
     "ROTATE_CW": "Rotate 90º",
     "ROTATE_CCW": "Rotate -90º",
+    "SETTINGS": "Settings",
     "SPLIT_MERGE": "Split | Merge",
     "STOP": "Stop"
   },
   "VIDEO_SAVE": {
-    "CANCEL": "Cancel",
     "CLIP_CUT": "Cut Mode",
     "CLIP_CONCAT": "Concatenation Mode",
-    "CLOSE": "Close",
     "EDIT": "Manual",
     "ENCODING": {
       "BITRATE": "Bitrate (kb/s)",
@@ -155,5 +156,16 @@
       "CLIP": "Remove Clip"
     },
     "TIME": "Time"
+  },
+  "VIDEO_SETTINGS": {
+    "CREATE_THUMBS": {
+      "NAME": "Generate Thumbnails",
+      "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
+    },
+    "RESTORE": "Restore",
+    "SETTINGS": [
+      "General"
+    ],
+    "TITLE": "{{ title }} Settings"
   }
 }

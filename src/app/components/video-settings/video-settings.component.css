@@ -1,0 +1,47 @@
+.settings-container {
+  @apply flex h-[450px] space-x-4;
+}
+
+.settings-buttons {
+  @apply flex flex-col space-y-2 w-[110px];
+}
+
+:host ::ng-deep .settings-buttons > ui-button > button {
+  @apply w-full;
+}
+
+.settings-option {
+  @apply flex items-center justify-between;
+}
+
+.settings-options {
+  @apply border border-slate-700 h-[calc(100%-74px)] px-4 py-5 rounded space-y-6;
+}
+
+.settings-panel {
+  @apply flex flex-col items-center space-y-4 w-[150px];
+}
+
+.settings-separator {
+  @apply bg-slate-600 h-px w-11/12;
+}
+
+.settings-title {
+  @apply px-2;
+}
+
+.settings-title > p {
+  @apply border-b-2 border-b-slate-200 mb-5 mt-2 pb-3 text-2xl;
+}
+
+.settings-type {
+  @apply bg-slate-1000 border border-slate-800 h-full overflow-hidden rounded w-full;
+}
+
+.settings-type > div {
+  @apply hover:bg-slate-900 border-b border-b-slate-800 cursor-pointer flex items-center p-2 space-x-1 w-full;
+}
+
+.settings-type p {
+  @apply pointer-events-none;
+}
