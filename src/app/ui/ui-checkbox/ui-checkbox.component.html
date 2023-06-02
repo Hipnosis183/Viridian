@@ -1,0 +1,6 @@
+<div (click)="changeValue()" class="cursor-pointer">
+  <input [ngModel]="value" (ngModelChange)="changeValue()" type="checkbox" class="hidden" />
+  <div class="checkbox-box">
+    <div [class]="value ? 'bg-blue-600' : ''"></div>
+  </div>
+</div>

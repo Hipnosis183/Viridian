@@ -17,6 +17,7 @@ import { VideoSegmentsComponent } from './components/video-segments/video-segmen
 
 // UI components.
 import { UiButtonComponent } from './ui/ui-button/ui-button.component';
+import { UiCheckboxComponent } from './ui/ui-checkbox/ui-checkbox.component';
 import { UiGroupBoxComponent } from './ui/ui-group-box/ui-group-box.component';
 import { UiInputComponent } from './ui/ui-input/ui-input.component';
 import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
@@ -62,6 +63,7 @@ function appInitializerFactory(translate: TranslateService) {
     VideoSaveComponent,
     VideoSegmentsComponent,
     UiButtonComponent,
+    UiCheckboxComponent,
     UiGroupBoxComponent,
     UiInputComponent,
     UiModalComponent,
