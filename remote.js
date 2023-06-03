@@ -1,6 +1,12 @@
 const { dialog, ipcMain } = require('electron');
 const { exec } = require('child_process');
-const { mkdir, readdir, unlink, writeFile } = require('fs');
+const { mkdir, readdir, unlink, writeFile, appendFile } = require('fs');
+
+ipcMain.on('append-file', (e, ...a) => {
+  appendFile(a[0], a[1], (error, stdout, stderr) => {
+    e.reply('append-file', error ? error : stdout);
+  });
+});
 
 ipcMain.on('dialog-open', async (e, ...a) => {
   e.reply('dialog-open', dialog.showOpenDialogSync(a[0]));

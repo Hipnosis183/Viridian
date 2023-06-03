@@ -33,6 +33,10 @@
             <ui-input [inputLabel]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.NAME' | translate" (inputUpdated)="settingUpdate('ffmpeg', 'filesPath')" [(inputValue)]="store.state.settings.ffmpeg.filesPath"></ui-input>
             <ui-button buttonColor="dark" buttonIcon="more" (click)="settingPath('ffmpeg', 'filesPath')"></ui-button>
           </div>
+          <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
+            <p>{{ 'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.NAME' | translate }}</p>
+            <ui-checkbox (click)="settingUpdate('ffmpeg', 'saveCommands')" [(value)]="store.state.settings.ffmpeg.saveCommands"></ui-checkbox>
+          </div>
         </div>
       </div>
     </div>

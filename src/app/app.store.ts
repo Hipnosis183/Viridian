@@ -8,6 +8,7 @@ const { state } = createStore({
   settings: {
     ffmpeg: {
       filesPath: localStorage.getItem('ffmpeg.filesPath') || process.cwd() + '/ffmpeg/',
+      saveCommands: JSON.parse(localStorage.getItem('ffmpeg.saveCommands') || 'true'),
     },
     general: {
       createThumbs: JSON.parse(localStorage.getItem('general.createThumbs') || 'false'),

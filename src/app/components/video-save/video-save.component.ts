@@ -522,9 +522,13 @@ export class VideoSaveComponent {
   }
 
   videoSaveRun(): void {
-    // Execute final export command.
+    // Store final export command in the log file.
+    const command: string = this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand + '\n';
+    if (this.store.state.settings.ffmpeg.saveCommands) {
+      this.ipc.send('append-file', `${process.cwd()}/commands.txt`, command);
+    } // Execute final export command.
     this.videoSave.videoSaving = true;
-    this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand, null);
+    this.ipc.send('exec', command, null);
     this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
         // Delete temporal clip/concat files.

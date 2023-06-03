@@ -162,6 +162,10 @@
       "FILES_PATH": {
         "NAME": "FFmpeg Path",
         "TEXT": "Select the directory for FFmpeg binaries."
+      },
+      "SAVE_COMMANDS": {
+        "NAME": "Save Commands to File",
+        "TEXT": "Saves the executed FFmpeg commands to a file."
       }
     },
     "GENERAL": {

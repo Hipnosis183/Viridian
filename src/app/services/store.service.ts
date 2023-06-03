@@ -13,6 +13,7 @@ export class StoreService {
     this.state.settings = {
       ffmpeg: {
         filesPath: process.cwd() + '/ffmpeg/',
+        saveCommands: true,
       },
       general: {
         createThumbs: false,
