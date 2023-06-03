@@ -11,11 +11,19 @@
 }
 
 .settings-option {
-  @apply flex items-center justify-between;
+  @apply border-b border-b-slate-700 flex items-center justify-between min-h-[36px] pb-4 [&:not(:first-child)]:pt-4 px-4 space-x-2 [&>p]:whitespace-nowrap;
+}
+
+:host ::ng-deep .settings-option ui-button {
+  @apply flex pb-1.5 self-end [&_img]:h-6 [&_img]:w-8 !important;
+}
+
+:host ::ng-deep .settings-option ui-input {
+  @apply w-full;
 }
 
 .settings-options {
-  @apply border border-slate-700 h-[calc(100%-74px)] px-4 py-5 rounded space-y-6;
+  @apply border border-slate-700 h-[calc(100%-74px)] py-4 rounded /*[&>div]:divide-y-4*/;
 }
 
 .settings-panel {
@@ -40,6 +48,7 @@
 
 .settings-type > div {
   @apply hover:bg-slate-900 border-b border-b-slate-800 cursor-pointer flex items-center p-2 space-x-1 w-full;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .settings-type p {

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
+import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
 
 @Component({
@@ -9,7 +10,11 @@ import { StoreService } from 'src/app/services/store.service';
 
 export class VideoSettingsComponent {
 
-  constructor(public store: StoreService) { }
+  constructor(
+    private ipc: IpcService,
+    public store: StoreService,
+    private zone: NgZone
+  ) { }
 
   videoSettings: boolean = false;
   $videoSettings(): void {
@@ -24,5 +29,12 @@ export class VideoSettingsComponent {
 
   settingUpdate(s: string, o: string): void {
     localStorage.setItem(`${s}.${o}` , this.store.state.settings[s][o]);
+  }
+
+  settingPath(s: string, o: string): void {
+    this.ipc.send('dialog-open', { defaultPath: this.store.state.settings[s][o], properties: ['openDirectory'] });
+    this.ipc.once('dialog-open', (err: any, r: string) => {
+      this.zone.run(() => { if (r) { this.store.state.settings[s][o] = r + '/'; this.settingUpdate(s, o); }});
+    });
   }
 }

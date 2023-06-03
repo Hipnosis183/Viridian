@@ -158,13 +158,22 @@
     "TIME": "Time"
   },
   "VIDEO_SETTINGS": {
-    "CREATE_THUMBS": {
-      "NAME": "Generate Thumbnails",
-      "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
+    "FFMPEG": {
+      "FILES_PATH": {
+        "NAME": "FFmpeg Path",
+        "TEXT": "Select the directory for FFmpeg binaries."
+      }
+    },
+    "GENERAL": {
+      "CREATE_THUMBS": {
+        "NAME": "Generate Thumbnails",
+        "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
+      }
     },
     "RESTORE": "Restore",
     "SETTINGS": [
-      "General"
+      "General",
+      "FFmpeg"
     ],
     "TITLE": "{{ title }} Settings"
   }

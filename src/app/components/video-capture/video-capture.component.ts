@@ -54,7 +54,7 @@ export class VideoCaptureComponent {
     frameTime = frameTime > 0 ? frameTime - 1 : frameTime;
     // Capture current frame to output image file.
     const command: string = `ffmpeg -v error -y -ss ${frameTime / frameRate} -i "${this.store.state.fileInfo[this.store.i].filePath}" -map 0:v -vframes 1 "${this.videoCapture.videoOutput}"`;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+    this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
     this.ipc.once('exec', (err: any, r: string) => { this.zone.run(() => { this.$videoCapture(); }); });
   }
 }

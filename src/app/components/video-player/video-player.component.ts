@@ -135,7 +135,7 @@ export class VideoPlayerComponent {
       // Get video file metadata.
       const input: string = e.path;
       const command: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${input}"`;
-      this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+      this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
       this.ipc.once('exec', (err: any, r: string) => {
         this.zone.run(() => {
           // Get general format and streams/tracks information.
@@ -155,7 +155,7 @@ export class VideoPlayerComponent {
             this.ipc.once('mkdir', (err: any, r: string) => {
               // Generate main video thumbnail.
               const command: string = `ffmpeg -v error -y -i "${e.path}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${fileTemp}thumb.jpg"`;
-              this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+              this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
               this.ipc.once('exec', (err: any, r: string) => {
                 // Get all generated thumbnail files.
                 this.zone.run(() => {

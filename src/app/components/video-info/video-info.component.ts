@@ -61,7 +61,7 @@ export class VideoInfoComponent {
     // Get video file metadata.
     const input: string = this.store.state.fileInfo[this.store.i].filePath;
     const command: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${input}"`;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+    this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
     this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
         // Get general format and streams/tracks information.
@@ -74,7 +74,7 @@ export class VideoInfoComponent {
         this.store.state.videoInfo[this.store.i].videoFrameRate = new Function(`return ${streams[1].r_frame_rate}`)();
         // Get video stream key/i-frames.
         const command: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=key_frame,pts_time -of json -i "${input}"`;
-        this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+        this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
         this.ipc.once('exec', (err: any, r: string) => {
           // Sort keyframes to ensure they are in order.
           let frames = JSON.parse(r).frames.filter((v: any) => v.key_frame == 1).map((v: any) => v.pts_time);
@@ -101,7 +101,7 @@ export class VideoInfoComponent {
               // Generate small video thumbnails.
               if (this.store.state.settings.general.createThumbs) {
                 const command: string = `ffmpeg -v error -y ${inputs.join(' ')} ${outputs.join(' ')}`;
-                this.ipc.send('exec', this.store.state.filePaths.ffmpeg + command, null);
+                this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + command, null);
                 this.ipc.once('exec', (err: any, r: string) => {
                   this.zone.run(() => { this.loaded.emit(); });});
               } else { this.loaded.emit(); }

@@ -2,6 +2,10 @@ const { dialog, ipcMain } = require('electron');
 const { exec } = require('child_process');
 const { mkdir, readdir, unlink, writeFile } = require('fs');
 
+ipcMain.on('dialog-open', async (e, ...a) => {
+  e.reply('dialog-open', dialog.showOpenDialogSync(a[0]));
+});
+
 ipcMain.on('dialog-save', async (e, ...a) => {
   e.reply('dialog-save', dialog.showSaveDialogSync(a[0]));
 });

@@ -3,10 +3,12 @@ import DefaultColors from 'tailwindcss/colors'
 
 const { state } = createStore({
   filePaths: {
-    ffmpeg: process.cwd() + '/ffmpeg/',
     temp: process.cwd() + '/temp/',
   },
   settings: {
+    ffmpeg: {
+      filesPath: localStorage.getItem('ffmpeg.filesPath') || process.cwd() + '/ffmpeg/',
+    },
     general: {
       createThumbs: JSON.parse(localStorage.getItem('general.createThumbs') || 'false'),
     }

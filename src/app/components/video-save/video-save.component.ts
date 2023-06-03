@@ -515,7 +515,7 @@ export class VideoSaveComponent {
     // Detect and adapt command for 2-pass encoding.
     if (!this.videoSave.videoCut && this.videoSave.videoEncoding.includes('$pass')) {
       const pass1: string = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
-      const pass2: string = this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand.replace('$pass', '2');
+      const pass2: string = this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand.replace('$pass', '2');
       this.videoSave.videoCommand = `${pass1} && ${pass2}`;
     } // Remove extra whitespace.
     this.videoSave.videoCommand = this.videoSave.videoCommand.replace(/\s\s+/g, ' ');
@@ -524,7 +524,7 @@ export class VideoSaveComponent {
   videoSaveRun(): void {
     // Execute final export command.
     this.videoSave.videoSaving = true;
-    this.ipc.send('exec', this.store.state.filePaths.ffmpeg + this.videoSave.videoCommand, null);
+    this.ipc.send('exec', this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand, null);
     this.ipc.once('exec', (err: any, r: string) => {
       this.zone.run(() => {
         // Delete temporal clip/concat files.

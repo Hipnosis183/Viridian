@@ -4,6 +4,6 @@
 }
 
 .checkbox-box > div {
-  @apply h-3 rounded-sm w-3;
+  @apply h-[10px] rounded-sm w-[10px];
   transition: background-color 0.1s ease-in-out;
 }

@@ -11,6 +11,9 @@ export class StoreService {
   resetSettings(): void {
     localStorage.clear();
     this.state.settings = {
+      ffmpeg: {
+        filesPath: process.cwd() + '/ffmpeg/',
+      },
       general: {
         createThumbs: false,
       }

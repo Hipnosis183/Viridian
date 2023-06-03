@@ -6,6 +6,10 @@
           <img src="assets/images/settings.svg">
           <p>{{ 'VIDEO_SETTINGS.SETTINGS.0' | translate }}</p>
         </div>
+        <div (click)="$settingIndex(1)" [class]="settingIndex == 1 ? 'bg-slate-900' : ''">
+          <img src="assets/images/settings.svg">
+          <p>{{ 'VIDEO_SETTINGS.SETTINGS.1' | translate }}</p>
+        </div>
       </div>
       <div class="settings-separator"></div>
       <div class="settings-buttons">
@@ -19,9 +23,15 @@
       </div>
       <div class="settings-options">
         <div *ngIf="settingIndex == 0">
-          <div [tooltip]="'VIDEO_SETTINGS.CREATE_THUMBS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
-            <p>{{ 'VIDEO_SETTINGS.CREATE_THUMBS.NAME' | translate }}</p>
+          <div [tooltip]="'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
+            <p>{{ 'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.NAME' | translate }}</p>
             <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(value)]="store.state.settings.general.createThumbs"></ui-checkbox>
+          </div>
+        </div>
+        <div *ngIf="settingIndex == 1">
+          <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
+            <ui-input [inputLabel]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.NAME' | translate" (inputUpdated)="settingUpdate('ffmpeg', 'filesPath')" [(inputValue)]="store.state.settings.ffmpeg.filesPath"></ui-input>
+            <ui-button buttonColor="dark" buttonIcon="more" (click)="settingPath('ffmpeg', 'filesPath')"></ui-button>
           </div>
         </div>
       </div>
