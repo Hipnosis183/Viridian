@@ -1,0 +1,30 @@
+.video-download {
+  @apply flex flex-col items-center space-y-4;
+}
+
+.video-download span {
+  @apply bg-slate-900 px-2 py-1 rounded;
+}
+
+.video-downloading {
+  @apply flex flex-col items-center py-1 space-y-4 w-[150px];
+}
+
+.video-downloading > img {
+  @apply h-14 w-14;
+}
+
+.video-missing {
+  @apply flex flex-col items-center space-y-4 text-center w-[550px];
+}
+
+.video-download > div,
+.video-downloading > div,
+.video-missing > div {
+  @apply flex justify-evenly mt-6 w-full !important;
+}
+
+:host ::ng-deep .video-download ui-button > button,
+:host ::ng-deep .video-missing ui-button > button {
+  @apply justify-center w-[132px] !important;
+}

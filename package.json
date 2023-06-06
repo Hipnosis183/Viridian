@@ -26,6 +26,8 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@stencil/store": "^2.0.1",
+    "extract-zip": "^2.0.1",
+    "follow-redirects": "^1.15.2",
     "resizable": "^1.2.1",
     "rxjs": "~7.5.0",
     "tippy.js": "^6.3.7",

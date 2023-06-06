@@ -6,6 +6,19 @@
     "DEFAULT": "Default",
     "OK": "Ok"
   },
+  "VIDEO_DOWNLOAD": {
+    "DOWNLOAD": {
+      "FIRST": "Download FFmpeg binaries?",
+      "SECOND": "FFmpeg will be installed in"
+    },
+    "DOWNLOADING": "Downloading",
+    "MISSING": {
+      "FIRST": "Viridian needs FFmpeg binaries in order to work.",
+      "SECOND": "If you already have FFmpeg installed/downloaded in your system, you can manually configure the binaries directory path in the settings.",
+      "THIRD": "In case you don't, you can download the binaries right now."
+    },
+    "UNPACKING": "Unpacking"
+  },
   "VIDEO_INFO": {
     "BITRATE": "Bitrate",
     "CHANNELS": "Channels",
@@ -159,6 +172,10 @@
   },
   "VIDEO_SETTINGS": {
     "FFMPEG": {
+      "DOWNLOAD": {
+        "NAME": "Download",
+        "TEXT": "Get the latest compatible FFmpeg version."
+      },
       "FILES_PATH": {
         "NAME": "FFmpeg Path",
         "TEXT": "Select the directory for FFmpeg binaries."
@@ -166,7 +183,8 @@
       "SAVE_COMMANDS": {
         "NAME": "Save Commands to File",
         "TEXT": "Saves the executed FFmpeg commands to a file."
-      }
+      },
+      "VERSION": "FFmpeg Version"
     },
     "GENERAL": {
       "CREATE_THUMBS": {

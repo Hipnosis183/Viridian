@@ -1,0 +1,31 @@
+<ui-modal *ngIf="videoMissing">
+  <div class="video-missing">
+    <p>{{ 'VIDEO_DOWNLOAD.MISSING.FIRST' | translate }}</p>
+    <p>{{ 'VIDEO_DOWNLOAD.MISSING.SECOND' | translate }}</p>
+    <p>{{ 'VIDEO_DOWNLOAD.MISSING.THIRD' | translate }}</p>
+    <div>
+      <ui-button buttonColor="success" buttonIcon="done" (click)="$videoDownload()">{{ 'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate }}</ui-button>
+      <ui-button buttonColor="primary" buttonIcon="settings" (click)="$videoMissing(true)">{{ 'VIDEO_PLAYER.SETTINGS' | translate }}</ui-button>
+      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoMissing()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
+    </div>
+  </div>
+</ui-modal>
+<ui-modal *ngIf="videoDownload">
+  <div class="video-download">
+    <p>{{ 'VIDEO_DOWNLOAD.DOWNLOAD.FIRST' | translate }}</p>
+    <p>{{ 'VIDEO_DOWNLOAD.DOWNLOAD.SECOND' | translate }}
+      <span>{{ store.state.settings.ffmpeg.filesPath }}</span>
+    </p>
+    <div>
+      <ui-button buttonColor="success" buttonIcon="done" (click)="videoStart()">{{ 'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate }}</ui-button>
+      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoDownload()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+    </div>
+  </div>
+</ui-modal>
+<ui-modal *ngIf="videoDownloading">
+  <div class="video-downloading">
+    <ui-loading></ui-loading>
+    <p *ngIf="videoDownloading == 1">{{ 'VIDEO_DOWNLOAD.DOWNLOADING' | translate }} [1/2]</p>
+    <p *ngIf="videoDownloading == 2">{{ 'VIDEO_DOWNLOAD.UNPACKING' | translate }} [2/2]</p>
+  </div>
+</ui-modal>

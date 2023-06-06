@@ -27,6 +27,7 @@ export class VideoPlayerComponent {
   ) { }
 
   $videoCapture: any;
+  $videoDownload: any;
   $videoInfo: any;
   $videoSave: any;
   $videoSegments: any;
@@ -115,10 +116,18 @@ export class VideoPlayerComponent {
 
   videoFileOpen: any[] = [];
   videoFileOpenT: number = 0;
-  $videoFileOpen(e: any): void {
-    this.videoFileOpenT = Object.values(e).length;
-    this.videoFileOpen = Object.values(e).slice(1);
-    this.videoFileLoad(e[0]);
+  $videoFileOpen(e: any, i?: any): void {
+    // Check if FFmpeg binaries are downloaded/installed.
+    const fileName: string = process.platform == 'linux' ? 'ffmpeg' : 'ffmpeg.exe';
+    const filePath: string = `${this.store.state.settings.ffmpeg.filesPath}${fileName}`;
+    this.ipc.send('exists', filePath);
+    this.ipc.once('exists', (err: any, r: string) => {
+      if (r) { // Load video file(s).
+        this.videoFileOpenT = Object.values(e).length;
+        this.videoFileOpen = Object.values(e).slice(1);
+        this.videoFileLoad(e[0]); // Reset input value to trigger change event.
+      } else { this.$videoDownload.$videoMissing(); if (i) { i.target.value = null; }}
+    });
   }
 
   videoFileCompatible: boolean = false;

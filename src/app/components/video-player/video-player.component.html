@@ -110,7 +110,7 @@
         <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
         <span></span>
       </div>
-      <input title="" type="file" multiple (change)="$videoFileOpen($event.target.files)" />
+      <input title="" type="file" multiple (change)="$videoFileOpen($event.target.files, $event);" />
     </div>
   </div>
   <video-segments #videoSegments (added)="$videoFileOpen($event.target.files)" (inited)="$videoSegments = videoSegments"
@@ -199,3 +199,4 @@
 <video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
 <video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded" (loaded)="$videoSave = videoSave"></video-save>
 <video-settings #videoSettings></video-settings>
+<video-download #videoDownload (loaded)="$videoDownload = videoDownload" (settings)="videoSettings.$videoSettings()"></video-download>

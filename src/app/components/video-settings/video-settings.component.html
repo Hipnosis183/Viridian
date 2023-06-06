@@ -13,7 +13,7 @@
       </div>
       <div class="settings-separator"></div>
       <div class="settings-buttons">
-        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="store.resetSettings()">{{ 'VIDEO_SETTINGS.RESTORE' | translate }}</ui-button>
+        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="settingsRestore()">{{ 'VIDEO_SETTINGS.RESTORE' | translate }}</ui-button>
         <ui-button buttonColor="secondary" buttonIcon="done" (click)="$videoSettings()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
       </div>
     </div>
@@ -31,7 +31,13 @@
         <div *ngIf="settingIndex == 1">
           <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
             <ui-input [inputLabel]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.NAME' | translate" (inputUpdated)="settingUpdate('ffmpeg', 'filesPath')" [(inputValue)]="store.state.settings.ffmpeg.filesPath"></ui-input>
-            <ui-button buttonColor="dark" buttonIcon="more" (click)="settingPath('ffmpeg', 'filesPath')"></ui-button>
+            <ui-button buttonColor="dark" buttonIcon="more" (click)="settingPath('ffmpeg', 'filesPath')" class="more"></ui-button>
+          </div>
+          <div class="settings-option h-[57px]">
+            <p>{{ 'VIDEO_SETTINGS.FFMPEG.VERSION' | translate }}</p>
+            <p *ngIf="settingVersion.length > 0" class="text-sm">{{ settingVersion }}</p>
+            <ui-button *ngIf="settingVersion.length == 0" buttonColor="dark" buttonIcon="done" buttonIconClass="-ml-[24px] opacity-0" (click)="videoDownload.$videoDownload()"
+              [tooltip]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom">{{ 'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate }}</ui-button>
           </div>
           <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
             <p>{{ 'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.NAME' | translate }}</p>
@@ -42,3 +48,4 @@
     </div>
   </div>
 </ui-modal>
+<video-download #videoDownload (finished)="$settingVersion()"></video-download>

@@ -14,7 +14,7 @@
   @apply border-b border-b-slate-700 flex items-center justify-between min-h-[36px] pb-4 [&:not(:first-child)]:pt-4 px-4 space-x-2 [&>p]:whitespace-nowrap;
 }
 
-:host ::ng-deep .settings-option ui-button {
+:host ::ng-deep .settings-option ui-button.more {
   @apply flex pb-1.5 self-end [&_img]:h-6 [&_img]:w-8 !important;
 }
 
