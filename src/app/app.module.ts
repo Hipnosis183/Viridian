@@ -21,6 +21,7 @@ import { UiButtonComponent } from './ui/ui-button/ui-button.component';
 import { UiCheckboxComponent } from './ui/ui-checkbox/ui-checkbox.component';
 import { UiGroupBoxComponent } from './ui/ui-group-box/ui-group-box.component';
 import { UiInputComponent } from './ui/ui-input/ui-input.component';
+import { UiLoadingComponent } from './ui/ui-loading/ui-loading.component';
 import { UiModalComponent } from './ui/ui-modal/ui-modal.component';
 import { UiProgressComponent } from './ui/ui-progress/ui-progress.component';
 import { UiSelectComponent } from './ui/ui-select/ui-select.component';
@@ -68,6 +69,7 @@ function appInitializerFactory(translate: TranslateService) {
     UiCheckboxComponent,
     UiGroupBoxComponent,
     UiInputComponent,
+    UiLoadingComponent,
     UiModalComponent,
     UiProgressComponent,
     UiSelectComponent,
