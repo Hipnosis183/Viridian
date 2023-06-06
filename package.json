@@ -53,10 +53,11 @@
     "directories": {
       "output": "release/"
     },
+    "files": ["dist", "main.js", "remote.js"],
     "linux": {
       "artifactName": "${productName}-${version}-Linux64.${ext}",
       "target": ["appImage", "deb", "7z"],
-      "category": "Game"
+      "category": "Video"
     },
     "win": {
       "artifactName": "${productName}-${version}-Win64.${ext}",
