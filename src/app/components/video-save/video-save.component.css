@@ -1,13 +1,51 @@
-textarea {
-  @apply bg-slate-900 border border-slate-800 break-all h-[300px] mb-4 p-4 resize-none rounded-md text-slate-100 w-[600px];
+.save-buttons {
+  @apply flex flex-col space-y-2 w-[110px];
 }
 
-.save-buttons {
-  @apply flex items-center justify-evenly w-full;
+:host ::ng-deep .save-buttons > ui-button > button {
+  @apply w-full;
 }
 
 .save-container {
   @apply flex space-x-4;
+}
+
+.save-edit {
+  @apply flex h-[490px] space-x-4;
+}
+
+.save-edit-command {
+  @apply hover:bg-slate-850 cursor-pointer flex items-center pl-2 pr-3 py-2 space-x-2 [&>div]:whitespace-nowrap;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.save-edit-commands {
+  @apply bg-slate-1000 border border-slate-800 h-full overflow-y-auto rounded w-full;
+}
+
+.save-edit-commands > div {
+  @apply border-l-[6px] border-b border-b-slate-700;
+}
+
+.save-edit-panel {
+  @apply flex flex-col items-center min-w-[150px] space-y-4;
+}
+
+.save-edit-text {
+  @apply bg-slate-1000 border border-slate-800 h-full [overflow-y:overlay] rounded text-slate-100 w-[600px] [&>div]:border-l-[6px];
+}
+
+.save-edit-text > div > div {
+  @apply border-b border-b-slate-850 cursor-default px-3 py-2 text-sm;
+  transition: background-color 0.4s ease-out;
+}
+
+:host ::ng-deep .save-edit-text ui-textarea > textarea {
+  @apply border-b border-b-slate-800;
+}
+
+:host ::ng-deep .save-edit-text ui-textarea.selected > textarea {
+  @apply bg-slate-850;
 }
 
 .save-error {

@@ -23,7 +23,7 @@
 }
 
 .settings-options {
-  @apply border border-slate-700 h-[calc(100%-74px)] py-4 rounded /*[&>div]:divide-y-4*/;
+  @apply border border-slate-700 h-[calc(100%-74px)] py-4 rounded;
 }
 
 .settings-panel {
@@ -47,7 +47,7 @@
 }
 
 .settings-type > div {
-  @apply hover:bg-slate-900 border-b border-b-slate-800 cursor-pointer flex items-center p-2 space-x-1 w-full;
+  @apply hover:bg-slate-850 border-b border-b-slate-800 cursor-pointer flex items-center p-2 space-x-1 w-full;
   transition: background-color 0.2s ease-in-out;
 }
 

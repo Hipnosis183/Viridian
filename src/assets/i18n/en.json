@@ -53,7 +53,25 @@
   "VIDEO_SAVE": {
     "CLIP_CUT": "Cut Mode",
     "CLIP_CONCAT": "Concatenation Mode",
-    "EDIT": "Manual",
+    "EDIT": {
+      "CLIP": {
+        "NAME": "F:{{ i }} | Create C:{{ k }}",
+        "FULL": "File ({{ i }}) | Create Clip ({{ k }})"
+      },
+      "CONCAT": {
+        "NAME": "F:{{ i }} | Concat Clips",
+        "FULL": "File ({{ i }}) | Concat All Clips ({{ k }})"
+      },
+      "FINAL": "Final Output",
+      "PASS": {
+        "NAME": "Final Output | P:{{ i }}",
+        "FULL": "Final Output | Pass {{ i }}"
+      },
+      "SPLIT": {
+        "NAME": "F:{{ i }} > C:{{ k }} | Create S:{{ l }}",
+        "FULL": "File ({{ i }}) > Clip ({{ k }}) | Create Split ({{ l }})"
+      }
+    },
     "ENCODING": {
       "BITRATE": "Bitrate (kb/s)",
       "ENCODING": "Encoding",
@@ -78,6 +96,7 @@
     },
     "LOSSY": "Lossy",
     "LOSSLESS": "Lossless",
+    "MANUAL": "Manual",
     "OUTPUT": "Output",
     "PATH": "File Path",
     "RESET": "Reset",

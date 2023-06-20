@@ -15,10 +15,10 @@
         </span>
         <div class="save-separator"></div>
         <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
-        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.EDIT' | translate }}</ui-button>
+        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.MANUAL' | translate }}</ui-button>
         <div class="save-separator"></div>
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
         <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
       </div>
     </div>
     <div *ngIf="store.state.playerInfo.playerVideo[0]" class="save-options">
@@ -177,10 +177,27 @@
   </div>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoEditing">
-  <textarea [(ngModel)]="videoSave.videoCommand" spellcheck="false"></textarea>
-  <div class="save-buttons">
-    <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveRun()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-    <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+  <div class="save-edit">
+    <div class="save-edit-panel">
+      <div class="save-edit-commands">
+        <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="command.color">
+          <div class="save-edit-command" [class]="videoCommandIndex == i ? 'bg-slate-900' : ''">
+            <div>{{ command.name }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="save-separator !w-11/12"></div>
+      <div class="save-buttons">
+        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveRun()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+      </div>
+    </div>
+    <div class="save-edit-text">
+      <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="store.state.colorInfo[i][600]">
+        <div [class]="videoCommandIndex == i ? 'text-slate-200' : 'text-slate-500'" [style.backgroundColor]="videoCommandIndex == i ? store.state.colorInfo[i][600] : ''">{{ command.full }}</div>
+        <ui-textarea [(textareaValue)]="videoSave.videoCommands[i].text" (textareaUpdated)="videoSave.videoCommands[i].text = $event" [class]="videoCommandIndex == i ? 'selected' : ''"></ui-textarea>
+      </div>
+    </div>
   </div>
 </ui-modal>
 <ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">

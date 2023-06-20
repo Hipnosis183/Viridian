@@ -1,4 +1,5 @@
 import { Component, EventEmitter, NgZone, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FiltersService } from 'src/app/services/filters.service';
 import { IpcService } from 'src/app/services/ipc.service';
 import { StoreService } from 'src/app/services/store.service';
@@ -24,7 +25,8 @@ export class VideoSaveComponent {
     public filters: FiltersService,
     private ipc: IpcService,
     public store: StoreService,
-    public utils: UtilsService,
+    private translate: TranslateService,
+    private utils: UtilsService,
     private zone: NgZone
   ) { }
 
@@ -172,11 +174,27 @@ export class VideoSaveComponent {
     this.videoReencode = (this.videoSave.$videoFilters.length > 0) || this.videoOutput.videoEncoder ? true : false;
   }
 
+  videoCommandColor: number = 0;
+  videoCommandIndex: number = 0;
+  $videoCommandIndex(i: number): void {
+    this.videoCommandIndex = i;
+  }
+
+  videoCommandAdd(n: string, f: string, t: string): void {
+    // Add command to list.
+    this.videoSave.videoCommands.push({
+      color: this.store.state.colorInfo[this.videoCommandColor][600],
+      full: `${this.videoSave.videoCommands.length}: ${f}`, name: n,
+      text: (this.store.state.settings.ffmpeg.filesPath + t).replace(/\s\s+/g, ' ')
+    }); // Update color assignment value index.
+    this.videoCommandColor = this.videoCommandColor == this.store.state.colorInfo.length - 1 ? 0 : this.videoCommandColor + 1;
+  }
+
   videoSave: any = {
     videoAudio: '',
     videoClips: [],
     videoCodec: '',
-    videoCommand: '',
+    videoCommands: [],
     videoConcat: '',
     videoCut: false,
     videoDelete: [],
@@ -247,7 +265,6 @@ export class VideoSaveComponent {
         // Continue without processing the file.
         this.videoSave.videoClips.push('');
       } else {
-        let clips: string[] = [];
         let concat: string = '';
         for (let k = 0; k < file.fileClips.length; k++) {
           let start: number = file.fileClips[k].start / frameRate;
@@ -267,7 +284,11 @@ export class VideoSaveComponent {
             for (let [l, clip] of splits.entries()) {
               const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.videoOutput.videoFormat.extensions[0]);
               // Add clip creation command to list.
-              clips.push(`ffmpeg -v error -y -noautorotate -ss ${clip.start} -to ${clip.end} -i "${file.filePath}" ${clip.mode} "${output}"`);
+              const command: any = {
+                name: this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.NAME', { i: i + 1, k: k + 1, l: l + 1 }),
+                full: this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${k + 1}/${file.fileClips.length}`, l: `${l + 1}/${splits.length}` }),
+                text: `ffmpeg -v error -y -noautorotate -ss ${clip.start} -to ${clip.end} -i "${file.filePath}" ${clip.mode} "${output}"`
+              }; this.videoCommandAdd(command.name, command.full, command.text);
               // Add clip output file to temporal file for concatenation.
               concat += 'file \'' + output + '\'\n';
               // Add clip output file for later deletion.
@@ -285,7 +306,11 @@ export class VideoSaveComponent {
               }
             } const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}.` + this.videoOutput.videoFormat.extensions[0]);
             // Add clip creation command to list.
-            clips.push(`ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" ${mode} "${output}"`);
+            const command: any = {
+              name: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.NAME', { i: i + 1, k: k + 1 }),
+              full: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${k + 1}/${file.fileClips.length}` }),
+              text: `ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" ${mode} "${output}"`
+            }; this.videoCommandAdd(command.name, command.full, command.text);
             // Add clip output file to temporal file for concatenation.
             concat += 'file \'' + output + '\'\n';
             // Add clip output file for later deletion.
@@ -295,9 +320,11 @@ export class VideoSaveComponent {
         const input: string = file.fileClip;
         const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.videoOutput.videoFormat.extensions[0]);
         // Add clip concatenation command to list.
-        clips.push(`ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" -c:v copy -c:a copy "${output}"`);
-        // Add clip creation commands to final output.
-        this.videoSave.videoCommand += clips.join(' && ') + ' && ';
+        const command: any = {
+          name: this.translate.instant('VIDEO_SAVE.EDIT.CONCAT.NAME', { i: i + 1 }),
+          full: this.translate.instant('VIDEO_SAVE.EDIT.CONCAT.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${file.fileClips.length}` }),
+          text: `ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" -c:v copy -c:a copy "${output}"`
+        }; this.videoCommandAdd(command.name, command.full, command.text);
         // Use clip concat output file instead of the original file.
         this.videoSave.videoClips.push(output);
         // Add clip output file for later deletion.
@@ -318,7 +345,6 @@ export class VideoSaveComponent {
 
   videoSaveClips(): void {
     // Process all available files.
-    let clips: string[] = [];
     for (let [i, file] of this.store.state.fileInfo.entries()) {
       // Get file total duration time in frames.
       const frameRate: number = this.store.state.videoInfo[i].videoFrameRate;
@@ -345,7 +371,11 @@ export class VideoSaveComponent {
           for (let [l, clip] of splits.entries()) {
             const output: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.videoOutput.videoFormat.extensions[0]);
             // Add clip creation command to list.
-            clips.push(`ffmpeg -v error -y -noautorotate -ss ${clip.start} -to ${clip.end} -i "${file.filePath}" ${clip.mode} "${output}"`);
+            const command: any = {
+              name: this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.NAME', { i: i + 1, k: k + 1, l: l + 1 }),
+              full: this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${k + 1}/${file.fileClips.length}`, l: `${l + 1}/${splits.length}` }),
+              text: `ffmpeg -v error -y -noautorotate -ss ${clip.start} -to ${clip.end} -i "${file.filePath}" ${clip.mode} "${output}"`
+            }; this.videoCommandAdd(command.name, command.full, command.text);
             // Add clip output file to temporal file for concatenation.
             concat += 'file \'' + output + '\'\n';
             // Create temporal text file for the concatenation process.
@@ -353,7 +383,11 @@ export class VideoSaveComponent {
             // Add clip output file for later deletion.
             this.videoSave.videoDelete.push(output);
           } // Add clip creation command to list.
-          clips.push(`ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`);
+          const command: any = {
+            name: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.NAME', { i: i + 1, k: k + 1 }),
+            full: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${k + 1}/${file.fileClips.length}` }),
+            text: `ffmpeg -v error -y -noautorotate -f concat -safe 0 -i "${input}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`
+          }; this.videoCommandAdd(command.name, command.full, command.text);
         } else { // Single cut mode.
           if (this.videoOutput.videoCut == 'keyframe') {
             // Change clip starting point to the nearest previous keyframe.
@@ -362,11 +396,14 @@ export class VideoSaveComponent {
               if (videoKeyFrames[l] > start) { start = videoKeyFrames[l-1]; break; }
             }
           } // Add clip creation command to list.
-          clips.push(`ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`);
+          const command: any = {
+            name: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.NAME', { i: i + 1, k: k + 1 }),
+            full: this.translate.instant('VIDEO_SAVE.EDIT.CLIP.FULL', { i: `${i + 1}/${this.store.state.fileInfo.length}`, k: `${k + 1}/${file.fileClips.length}` }),
+            text: `ffmpeg -v error -y -noautorotate -ss ${start} -to ${end} -i "${file.filePath}" ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${output}"`
+          }; this.videoCommandAdd(command.name, command.full, command.text);
         }
       }
-    } // Add clip creation commands to final output.
-    this.videoSave.videoCommand += clips.join(' && ');
+    }
   }
 
   videoSaveEncoding(): void {
@@ -441,7 +478,11 @@ export class VideoSaveComponent {
 
   videoSaveOutput(): void {
     // Define output command.
-    this.videoSave.videoCommand += `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${this.videoSave.videoOutput}"`;
+    const command: any = {
+      name: this.translate.instant('VIDEO_SAVE.EDIT.FINAL'),
+      full: this.translate.instant('VIDEO_SAVE.EDIT.FINAL'),
+      text: `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding} ${this.videoSave.videoFilters} ${this.videoSave.videoMetadata} ${this.videoSave.videoAudio} "${this.videoSave.videoOutput}"`
+    }; this.videoCommandAdd(command.name, command.full, command.text);
   }
 
   videoSaveDirectory(): void {
@@ -453,6 +494,8 @@ export class VideoSaveComponent {
   }
 
   videoSaveEdit(): void {
+    this.videoCommandColor = 0;
+    this.videoCommandIndex = 0;
     if (!this.videoSave.videoEditing) { this.videoSaveBuild(); }
     this.videoSave.videoEditing = !this.videoSave.videoEditing;
   }
@@ -490,7 +533,7 @@ export class VideoSaveComponent {
 
   videoSaveBuild(): void {
     // Reset output command.
-    this.videoSave.videoCommand = '';
+    this.videoSave.videoCommands = [];
     this.videoSave.videoDelete = [];
     // Build output command.
     switch (this.videoOutput.videoConcat) {
@@ -515,15 +558,17 @@ export class VideoSaveComponent {
     // Detect and adapt command for 2-pass encoding.
     if (!this.videoSave.videoCut && this.videoSave.videoEncoding.includes('$pass')) {
       const pass1: string = `ffmpeg -v error -y -noautorotate ${this.videoSave.videoConcat} ${this.videoSave.videoInput} ${this.videoSave.videoCodec} ${this.videoSave.videoEncoding.replace('$pass', '1')} ${this.videoSave.videoFilters} -an -f null -`;
-      const pass2: string = this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand.replace('$pass', '2');
-      this.videoSave.videoCommand = `${pass1} && ${pass2}`;
-    } // Remove extra whitespace.
-    this.videoSave.videoCommand = this.videoSave.videoCommand.replace(/\s\s+/g, ' ');
+      const pass2: string = `ffmpeg ${this.videoSave.videoCommands[0].text.slice(this.store.state.settings.ffmpeg.filesPath.length + 7).replace('$pass', '2')}`;
+      this.videoSave.videoCommands = [];
+      this.videoCommandColor = 0;
+      this.videoCommandAdd(this.translate.instant('VIDEO_SAVE.EDIT.PASS.NAME', { i: '1' }), this.translate.instant('VIDEO_SAVE.EDIT.PASS.FULL', { i: '1' }), pass1);
+      this.videoCommandAdd(this.translate.instant('VIDEO_SAVE.EDIT.PASS.NAME', { i: '2' }), this.translate.instant('VIDEO_SAVE.EDIT.PASS.FULL', { i: '2' }), pass2);
+    }
   }
 
   videoSaveRun(): void {
     // Store final export command in the log file.
-    const command: string = this.store.state.settings.ffmpeg.filesPath + this.videoSave.videoCommand + '\n';
+    const command: string = this.videoSave.videoCommands.map((v: any) => v.text).join(' && ') + '\n';
     if (this.store.state.settings.ffmpeg.saveCommands) {
       this.ipc.send('append-file', `${process.cwd()}/commands.txt`, command);
     } // Execute final export command.
