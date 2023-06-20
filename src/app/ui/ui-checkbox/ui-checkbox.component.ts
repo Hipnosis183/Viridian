@@ -8,11 +8,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 export class UiCheckboxComponent {
 
-  @Input() value: any;
-  @Output() valueChange = new EventEmitter;
+  @Input() checkboxValue: any;
+  @Output() checkboxValueChange = new EventEmitter;
 
   changeValue(): void {
-    this.value = !this.value;
-    this.valueChange.emit(this.value);
+    this.checkboxValue = !this.checkboxValue;
+    this.checkboxValueChange.emit(this.checkboxValue);
   }
 }

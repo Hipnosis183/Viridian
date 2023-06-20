@@ -25,7 +25,7 @@
         <div *ngIf="settingIndex == 0">
           <div [tooltip]="'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
             <p>{{ 'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.NAME' | translate }}</p>
-            <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(value)]="store.state.settings.general.createThumbs"></ui-checkbox>
+            <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(checkboxValue)]="store.state.settings.general.createThumbs"></ui-checkbox>
           </div>
         </div>
         <div *ngIf="settingIndex == 1">
@@ -41,7 +41,7 @@
           </div>
           <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
             <p>{{ 'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.NAME' | translate }}</p>
-            <ui-checkbox (click)="settingUpdate('ffmpeg', 'saveCommands')" [(value)]="store.state.settings.ffmpeg.saveCommands"></ui-checkbox>
+            <ui-checkbox (click)="settingUpdate('ffmpeg', 'saveCommands')" [(checkboxValue)]="store.state.settings.ffmpeg.saveCommands"></ui-checkbox>
           </div>
         </div>
       </div>
