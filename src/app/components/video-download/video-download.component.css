@@ -1,9 +1,9 @@
-.video-download {
-  @apply flex flex-col items-center space-y-4;
+.video-download > p {
+  @apply text-center;
 }
 
 .video-download span {
-  @apply bg-slate-900 px-2 py-1 rounded;
+  @apply bg-dark-800 px-2 py-1 rounded;
 }
 
 .video-downloading {
@@ -15,7 +15,7 @@
 }
 
 .video-missing {
-  @apply flex flex-col items-center space-y-4 text-center w-[550px];
+  @apply text-center w-[550px];
 }
 
 .video-download > div,

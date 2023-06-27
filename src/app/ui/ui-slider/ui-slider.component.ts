@@ -18,7 +18,7 @@ export class UiSliderComponent {
   updateSlider(): void {
     // Update bar color based on thumb position.
     const value = (this.sliderValue - this.sliderMin) / (this.sliderMax - this.sliderMin) * 100;
-    this.slider.nativeElement.style.background = `linear-gradient(to right, #0f172a 0%, #0f172a ${value}%, #f1f5f9 ${value}%, #f1f5f9 100%)`;
+    this.slider.nativeElement.style.background = `linear-gradient(to right, #7D8590 0%, #7D8590 ${value}%, #010409 ${value}%, #010409 100%)`;
     // Emit input value to parent.
     this.sliderValueChange.emit(this.sliderValue);
   }

@@ -2,7 +2,7 @@
   <p>{{ 'VIDEO_SEGMENTS.FILES_CLIPS' | translate }}</p>
   <div class="segments-files">
     <div *ngFor="let info of store.state.videoInfo; index as i">
-      <div *ngIf="info.videoStreams" (click)="videoFileChange(i)" class="file" [class]="i == store.i ? 'bg-slate-800' : ''">
+      <div *ngIf="info.videoStreams" (click)="videoFileChange(i)" class="file" [class]="i == store.i ? 'bg-dark-800' : ''">
         <div class="file-title">
           <b>{{ i + 1 }} |</b>
           <p>{{ store.state.fileInfo[i].fileName }}</p>
@@ -33,13 +33,13 @@
   </div>
   <div class="segments-buttons">
     <div>
-      <ui-button buttonColor="dark" buttonIcon="add" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_ADD.' | translate" [dropdown]="segmentAdd"></ui-button>
+      <ui-button buttonColor="darker" buttonIcon="add" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_ADD.' | translate" [dropdown]="segmentAdd"></ui-button>
       <div #segmentAdd>
         <span (click)="videoAdd.click()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.FILE' | translate }}</span>
         <div class="tippy-separator"></div>
         <span (click)="videoClipAdd()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate }}</span>
       </div>
-      <ui-button buttonColor="dark" buttonIcon="remove" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.' | translate" [dropdown]="segmentRemove"></ui-button>
+      <ui-button buttonColor="darker" buttonIcon="remove" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.' | translate" [dropdown]="segmentRemove"></ui-button>
       <div #segmentRemove>
         <span (click)="videoFileRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.FILE' | translate }}</span>
         <div class="tippy-separator"></div>
@@ -47,13 +47,13 @@
       </div>
     </div>
     <div>
-      <ui-button buttonColor="dark" buttonIcon="move" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.' | translate" [dropdown]="segmentMoveUp"></ui-button>
+      <ui-button buttonColor="darker" buttonIcon="move" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.' | translate" [dropdown]="segmentMoveUp"></ui-button>
       <div #segmentMoveUp>
         <span (click)="videoFileMoveUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.FILE' | translate }}</span>
         <div class="tippy-separator"></div>
         <span (click)="videoClipMoveUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.CLIP' | translate }}</span>
       </div>
-      <ui-button buttonColor="dark" buttonIcon="move" buttonIconClass="-scale-y-100" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.' | translate" [dropdown]="segmentMoveDown"></ui-button>
+      <ui-button buttonColor="darker" buttonIcon="move" buttonIconClass="-scale-y-100" [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.' | translate" [dropdown]="segmentMoveDown"></ui-button>
       <div #segmentMoveDown>
         <span (click)="videoFileMoveDown()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.FILE' | translate }}</span>
         <div class="tippy-separator"></div>

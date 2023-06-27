@@ -7,16 +7,9 @@
     "OK": "Ok"
   },
   "VIDEO_DOWNLOAD": {
-    "DOWNLOAD": {
-      "FIRST": "Download FFmpeg binaries?",
-      "SECOND": "FFmpeg will be installed in"
-    },
+    "DOWNLOAD": "Download FFmpeg binaries?\n\nFFmpeg will be installed in",
     "DOWNLOADING": "Downloading",
-    "MISSING": {
-      "FIRST": "Viridian needs FFmpeg binaries in order to work.",
-      "SECOND": "If you already have FFmpeg installed/downloaded in your system, you can manually configure the binaries directory path in the settings.",
-      "THIRD": "In case you don't, you can download the binaries right now."
-    },
+    "MISSING": "Viridian needs FFmpeg binaries in order to work.\n\nIf you already have FFmpeg installed/downloaded in your system, you can manually configure the binaries directory path in the settings.\n\nIn case you don't, you can download the binaries right now.",
     "UNPACKING": "Unpacking"
   },
   "VIDEO_INFO": {
@@ -101,7 +94,7 @@
     "PATH": "File Path",
     "RESET": "Reset",
     "SAVE": {
-      "SAVE_ERROR": "An error has occurred during the processing of the video. Check the log for more details.",
+      "SAVE_ERROR": "An error has occurred during the processing of the video.\nCheck the log for more details.",
       "SAVE_OK": "Video saved successfully!",
       "SAVING": "Processing video..."
     },
@@ -154,19 +147,13 @@
       "CURRENT": "At Current Time",
       "NUMBER": "Into {{ number }} Clips"
     },
-    "COMPATIBLE": {
-      "FIRST": "One or more of the files don't share the necessary parameters to use lossless concatenation with the already opened ones, but they were added anyways.",
-      "SECOND": "The concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase."
-    },
+    "COMPATIBLE": "One or more of the files don't share the necessary parameters to use lossless concatenation with the already opened ones, but they were added anyways.\n\nThe concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase.",
     "FILES_CLIPS": "Files | Clips",
     "FRAME_ADVANCE": {
       "PREV": "Previous Frame",
       "NEXT": "Next Frame"
     },
-    "INCOMPATIBLE": {
-      "FIRST": "One or more of the files don't share the necessary parameters to use concatenation with the already opened ones, and haven't been added to the list.",
-      "SECOND": "Make sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."
-    },
+    "INCOMPATIBLE": "One or more of the files don't share the necessary parameters to use concatenation with the already opened ones, and haven't been added to the list.\n\nMake sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation).",
     "SEGMENT_ADD": {
       "": "Add Files/Clip...",
       "CLIP": "Add Clip",

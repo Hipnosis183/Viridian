@@ -1,19 +1,20 @@
 <ui-modal *ngIf="store.state.playerInfo.playerLoading">
   <div class="player-loading">
-    <img [src]="store.state.fileInfo[store.state.fileInfo.length - 1].fileThumb">
+    <div class="player-loading-i">
+      <ui-loading></ui-loading>
+      <img [src]="store.state.fileInfo[store.state.fileInfo.length - 1].fileThumb">
+    </div>
     <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.videoFileOpenT - this.videoFileOpen.length, total: this.videoFileOpenT } }}</p>
   </div>
 </ui-modal>
 <ui-modal *ngIf="store.state.playerInfo.playerLoaded && (videoFileCompatible || videoFileIncompatible)">
   <div class="player-compatibility">
     <div *ngIf="videoFileCompatible">
-      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.FIRST' | translate }}</p>
-      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE.SECOND' | translate }}</p>
+      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE' | translate }}</p>
     </div>
     <span *ngIf="videoFileCompatible && videoFileIncompatible"></span>
     <div *ngIf="videoFileIncompatible">
-      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.FIRST' | translate }}</p>
-      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE.SECOND' | translate }}</p>
+      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE' | translate }}</p>
     </div>
     <ui-button buttonColor="success" buttonIcon="done" (click)="videoFileCompatibility()">{{ 'GENERAL.OK' | translate }}</ui-button>
   </div>
@@ -59,43 +60,43 @@
     </div>
     <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-segments">
       <div class="flex">
-        <ui-button buttonColor="dark" buttonIcon="next" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" (click)="videoPlayerFrame(0)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="next" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" (click)="videoPlayerFrame(1)"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="next" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" (click)="videoPlayerFrame(0)"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="next" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" (click)="videoPlayerFrame(1)"></ui-button>
         <p>{{ (playerInfo.playerVideo[store.i]?.currentTime * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }} / {{ (playerInfo.playerVideo[store.i]?.duration * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }}</p>
       </div>
       <div>
-        <ui-button buttonColor="dark" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
         <div #clipSplit>
           <div dropdownIgnore class="player-split">
-            <input dropdownIgnore [(ngModel)]="$videoSegments.videoSplit" (input)="$videoSegments.$videoSplit($event)" min="2" [max]="100" type="number">
+            <ui-input [inputMin]="2" [inputMax]="100" inputType="number" [(inputValue)]="$videoSegments.videoSplit" (inputUpdated)="$videoSegments.$videoSplit($event)"></ui-input>
           </div>
           <span (click)="$videoSegments.$videoClipSplit(0)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: $videoSegments.videoSplit } }}</span>
           <div class="tippy-separator"></div>
           <span (click)="$videoSegments.$videoClipSplit(1)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</span>
         </div>
         <div class="player-separator-dark"></div>
-        <ui-button buttonColor="dark" buttonIcon="clip-set" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate" (click)="$videoSegments.videoClipSet(1)"></ui-button>
-        <ui-button buttonColor="dark" buttonIcon="clip-set" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate" (click)="$videoSegments.videoClipSet(0)"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-set" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate" (click)="$videoSegments.videoClipSet(1)"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-set" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate" (click)="$videoSegments.videoClipSet(0)"></ui-button>
         <div class="player-separator-dark"></div>
-        <ui-button buttonColor="dark" buttonIcon="clip-nav" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavStart"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-nav" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavStart"></ui-button>
         <div #clipNavStart>
           <span (click)="$videoSegments.videoClipNavigate(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</span>
           <div class="tippy-separator"></div>
           <span (click)="$videoSegments.videoClipNavigate(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="dark" buttonIcon="clip-nav" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavEnd"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-nav" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavEnd"></ui-button>
         <div #clipNavEnd>
           <span (click)="$videoSegments.videoClipNavigate(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</span>
           <div class="tippy-separator"></div>
           <span (click)="$videoSegments.videoClipNavigate(0, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="dark" buttonIcon="clip-snap" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate" [dropdown]="clipSnapStart"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-snap" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate" [dropdown]="clipSnapStart"></ui-button>
         <div #clipSnapStart>
           <span (click)="$videoSegments.videoClipSnap(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</span>
           <div class="tippy-separator"></div>
           <span (click)="$videoSegments.videoClipSnap(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="dark" buttonIcon="clip-snap" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate" [dropdown]="clipSnapEnd"></ui-button>
+        <ui-button buttonColor="darker" buttonIcon="clip-snap" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate" [dropdown]="clipSnapEnd"></ui-button>
         <div #clipSnapEnd>
           <span (click)="$videoSegments.videoClipSnap(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</span>
           <div class="tippy-separator"></div>
@@ -123,9 +124,9 @@
         [buttonToggle]="playerInfo.playerVideo[store.i] && !playerInfo.playerVideo[store.i].paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
       <ui-button buttonColor="dark" buttonIcon="stop" [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate" (click)="videoPlayerStop()"></ui-button>
       <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo[store.i]?.muted || playerInfo.playerVideo[store.i]?.volume == 0 ? 'mute' : 'volume'"
-        [tooltip]="playerVolume" [tooltipDelay]="[0, 0]" [tooltipKeep]="true" (click)="videoPlayerMute()"></ui-button>
+        [tooltip]="playerVolume" [tooltipDelay]="[0, 0]" [tooltipKeep]="true" [tooltipOffset]="[-3, 10]" tooltipPlace="right" (click)="videoPlayerMute()"></ui-button>
       <div #playerVolume>
-        <ui-slider *ngIf="playerInfo.playerVideo[store.i]" [sliderValue]="playerInfo.playerVideo[store.i].volume * 100" (sliderValueChange)="videoPlayerVolume($event / 100)" [sliderVertical]="true"></ui-slider>
+        <ui-slider *ngIf="playerInfo.playerVideo[store.i]" [sliderValue]="playerInfo.playerVideo[store.i].volume * 100" (sliderValueChange)="videoPlayerVolume($event / 100)"></ui-slider>
       </div>
       <p>{{ (playerInfo.playerVideo[store.i]?.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo[store.i]?.duration || 0) | duration: true }}</p>
     </div>

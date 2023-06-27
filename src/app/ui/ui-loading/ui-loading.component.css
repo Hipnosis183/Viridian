@@ -1,5 +1,5 @@
 .loading-ring {
-  @apply border-4 border-slate-300 border-t-slate-800 h-14 rounded-[50%] w-14;
+  @apply border-4 border-dark-100 border-t-transparent h-14 rounded-[50%] w-14;
   animation: spin 1s linear infinite;
 }
 

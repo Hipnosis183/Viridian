@@ -1,12 +1,14 @@
 <ui-modal [modalHidden]="!videoCapture.videoCapture">
-  <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate" class="flex mt-1">
-    <div class="capture-output">
-      <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoCapture.videoOutput"></ui-input>
-      <ui-button buttonColor="dark" buttonIcon="more" (click)="videoCaptureDirectory()"></ui-button>
+  <div class="capture-container">
+    <div class="capture-buttons">
+      <ui-button buttonColor="success" buttonIcon="done" (click)="videoCaptureFrame()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
+      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoCapture()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
     </div>
-  </ui-group-box>
-  <div class="capture-buttons">
-    <ui-button buttonColor="success" buttonIcon="done" (click)="videoCaptureFrame()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-    <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoCapture()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate" class="flex mt-1">
+      <div class="capture-output">
+        <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoCapture.videoOutput"></ui-input>
+        <ui-button buttonColor="dark" buttonIcon="more" (click)="videoCaptureDirectory()"></ui-button>
+      </div>
+    </ui-group-box>
   </div>
 </ui-modal>

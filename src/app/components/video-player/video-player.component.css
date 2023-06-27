@@ -27,7 +27,7 @@
 }
 
 .player-clip input {
-  @apply h-7 p-0.5 pl-1 rounded text-slate-900;
+  @apply h-7 p-0.5 pl-1 rounded text-dark-800;
   border: solid 1px #ccc;
 }
 
@@ -40,12 +40,12 @@
 }
 
 .player-clip input[type="time"]::-webkit-calendar-picker-indicator {
-  @apply hover:bg-slate-200 cursor-pointer rounded;
+  @apply hover:bg-dark-100 cursor-pointer rounded;
   transition: background-color 0.2s ease-in-out;
 }
 
 .player-clips {
-  @apply bg-slate-1000 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
+  @apply bg-dark-1000/80 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
 }
 
 .player-clips > div > div > div:first-child {
@@ -58,7 +58,7 @@
 }
 
 .player-compatibility > span {
-  @apply bg-slate-600 h-px w-full;
+  @apply bg-dark-400 h-px w-full;
 }
 
 .player-compatibility > ui-button {
@@ -82,28 +82,36 @@
 }
 
 .player-crop > span {
-  @apply bg-slate-200 h-px px-2 w-full;
+  @apply bg-dark-100 h-px px-2 w-full;
 }
 
 .player-crop input {
-  @apply p-0.5 pl-1 rounded text-slate-900 w-[80px];
+  @apply p-0.5 pl-1 rounded text-dark-800 w-[80px];
   border: solid 1px #ccc;
 }
 
 .player-crop p {
-  @apply text-slate-900 w-[14px] !important;
+  @apply text-dark-800 w-[14px] !important;
 }
 
 .player-edit {
-  @apply absolute bg-slate-1000 border border-slate-1000 flex justify-center;
+  @apply absolute bg-dark-1000 border-b border-b-dark-500 flex justify-center;
 }
 
 .player-loading {
-  @apply flex flex-col items-center space-y-4;
+  @apply flex flex-col items-center m-[-16px] mb-0 space-y-4;
 }
 
-.player-loading > img {
-  @apply bg-slate-1000 border border-slate-700 h-[120px] object-cover rounded w-[200px];
+.player-loading-i {
+  @apply border-b border-b-dark-400 flex h-[121px] items-center justify-center w-[200px];
+}
+
+.player-loading-i > img {
+  @apply bg-dark-900 brightness-50 h-[120px] object-cover w-[200px];
+}
+
+.player-loading-i > ui-loading {
+  @apply absolute z-10;
 }
 
 .player-open {
@@ -123,11 +131,11 @@
 }
 
 .player-open span {
-  @apply absolute border-2 border-dashed border-slate-100 h-[calc(100%-36px)] opacity-20 rounded-md w-[calc(100%-36px)];
+  @apply absolute border-2 border-dashed border-dark-100 h-[calc(100%-36px)] opacity-20 rounded-md w-[calc(100%-36px)];
 }
 
 .player-segments {
-  @apply absolute bg-slate-800 bottom-[-51px] border border-slate-1000 border-t-0 h-[50px] justify-end pb-0 pt-[0.4rem] px-[15px] w-[calc(100%+2px)];
+  @apply absolute bg-dark-800 border-b border-b-dark-500 bottom-[-51px] h-[50px] justify-end pb-0 pt-[0.45rem] px-[15px] w-[calc(100%+2px)];
 }
 
 .player-segments > div:last-child {
@@ -143,24 +151,28 @@
 }
 
 .player-separator-dark {
-  @apply bg-slate-900;
+  @apply bg-dark-500;
 }
 
 .player-separator-lite {
-  @apply bg-slate-700;
+  @apply bg-dark-400;
 }
 
 .player-separator-dark,
 .player-separator-lite {
-  @apply h-7 inline-flex ml-4 mr-2 my-1 w-0.5;
+  @apply h-7 inline-flex ml-4 mr-2 my-1 w-px;
 }
 
 .player-split {
-  @apply flex justify-center mb-1.5 mt-1;
+  @apply flex justify-center mb-2 mt-1;
 }
 
-.player-split input {
-  @apply bg-slate-900 border border-slate-700 p-0.5 pl-2.5 rounded text-center w-[80px];
+:host ::ng-deep .player-split ui-input input {
+  @apply bg-dark-900 hover:bg-dark-1000 w-[80px];
+}
+
+:host ::ng-deep .player-split ui-input .input-arrow {
+  @apply hover:bg-dark-1000;
 }
 
 .player-video {

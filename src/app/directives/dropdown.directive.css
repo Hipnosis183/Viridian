@@ -1,5 +1,5 @@
 .tippy-box[data-theme ~= 'dropdown'] {
-  @apply bg-slate-800 border border-slate-1000 !important;
+  @apply bg-dark-800 border border-dark-700 !important;
 }
 .tippy-box[data-theme ~= 'dropdown'] > .tippy-content {
   @apply py-1.5 px-0 !important;
@@ -8,25 +8,25 @@
   @apply flex flex-col !important;
 }
 .tippy-box[data-theme ~= 'dropdown'] > .tippy-content span {
-  @apply bg-slate-800 hover:bg-slate-600 cursor-pointer flex items-center justify-center min-h-[32px] px-3;
+  @apply hover:bg-dark-600 cursor-pointer flex items-center justify-center min-h-[32px] mx-2 px-3 rounded;
   transition: background-color 0.2s;
 }
 .tippy-box[data-theme ~= 'dropdown'] .tippy-separator {
-  @apply bg-slate-900 h-px mx-auto my-1 w-[calc(100%-8px)];
+  @apply bg-dark-600 h-px mx-auto my-2 w-[calc(100%-8px)];
 }
 
 .tippy-box[data-theme ~= 'dropdown'] > .tippy-arrow::before {
   transform: scale(0.75);
 }
 .tippy-box[data-theme ~= 'dropdown'][data-placement ^= top] > .tippy-arrow:before {
-  @apply border-t-slate-800;
+  @apply border-t-dark-800;
 }
 .tippy-box[data-theme ~= 'dropdown'][data-placement ^= bottom] > .tippy-arrow:before {
-  @apply border-b-slate-800;
+  @apply border-b-dark-800;
 }
 .tippy-box[data-theme ~= 'dropdown'][data-placement ^= left] > .tippy-arrow:before {
-  @apply border-l-slate-800;
+  @apply border-l-dark-800;
 }
 .tippy-box[data-theme ~= 'dropdown'][data-placement ^= right] > .tippy-arrow:before {
-  @apply border-r-slate-800;
+  @apply border-r-dark-800;
 }

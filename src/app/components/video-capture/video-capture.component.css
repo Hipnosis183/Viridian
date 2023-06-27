@@ -1,5 +1,13 @@
 .capture-buttons {
-  @apply flex justify-evenly mt-5;
+  @apply flex flex-col space-y-4 w-[110px];
+}
+
+:host ::ng-deep .capture-buttons > ui-button > button {
+  @apply w-full;
+}
+
+.capture-container {
+  @apply flex items-center space-x-4;
 }
 
 .capture-output {

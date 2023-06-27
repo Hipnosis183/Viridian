@@ -19,6 +19,18 @@ export class UiInputComponent {
   @Input() inputValue: any;
   @Output() inputValueChange = new EventEmitter;
 
+  inputStepUp(e: any): void {
+    e.preventDefault(); e.stopPropagation();
+    this.inputValue++;
+    this.inputUpdate();
+  }
+
+  inputStepDown(e: any): void {
+    e.preventDefault(); e.stopPropagation();
+    this.inputValue--;
+    this.inputUpdate();
+  }
+
   inputUpdate(): void {
     if (this.inputType == 'number') {
       if (this.inputValue > this.inputMax) {

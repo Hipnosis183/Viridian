@@ -1,4 +1,4 @@
 textarea {
-  @apply align-top bg-transparent hover:bg-slate-800 break-all overflow-hidden p-3 resize-none w-full;
+  @apply align-top bg-transparent hover:bg-dark-800 break-all overflow-hidden p-3 resize-none w-full;
   transition: background-color 0.2s ease-in-out;
 }

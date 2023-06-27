@@ -181,20 +181,20 @@
     <div class="save-edit-panel">
       <div class="save-edit-commands">
         <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="command.color">
-          <div class="save-edit-command" [class]="videoCommandIndex == i ? 'bg-slate-900' : ''">
+          <div class="save-edit-command" [class]="videoCommandIndex == i ? 'bg-dark-800' : ''">
             <div>{{ command.name }}</div>
           </div>
         </div>
       </div>
       <div class="save-separator !w-11/12"></div>
-      <div class="save-buttons">
+      <div class="save-buttons-v">
         <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveRun()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
         <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
       </div>
     </div>
     <div class="save-edit-text">
       <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="store.state.colorInfo[i][600]">
-        <div [class]="videoCommandIndex == i ? 'text-slate-200' : 'text-slate-500'" [style.backgroundColor]="videoCommandIndex == i ? store.state.colorInfo[i][600] : ''">{{ command.full }}</div>
+        <div [class]="videoCommandIndex == i ? 'text-dark-100' : 'text-dark-200'" [style.backgroundColor]="videoCommandIndex == i ? store.state.colorInfo[i][600] : ''">{{ command.full }}</div>
         <ui-textarea [(textareaValue)]="videoSave.videoCommands[i].text" (textareaUpdated)="videoSave.videoCommands[i].text = $event" [class]="videoCommandIndex == i ? 'selected' : ''"></ui-textarea>
       </div>
     </div>
@@ -203,16 +203,19 @@
 <ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">
   <div class="save-saving">
     <div *ngIf="videoSave.videoSaving">
+      <ui-loading></ui-loading>
       <p>{{ 'VIDEO_SAVE.SAVE.SAVING' | translate }}</p>
     </div>
     <div *ngIf="!videoSave.videoSaving">
-      <div *ngIf="!videoSave.videoErrorText">
+      <div *ngIf="!videoSave.videoErrorText" class="contents">
+        <img src="assets/images/save-done.svg">
         <p>{{ 'VIDEO_SAVE.SAVE.SAVE_OK' | translate }}</p>
       </div>
-      <div *ngIf="videoSave.videoErrorText">
+      <div *ngIf="videoSave.videoErrorText" class="contents">
+        <img src="assets/images/save-error.svg">
         <p>{{ 'VIDEO_SAVE.SAVE.SAVE_ERROR' | translate }}</p>
       </div>
-      <div class="save-buttons">
+      <div class="save-buttons-h">
         <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">{{ 'VIDEO_SAVE.ERROR_LOG' | translate }}</ui-button>
         <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
           (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'GENERAL.CLOSE' : 'GENERAL.OK') | translate }}</ui-button>

@@ -1,5 +1,5 @@
 .checkbox-box {
-  @apply hover:brightness-90 bg-slate-900 border border-slate-600 flex h-5 items-center justify-center rounded w-5;
+  @apply hover:brightness-90 bg-dark-900 border border-dark-400 flex h-5 items-center justify-center rounded w-5;
   transition: filter 0.1s ease-in-out;
 }
 
