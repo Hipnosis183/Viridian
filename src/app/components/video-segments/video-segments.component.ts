@@ -1,4 +1,4 @@
-import { Component, EventEmitter, NgZone, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DelayService } from 'src/app/services/delay.service';
 import { FiltersService } from 'src/app/services/filters.service';
 import { IpcService } from 'src/app/services/ipc.service';
@@ -21,8 +21,7 @@ export class VideoSegmentsComponent {
     public filters: FiltersService,
     private ipc: IpcService,
     public store: StoreService,
-    public utils: UtilsService,
-    private zone: NgZone
+    public utils: UtilsService
   ) { }
 
   @Output() added = new EventEmitter;
@@ -42,18 +41,12 @@ export class VideoSegmentsComponent {
     this.videoIncompatible = v ?? !this.videoIncompatible;
   }
 
+  videoSplit: number = 2;
   videoSegments: boolean = false;
   $videoSegments(v?: boolean): void {
     this.videoSegments = v ?? !this.videoSegments;
     if (this.videoSegments) { setTimeout(() => { this.videoClipUpdate(true); }); }
     if (v == undefined) { setTimeout(() => { this.loaded.emit(); }); }
-  }
-
-  videoSplit: number = 2;
-  $videoSplit(e: any): void {
-    if (this.videoSplit < 2) { this.videoSplit = 2; }
-    if (this.videoSplit > 100) { this.videoSplit = 100; }
-    e.target.value = this.videoSplit;
   }
 
   videoFileCompatible: boolean = false;

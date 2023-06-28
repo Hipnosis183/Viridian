@@ -1,5 +1,5 @@
 const { dialog, ipcMain } = require('electron');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const extract = require('extract-zip');
 const { appendFile, chmod, createWriteStream, existsSync, mkdir, readdir, unlink, writeFile } = require('fs');
 const { get } = require('follow-redirects').https;
@@ -45,6 +45,20 @@ ipcMain.on('read-dir', (e, ...a) => {
   readdir(a[0], (error, stdout, stderr) => {
     e.reply('read-dir', error ? error : stdout);
   });
+});
+
+let $process;
+
+ipcMain.on('spawn', (e, ...a) => {
+  $process = spawn(a[0], { detached: process.platform != 'win32', shell: true });
+  $process.stderr.on('data', (error) => { e.reply('spawn', error.toString()); });
+  $process.on('close', () => { e.reply('spawn', ''); });
+});
+
+ipcMain.on('spawn-kill', (e, ...a) => {
+  if (process.platform == 'win32') {
+    exec(`taskkill /F /T /PID ${$process.pid}`);
+  } else { process.kill(-$process.pid, 'SIGINT'); }
 });
 
 ipcMain.on('unlink', (e, ...a) => {

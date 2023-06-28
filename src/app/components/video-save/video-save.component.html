@@ -204,7 +204,10 @@
   <div class="save-saving">
     <div *ngIf="videoSave.videoSaving">
       <ui-loading></ui-loading>
-      <p>{{ 'VIDEO_SAVE.SAVE.SAVING' | translate }}</p>
+      <p>{{ (videoSave.videoCancel ? 'VIDEO_SAVE.SAVE.CANCEL' : 'VIDEO_SAVE.SAVE.SAVING') | translate }}</p>
+      <div class="save-buttons-h" [class]="videoSave.videoCancel ? 'pointer-events-none' : ''">
+        <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveCancel()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+      </div>
     </div>
     <div *ngIf="!videoSave.videoSaving">
       <div *ngIf="!videoSave.videoErrorText" class="contents">

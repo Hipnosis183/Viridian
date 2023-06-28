@@ -192,6 +192,7 @@ export class VideoSaveComponent {
 
   videoSave: any = {
     videoAudio: '',
+    videoCancel: false,
     videoClips: [],
     videoCodec: '',
     videoCommands: [],
@@ -523,6 +524,7 @@ export class VideoSaveComponent {
   }
 
   videoSaveClose(): void {
+    this.videoSave.videoCancel = false;
     this.videoSave.videoErrorText = null;
     this.videoSave.videoErrorView = false;
     this.videoSave.videoSaving = false;
@@ -573,18 +575,30 @@ export class VideoSaveComponent {
       this.ipc.send('append-file', `${process.cwd()}/commands.txt`, command);
     } // Execute final export command.
     this.videoSave.videoSaving = true;
-    this.ipc.send('exec', command, null);
-    this.ipc.once('exec', (err: any, r: string) => {
+    this.ipc.send('spawn', command, null);
+    this.ipc.once('spawn', (err: any, r: string) => {
       this.zone.run(() => {
         // Delete temporal clip/concat files.
         for (let file of this.videoSave.videoDelete) {
           this.ipc.send('unlink', file);
+        } // Manage process termination.
+        if (this.videoSave.videoCancel) {
+          // Delete remaining output files.
+          for (let c of this.videoSave.videoCommands) {
+            if (c.text.match(/(?<=")[^"]*(?="[^"]*$)(?="$)/g)) {
+              this.ipc.send('unlink', c.text.match(/(?<=")[^"]*(?="[^"]*$)(?="$)/g)[0]); }
+          } this.videoSaveClose(); return;
         } // Update dialog related values.
         this.videoSave.videoSaved = true;
         this.videoSave.videoSaving = false;
         if (r) { this.videoSave.videoErrorText = r; }
       });
     });
+  }
+
+  videoSaveCancel(): void {
+    this.ipc.send('spawn-kill');
+    this.videoSave.videoCancel = true;
   }
 
   videoSaveExport(): void {

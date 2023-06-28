@@ -68,7 +68,7 @@
         <ui-button buttonColor="darker" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
         <div #clipSplit>
           <div dropdownIgnore class="player-split">
-            <ui-input [inputMin]="2" [inputMax]="100" inputType="number" [(inputValue)]="$videoSegments.videoSplit" (inputUpdated)="$videoSegments.$videoSplit($event)"></ui-input>
+            <ui-input [inputMin]="2" [inputMax]="100" inputType="number" [(inputValue)]="$videoSegments.videoSplit"></ui-input>
           </div>
           <span (click)="$videoSegments.$videoClipSplit(0)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: $videoSegments.videoSplit } }}</span>
           <div class="tippy-separator"></div>

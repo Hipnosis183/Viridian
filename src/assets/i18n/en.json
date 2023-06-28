@@ -94,6 +94,7 @@
     "PATH": "File Path",
     "RESET": "Reset",
     "SAVE": {
+      "CANCEL": "Terminating process...",
       "SAVE_ERROR": "An error has occurred during the processing of the video.\nCheck the log for more details.",
       "SAVE_OK": "Video saved successfully!",
       "SAVING": "Processing video..."
