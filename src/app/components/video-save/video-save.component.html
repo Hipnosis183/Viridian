@@ -220,8 +220,9 @@
       </div>
       <div class="save-buttons-h">
         <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">{{ 'VIDEO_SAVE.ERROR_LOG' | translate }}</ui-button>
+        <ui-button *ngIf="!videoSave.videoErrorText" buttonColor="primary" buttonIcon="open-folder" (click)="videoSaveOpen()">{{ 'VIDEO_SAVE.OPEN' | translate }}</ui-button>
         <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
-          (click)="videoSaveClose()">{{ (videoSave.videoErrorText ? 'GENERAL.CLOSE' : 'GENERAL.OK') | translate }}</ui-button>
+          (click)="videoSaveClose()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
       </div>
       <div *ngIf="videoSave.videoErrorView" class="save-error">
         <span [innerText]="videoSave.videoErrorText"></span>

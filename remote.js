@@ -1,4 +1,4 @@
-const { dialog, ipcMain } = require('electron');
+const { dialog, ipcMain , shell} = require('electron');
 const { exec, spawn } = require('child_process');
 const extract = require('extract-zip');
 const { appendFile, chmod, createWriteStream, existsSync, mkdir, readdir, unlink, writeFile } = require('fs');
@@ -59,6 +59,10 @@ ipcMain.on('spawn-kill', (e, ...a) => {
   if (process.platform == 'win32') {
     exec(`taskkill /F /T /PID ${$process.pid}`);
   } else { process.kill(-$process.pid, 'SIGINT'); }
+});
+
+ipcMain.on('shell-open', (e, ...a) => {
+  shell.showItemInFolder(a[0]);
 });
 
 ipcMain.on('unlink', (e, ...a) => {

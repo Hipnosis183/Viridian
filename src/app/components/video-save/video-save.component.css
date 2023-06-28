@@ -1,9 +1,9 @@
 .save-buttons-h {
-  @apply flex justify-evenly mt-6 w-full;
+  @apply flex justify-evenly mt-6 space-x-4 w-full;
 }
 
 :host ::ng-deep .save-buttons-h ui-button > button {
-  @apply justify-center w-[124px];
+  @apply justify-center min-w-[124px];
 }
 
 .save-buttons-v {

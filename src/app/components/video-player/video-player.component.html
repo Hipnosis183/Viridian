@@ -106,7 +106,7 @@
     </div>
     <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded" class="player-open">
       <div [class]="store.state.playerInfo.playerLoading ? 'hidden' : 'flex'">
-        <img [src]="'assets/images/open.svg'">
+        <img [src]="'assets/images/open-file.svg'">
         <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
         <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
         <span></span>

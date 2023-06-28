@@ -90,6 +90,7 @@
     "LOSSY": "Lossy",
     "LOSSLESS": "Lossless",
     "MANUAL": "Manual",
+    "OPEN": "Open folder",
     "OUTPUT": "Output",
     "PATH": "File Path",
     "RESET": "Reset",

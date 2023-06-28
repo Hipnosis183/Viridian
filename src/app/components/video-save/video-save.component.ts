@@ -601,6 +601,12 @@ export class VideoSaveComponent {
     this.videoSave.videoCancel = true;
   }
 
+  videoSaveOpen(): void {
+    const command: any = this.videoSave.videoCommands[this.videoSave.videoCommands.length - 1];
+    this.ipc.send('shell-open', command.text.match(/(?<=")[^"]*(?="[^"]*$)(?="$)/g)[0]);
+    this.videoSaveClose();
+  }
+
   videoSaveExport(): void {
     this.videoSaveBuild();
     this.videoSaveRun();
