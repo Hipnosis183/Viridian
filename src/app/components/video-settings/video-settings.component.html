@@ -27,6 +27,10 @@
             <p>{{ 'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.NAME' | translate }}</p>
             <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(checkboxValue)]="store.state.settings.general.createThumbs"></ui-checkbox>
           </div>
+          <div [tooltip]="'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
+            <p>{{ 'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.NAME' | translate }}</p>
+            <ui-checkbox (click)="settingUpdate('general', 'showRecent')" [(checkboxValue)]="store.state.settings.general.showRecent"></ui-checkbox>
+          </div>
         </div>
         <div *ngIf="settingIndex == 1">
           <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">

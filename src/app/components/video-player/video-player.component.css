@@ -115,23 +115,62 @@
 }
 
 .player-open {
-  @apply h-full w-full;
+  @apply h-full mr-auto relative;
 }
 
 .player-open > div {
-  @apply absolute flex-col h-full items-center justify-center w-full [&>h1]:text-2xl [&>h1]:font-medium [&>p]:opacity-60;
+  @apply absolute flex-col h-full items-center justify-center w-full [&>h1]:text-xl [&>p]:text-dark-200 [&>*:not(input):not(span)]:pointer-events-none [&>*:not(span)]:z-10;
 }
 
 .player-open img {
-  @apply h-36 mb-6 opacity-20 w-full;
+  @apply h-36 mb-4 opacity-20 w-full z-10;
 }
 
 .player-open input {
-  @apply cursor-pointer h-full opacity-0 w-full;
+  @apply cursor-pointer h-full opacity-0 w-full z-10;
 }
 
 .player-open span {
-  @apply absolute border-2 border-dashed border-dark-100 h-[calc(100%-36px)] opacity-20 rounded-md w-[calc(100%-36px)];
+  @apply absolute border-2 border-dashed border-dark-100/20 h-[calc(100%-36px)] rounded-md w-[calc(100%-36px)];
+  transition: background-color 0.2s ease-in-out;
+}
+
+.player-recent {
+  @apply flex h-full items-center justify-center ml-auto relative w-1/2;
+}
+
+.player-recent > div {
+  @apply absolute flex flex-col max-h-[80%] pl-2 pr-4 w-full;
+}
+
+.player-recent h1 {
+  @apply border-b-2 border-b-dark-100/20 mb-4 mr-2 pb-1.5 pointer-events-none text-xl;
+}
+
+.player-recent ui-button {
+  @apply absolute border border-dark-600 right-7 rounded -top-1;
+}
+
+.player-recent-close {
+  @apply absolute hover:bg-dark-600 group-hover:block border border-transparent hover:border-dark-400 cursor-pointer hidden my-auto right-2 rounded-sm [&>img]:h-6;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.player-recent-error {
+  @apply flex flex-col items-center space-y-4 w-[350px] [&>img]:h-14;
+}
+
+.player-recent-file {
+  @apply hover:bg-dark-900 border border-transparent hover:border-dark-700 cursor-pointer flex items-center px-2.5 py-1.5 hover:pr-11 relative rounded;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.player-recent-list {
+  @apply flex flex-col overflow-x-hidden overflow-y-auto pr-2 space-y-1.5;
+}
+
+.player-recent-text {
+  @apply flex flex-col overflow-hidden space-y-0.5 [&>p]:pointer-events-none [&>p]:whitespace-nowrap;
 }
 
 .player-segments {

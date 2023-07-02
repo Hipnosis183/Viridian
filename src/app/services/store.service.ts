@@ -17,6 +17,7 @@ export class StoreService {
       },
       general: {
         createThumbs: false,
+        showRecent: true,
       }
     };
   }

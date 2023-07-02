@@ -45,5 +45,5 @@
 }
 
 .segments-files {
-  @apply max-h-[calc(100%-90px)] overflow-y-auto;
+  @apply max-h-[calc(100%-92px)] overflow-y-auto;
 }

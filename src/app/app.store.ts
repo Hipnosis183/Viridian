@@ -3,7 +3,8 @@ import DefaultColors from 'tailwindcss/colors'
 
 const { state } = createStore({
   filePaths: {
-    temp: process.cwd() + '/temp/',
+    recentFiles: JSON.parse(localStorage.getItem('app.recentFiles') || '[]'),
+    tempFolder: process.cwd() + '/temp/',
   },
   settings: {
     ffmpeg: {
@@ -12,6 +13,7 @@ const { state } = createStore({
     },
     general: {
       createThumbs: JSON.parse(localStorage.getItem('general.createThumbs') || 'false'),
+      showRecent: JSON.parse(localStorage.getItem('general.showRecent') || 'true'),
     }
   },
   colorInfo: [

@@ -7,6 +7,13 @@
     <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.videoFileOpenT - this.videoFileOpen.length, total: this.videoFileOpenT } }}</p>
   </div>
 </ui-modal>
+<ui-modal *ngIf="videoFileRecent">
+  <div class="player-recent-error">
+    <img src="assets/images/save-error.svg">
+    <p>{{ 'VIDEO_PLAYER.FILE_ERROR' | translate }}</p>
+    <ui-button buttonColor="danger" buttonIcon="close" (click)="$videoFileRecent()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
+  </div>
+</ui-modal>
 <ui-modal *ngIf="store.state.playerInfo.playerLoaded && (videoFileCompatible || videoFileIncompatible)">
   <div class="player-compatibility">
     <div *ngIf="videoFileCompatible">
@@ -104,14 +111,31 @@
         </div>
       </div>
     </div>
-    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded" class="player-open">
+    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded" class="player-open group" [class]="store.state.filePaths.recentFiles.length > 0 && store.state.settings.general.showRecent ? 'w-1/2' : 'w-full'">
       <div [class]="store.state.playerInfo.playerLoading ? 'hidden' : 'flex'">
         <img [src]="'assets/images/open-file.svg'">
-        <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
-        <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
-        <span></span>
+        <h1 *ngIf="store.state.filePaths.recentFiles.length == 0 || !store.state.settings.general.showRecent">{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
+        <p *ngIf="store.state.filePaths.recentFiles.length == 0 || !store.state.settings.general.showRecent">{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
+        <span class="group-hover:bg-dark-800/20"></span>
       </div>
       <input title="" type="file" multiple (change)="$videoFileOpen($event.target.files, $event);" />
+    </div>
+    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded && (store.state.filePaths.recentFiles.length > 0 && store.state.settings.general.showRecent)" class="player-recent">
+      <div>
+        <h1>{{ 'VIDEO_PLAYER.RECENT' | translate }}</h1>
+        <ui-button buttonColor="dark" buttonIcon="close" buttonIconClass="!h-6 my-0.5" (click)="videoFileRecentClear()">{{ 'GENERAL.CLEAR' | translate }}</ui-button>
+        <div class="player-recent-list">
+          <div *ngFor="let file of store.state.filePaths.recentFiles; index as i" (click)="videoFileRecentOpen(file, i)" class="player-recent-file group">
+            <div class="player-recent-text">
+              <p>{{ file.name }}</p>
+              <p class="text-dark-200 text-sm">{{ file.path.slice(0, -file.name.length - 1) }}</p>
+            </div>
+            <div class="player-recent-close">
+              <img src="assets/images/close.svg" (click)="videoFileRecentRemove(i); $event.stopPropagation();">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <video-segments #videoSegments (added)="$videoFileOpen($event.target.files)" (inited)="$videoSegments = videoSegments"

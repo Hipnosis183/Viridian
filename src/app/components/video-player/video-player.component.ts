@@ -130,6 +130,52 @@ export class VideoPlayerComponent {
     });
   }
 
+  videoFileRecent: boolean = false;
+  $videoFileRecent(): void {
+    this.videoFileRecent = !this.videoFileRecent;
+    this.change.detectChanges();
+  }
+
+  videoFileRecentOpen(e: any, i: number): void {
+    // Check if recent file to open still exists.
+    this.ipc.send('exists', e.path);
+    this.ipc.once('exists', (err: any, r: string) => {
+      if (r) { // Proceed to open the file.
+        this.$videoFileOpen([e]);
+      } // Remove file from list and display error.
+      else { this.videoFileRecentRemove(i); this.$videoFileRecent(); }
+    });
+  }
+
+  videoFileRecentAdd(e: any): void {
+    // Get recent files list from store.
+    let recentFiles: any = JSON.parse(localStorage.getItem('app.recentFiles') || '[]');
+    // Remove entry from list if already exists.
+    recentFiles = recentFiles.filter((v: any) => (v.name != e.name) && (v.path != e.path));
+    // Add entry to the top of the list.
+    recentFiles.unshift({ name: e.name, path: e.path, type: e.type });
+    // Limit recent files limit to 20 entries.
+    if (recentFiles.length > 20) { recentFiles.pop(); }
+    this.store.state.filePaths.recentFiles = recentFiles;
+    localStorage.setItem('app.recentFiles', JSON.stringify(recentFiles));
+  }
+
+  videoFileRecentRemove(i: number): void {
+    // Get recent files list from store.
+    let recentFiles: any = JSON.parse(localStorage.getItem('app.recentFiles') || '[]');
+    // Remove entry from list by index.
+    recentFiles.splice(i, 1);
+    this.store.state.filePaths.recentFiles = recentFiles;
+    localStorage.setItem('app.recentFiles', JSON.stringify(recentFiles));
+    this.change.detectChanges();
+  }
+
+  videoFileRecentClear(): void {
+    // Clear recent files list.
+    this.store.state.filePaths.recentFiles = [];
+    localStorage.setItem('app.recentFiles', '[]');
+  }
+
   videoFileCompatible: boolean = false;
   videoFileIncompatible: boolean = false;
   videoFileCompatibility(): void {
@@ -141,6 +187,8 @@ export class VideoPlayerComponent {
     // Check if open file is a valid video file.
     if (e.type.indexOf('video') > -1) {
       this.store.state.playerInfo.playerLoaded = false;
+      // Manage opened file in recent files list.
+      if (this.store.state.fileInfo.length == 0) { this.videoFileRecentAdd(e); }
       // Get video file metadata.
       const input: string = e.path;
       const command: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${input}"`;
@@ -159,7 +207,7 @@ export class VideoPlayerComponent {
               this.store.state.filterInfo.filterConcat.push(input);
               this.videoFileCompatible = true;
             } // Create cache directory for the file.
-            const fileTemp: string = this.store.state.filePaths.temp + e.name.replace(/(\.[\w\d_-]+)$/i, '/');
+            const fileTemp: string = this.store.state.filePaths.tempFolder + e.name.replace(/(\.[\w\d_-]+)$/i, '/');
             this.ipc.send('mkdir', `${fileTemp}thumbs`);
             this.ipc.once('mkdir', (err: any, r: string) => {
               // Generate main video thumbnail.

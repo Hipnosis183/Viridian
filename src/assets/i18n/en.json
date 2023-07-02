@@ -1,6 +1,7 @@
 {
   "GENERAL": {
     "CANCEL": "Cancel",
+    "CLEAR": "Clear",
     "CLOSE": "Close",
     "CODEC": "Codec",
     "DEFAULT": "Default",
@@ -26,6 +27,7 @@
     "CLOSE": "Close File",
     "CROP": "Crop Video",
     "DONE": "Export Video",
+    "FILE_ERROR": "The file you tried to open doesn't exist.",
     "FILE_OPEN": {
       "TITLE": "Select video file(s)",
       "SUB": "or drag and drop here"
@@ -37,6 +39,7 @@
     "MUTE": "Mute",
     "NO_AUDIO": "Remove Audio",
     "PLAY_PAUSE": "Play | Pause",
+    "RECENT": "Recent files",
     "ROTATE_CW": "Rotate 90º",
     "ROTATE_CCW": "Rotate -90º",
     "SETTINGS": "Settings",
@@ -198,6 +201,10 @@
       "CREATE_THUMBS": {
         "NAME": "Generate Thumbnails",
         "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
+      },
+      "SHOW_RECENT": {
+        "NAME": "Show Recent Files List",
+        "TEXT": "Display the recent opened files list in the startup screen if there are any, storing up to 20 files."
       }
     },
     "RESTORE": "Restore",
