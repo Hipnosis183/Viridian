@@ -4,68 +4,52 @@
   "private": true,
   "author": "Renzo Pigliacampo <renzopigliacampo@gmail.com>",
   "scripts": {
-    "angular:build": "ng build",
-    "angular:serve": "ng serve",
-    "electron:build": "ng build && electron . --build",
-    "electron:serve": "electron . --serve",
-    "electron:pack": "electron-builder build --linux --win",
-    "electron:pack:dir": "electron-builder build --dir",
-    "electron:pack:linux": "electron-builder build --linux",
-    "electron:pack:win": "electron-builder build --win"
+    "start:angular": "ng serve",
+    "start:electron": "electron-forge start",
+    "build": "ng build && electron-forge package",
+    "build:angular": "ng build",
+    "build:electron": "electron-forge package",
+    "package": "electron-forge make --skip-package",
+    "package:linux": "electron-forge make --platform linux",
+    "package:win32": "electron-forge make --platform win32"
   },
-  "main": "main.js",
+  "main": ".vite/main.js",
   "dependencies": {
-    "@angular/animations": "~13.2.0",
-    "@angular/common": "~13.2.0",
-    "@angular/compiler": "~13.2.0",
-    "@angular/core": "~13.2.0",
-    "@angular/forms": "~13.2.0",
-    "@angular/platform-browser": "~13.2.0",
-    "@angular/platform-browser-dynamic": "~13.2.0",
-    "@angular/router": "~13.2.0",
-    "@ngx-translate/core": "^14.0.0",
-    "@ngx-translate/http-loader": "^7.0.0",
-    "@stencil/store": "^2.0.1",
+    "@angular/animations": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/router": "^17.3.0",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
+    "@stencil/store": "^2.0.15",
     "extract-zip": "^2.0.1",
-    "follow-redirects": "^1.15.2",
+    "follow-redirects": "^1.15.6",
     "resizable": "^1.2.1",
-    "rxjs": "~7.5.0",
+    "rxjs": "~7.8.0",
     "tippy.js": "^6.3.7",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.2.5",
-    "@angular/cli": "~13.2.5",
-    "@angular/compiler-cli": "~13.2.0",
-    "@types/electron": "^1.6.10",
-    "@types/node": "^12.11.1",
-    "autoprefixer": "^10.4.13",
-    "electron": "^21.2.0",
-    "electron-builder": "^23.6.0",
-    "postcss": "^8.4.18",
-    "tailwindcss": "^3.2.1",
-    "typescript": "~4.5.2"
-  },
-  "build": {
-    "productName": "Viridian",
-    "appId": "com.hipnosis.viridian",
-    "directories": {
-      "output": "release/"
-    },
-    "files": ["dist", "main.js", "remote.js"],
-    "linux": {
-      "artifactName": "${productName}-${version}-Linux64.${ext}",
-      "target": ["appImage", "deb", "7z"],
-      "category": "Video"
-    },
-    "win": {
-      "artifactName": "${productName}-${version}-Win64.${ext}",
-      "target": ["nsis", "7z"]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
-    }
+    "@angular-devkit/build-angular": "^17.3.5",
+    "@angular/cli": "^17.3.5",
+    "@angular/compiler-cli": "^17.3.0",
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "@types/node": "^20.12.7",
+    "autoprefixer": "^10.4.19",
+    "electron": "30.0.1",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "~5.4.2",
+    "vite": "^5.2.10"
   }
 }

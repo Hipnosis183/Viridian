@@ -42,6 +42,35 @@ The documentation also goes into some basic and advanced **video processing conc
 ![](assets/screens/2.png)
 ![](assets/screens/3.png)
 
+# Development | Building
+
+Angular and Electron don't play very nice together out of the box, so it's necessary to start the Angular server first, and then the Electron one:
+
+```bash
+npm run start:angular    # Start Angular server.
+npm run start:electron   # Start Electron server.
+```
+
+To build the project:
+
+```bash
+npm run build            # Build Angular and Electron together.
+
+npm run build:angular    # Build Angular app.
+npm run build:electron   # Build Electron app.
+```
+
+And finally to package (currently only Zip files for Linux and Windows):
+
+```bash
+npm run package          # Package for current target platform.
+
+npm run package:linux    # Build and package for Linux.
+npm run package:win32    # Build and package for Windows.
+```
+
+Viridian uses Electron Forge, and while it doesn't have the level of customization of Electron Builder, it's faster and makes Vite integration easier. This could change in the future.
+
 # Acknowledgements
 
 - [FFmpeg](https://ffmpeg.org/), for being the backbone of, not only Viridian, but every single video processing program out there.

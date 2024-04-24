@@ -1,8 +1,5 @@
 const { app, BrowserWindow } = require('electron');
 
-const args = process.argv.slice(1);
-const serve = args.some((val) => val === '--serve');
-
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 1080,
@@ -22,13 +19,13 @@ const createWindow = () => {
   // Disable manu bar display.
   win.setMenuBarVisibility(false);
   // Manage app loading.
-  if (serve) {
+  if (process.env.NODE_ENV) {
     win.loadURL('http://localhost:4200');
     win.webContents.openDevTools();
   } else {
-    win.loadFile('./dist/index.html');
+    win.loadFile('.vite/browser/index.html');
   }
-}
+};
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
