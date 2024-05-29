@@ -1,0 +1,17 @@
+/* Checkbox container. */
+.checkbox-container {
+  @apply cursor-pointer;
+}
+
+/* Checkbox box. */
+.checkbox-box {
+  @apply hover:brightness-90 bg-dark-900 border border-dark-400 flex h-5 items-center justify-center rounded w-5;
+  transition: filter 0.1s ease-in-out;
+}
+.checkbox-box > div {
+  @apply h-[10px] rounded-sm w-[10px];
+  transition: background-color 0.1s ease-in-out;
+}
+.checkbox-box > div.checked {
+  @apply bg-dark-100/90;
+}

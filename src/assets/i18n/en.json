@@ -152,13 +152,15 @@
       "CURRENT": "At Current Time",
       "NUMBER": "Into {{ number }} Clips"
     },
-    "COMPATIBLE": "One or more of the files don't share the necessary parameters to use lossless concatenation with the already opened ones, but they were added anyways.\n\nThe concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase.",
+    "COMPATIBILITY": {
+      "LOSSY_CONCAT": "One or more of the files don't share the necessary parameters to use lossless concatenation with the already opened ones, but they were added anyways.\n\nThe concatenation filter (lossy) will be used. To be able to use the demuxer (lossless) mode, make sure that all files have the same codec and timebase.",
+      "NO_CONCAT": "One or more of the files don't share the necessary parameters to use concatenation with the already opened ones, and haven't been added to the list.\n\nMake sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation)."
+    },
     "FILES_CLIPS": "Files | Clips",
     "FRAME_ADVANCE": {
       "PREV": "Previous Frame",
       "NEXT": "Next Frame"
     },
-    "INCOMPATIBLE": "One or more of the files don't share the necessary parameters to use concatenation with the already opened ones, and haven't been added to the list.\n\nMake sure that all files have at least the same width and height values (for lossy concatenation), and same codec and timebase preferably (for lossless concatenation).",
     "SEGMENT_ADD": {
       "": "Add Files/Clip...",
       "CLIP": "Add Clip",
@@ -183,6 +185,7 @@
   },
   "VIDEO_SETTINGS": {
     "FFMPEG": {
+      "NAME": "FFmpeg",
       "DOWNLOAD": {
         "NAME": "Download",
         "TEXT": "Get the latest compatible FFmpeg version."
@@ -198,6 +201,7 @@
       "VERSION": "FFmpeg Version"
     },
     "GENERAL": {
+      "NAME": "General",
       "CREATE_THUMBS": {
         "NAME": "Generate Thumbnails",
         "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
@@ -208,10 +212,6 @@
       }
     },
     "RESTORE": "Restore",
-    "SETTINGS": [
-      "General",
-      "FFmpeg"
-    ],
     "TITLE": "{{ title }} Settings"
   }
 }

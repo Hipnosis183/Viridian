@@ -1,45 +1,59 @@
-<ui-modal *ngIf="store.state.videoInfo[store.i]?.videoStreams && videoInfo">
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'VIDEO_INFO.TRACK' | translate }}</th>
-        <th>{{ 'VIDEO_INFO.TYPE' | translate }}</th>
-        <th>{{ 'GENERAL.CODEC' | translate }}</th>
-        <th>{{ 'VIDEO_INFO.BITRATE' | translate }}</th>
-        <th>{{ 'VIDEO_INFO.INFORMATION' | translate }}</th>
-      </tr>
-      <tr class="h-4"></tr>
-    </thead>
-    <tbody>
-      <div *ngFor="let stream of store.state.videoInfo[store.i].videoStreams; let i = index" class="contents">
-        <div class="contents info-tracks" [class]="stream.view ? 'selected' : ''">
-          <tr *ngIf="i == 0" (click)="videoStreamOpen(i)">
-            <td></td>
-            <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
-            <td>{{ store.state.fileInfo[store.i].fileType }}</td>
-            <td>{{ stream.bit_rate / 1000 }} kb/s</td>
-            <td>{{ stream.duration | duration }} - {{ stream.size | fileSize }}</td>
-          </tr>
-          <tr *ngIf="i != 0" (click)="videoStreamOpen(i)">
-            <td>{{ stream.index }}</td>
-            <td>{{ stream.codec_type | titlecase }}</td>
-            <td>{{ stream.codec_name | uppercase }}{{ (stream.codec_tag_string != '[0][0][0][0]' ? '/' + stream.codec_tag_string : '') | uppercase }}</td>
-            <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + ' kb/s' : '-'}}</td>
-            <td *ngIf="stream.codec_type=='video'">{{ stream.coded_width }}x{{ stream.coded_height }} {{'@'}}{{ stream.r_frame_rate | expression }}fps</td>
-            <td *ngIf="stream.codec_type=='audio'">{{ stream.channels }} {{ 'VIDEO_INFO.CHANNELS' | translate }} ({{ stream.channel_layout | titlecase }})</td>
-          </tr>
-        </div>
+<!-- Video information dialog. -->
+@if (store.storeVideos()[store.storeIndex()]?.videoStreams && info.infoOpen()) {
+  <vi-modal>
+    <!-- Video file streams. -->
+    <table [class]="'info-streams'">
+      <thead>
         <tr>
-          <td colspan="100%">
-            <div [hidden]="!stream.view" rendered (rendered)="videoStreamResize($event, i)" class="info-details">
-              <span [innerHtml]="store.state.videoInfo[store.i].videoStreamsText[i]" class="space-y-1"></span>
-            </div>
-          </td>
+          <th>{{ 'VIDEO_INFO.TRACK' | translate }}</th>
+          <th>{{ 'VIDEO_INFO.TYPE' | translate }}</th>
+          <th>{{ 'GENERAL.CODEC' | translate }}</th>
+          <th>{{ 'VIDEO_INFO.BITRATE' | translate }}</th>
+          <th>{{ 'VIDEO_INFO.INFORMATION' | translate }}</th>
         </tr>
-      </div>
-    </tbody>
-  </table>
-  <button (click)="$videoInfo()">
-    <img [src]="'assets/images/close.svg'">
-  </button>
-</ui-modal>
+        <tr></tr>
+      </thead>
+      <tbody>
+        <!-- Video stream tracks. -->
+        @for (stream of store.storeVideos()[store.storeIndex()].videoStreams; track stream; let i = $index) {
+          <div [class]="'info-tracks'" [class.selected]="i == info.infoExpanded()">
+            <tr (click)="info.infoUpdateExpanded(i)">
+              @if ($first) {
+                <td></td>
+                <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
+                <td>{{ store.storeFiles()[store.storeIndex()].fileType }}</td>
+                <td>{{ stream.bit_rate / 1000 }} kb/s</td>
+                <td>{{ stream.duration | duration }} - {{ stream.size | fileSize }}</td>
+              } @else {
+                <td>{{ stream.index }}</td>
+                <td>{{ stream.codec_type | titlecase }}</td>
+                <td>{{ stream.codec_name | uppercase }}{{ (stream.codec_tag_string != '[0][0][0][0]' ? '/' + stream.codec_tag_string : '') | uppercase }}</td>
+                <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + ' kb/s' : '-' }}</td>
+                @switch (stream.codec_type) {
+                  @case ('video') { <td>{{ stream.coded_width }}x{{ stream.coded_height }} {{ '@' }}{{ stream.r_frame_rate | frameRate }}fps</td> }
+                  @case ('audio') { <td>{{ stream.channels }} {{ 'VIDEO_INFO.CHANNELS' | translate }} ({{ stream.channel_layout | titlecase }})</td> }
+                }
+              }
+            </tr>
+          </div>
+          <!-- Video stream details. -->
+          <tr>
+            <td [attr.colspan]="'100%'">
+              <div
+                [class]="'info-details'"
+                [hidden]="i != info.infoExpanded()"
+                rendered
+                (rendered)="info.infoRendered($event, i)">
+                <span [innerHtml]="store.storeVideos()[store.storeIndex()].videoStreamsText[i]"></span>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <!-- Close dialog. -->
+    <button [class]="'info-close'" (click)="info.infoUpdateOpen()">
+      <img [src]="'assets/images/close.svg'" />
+    </button>
+  </vi-modal>
+}

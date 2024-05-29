@@ -1,55 +1,120 @@
-<ui-modal *ngIf="videoSettings">
-  <div class="settings-container">
-    <div class="settings-panel">
-      <div class="settings-type">
-        <div (click)="$settingIndex(0)" [class]="settingIndex == 0 ? 'bg-dark-800' : ''">
-          <img src="assets/images/settings.svg">
-          <p>{{ 'VIDEO_SETTINGS.SETTINGS.0' | translate }}</p>
+<!-- Settings dialog. -->
+@if (settings.settingsOpen()) {
+  <vi-modal>
+    <!-- Settings container. -->
+    <div [class]="'settings-container'">
+      <!-- Settings categories. -->
+      <div [class]="'settings-categories'">
+        <div [class]="'settings-category'">
+          <div
+            [class.selected]="settings.settingsIndex() == 'GENERAL'"
+            (click)="settings.settingsUpdateIndex('GENERAL')">
+            <img [src]="'assets/images/settings.svg'">
+            <p>{{ 'VIDEO_SETTINGS.GENERAL.NAME' | translate }}</p>
+          </div>
+          <div
+            [class.selected]="settings.settingsIndex() == 'FFMPEG'"
+            (click)="settings.settingsUpdateIndex('FFMPEG')">
+            <img [src]="'assets/images/settings.svg'">
+            <p>{{ 'VIDEO_SETTINGS.FFMPEG.NAME' | translate }}</p>
+          </div>
         </div>
-        <div (click)="$settingIndex(1)" [class]="settingIndex == 1 ? 'bg-dark-800' : ''">
-          <img src="assets/images/settings.svg">
-          <p>{{ 'VIDEO_SETTINGS.SETTINGS.1' | translate }}</p>
+        <div [class]="'settings-separator'"></div>
+        <div [class]="'settings-buttons'">
+          <vi-button
+            [buttonColor]="'danger'"
+            [buttonIcon]="'rotate'"
+            [buttonText]="'VIDEO_SETTINGS.RESTORE' | translate"
+            (click)="settings.settingsRestore()" />
+          <vi-button
+            [buttonColor]="'secondary'"
+            [buttonIcon]="'done'"
+            [buttonText]="'GENERAL.CLOSE' | translate"
+            (click)="settings.settingsUpdateOpen()" />
         </div>
       </div>
-      <div class="settings-separator"></div>
-      <div class="settings-buttons">
-        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="settingsRestore()">{{ 'VIDEO_SETTINGS.RESTORE' | translate }}</ui-button>
-        <ui-button buttonColor="secondary" buttonIcon="done" (click)="$videoSettings()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
+      <!-- Settings contents. -->
+      <div [class]="'settings-contents'">
+        <div [class]="'settings-title'">
+          <p>{{ 'VIDEO_SETTINGS.TITLE' | translate: { title: 'VIDEO_SETTINGS.' + settings.settingsIndex() + '.NAME' | translate } }}</p>
+        </div>
+        <!-- Settings options. -->
+        <div [class]="'settings-options'">
+          @switch (settings.settingsIndex()) {
+            <!-- General settings. -->
+            @case ('GENERAL') {
+              <div>
+                <div
+                  [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.NAME' | translate }}</p>
+                  <vi-checkbox
+                    [(checkboxValue)]="settings.options.general.createThumbs"
+                    (click)="settings.settingsUpdate('general', 'createThumbs')" />
+                </div>
+                <div
+                  [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.NAME' | translate }}</p>
+                  <vi-checkbox
+                    [(checkboxValue)]="settings.options.general.recentFiles"
+                    (click)="settings.settingsUpdate('general', 'recentFiles')" />
+                </div>
+              </div>
+            }
+            <!-- FFmpeg settings. -->
+            @case ('FFMPEG') {
+              <div>
+                <div
+                  [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <vi-input
+                    [inputLabel]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.NAME' | translate"
+                    [(inputValue)]="settings.options.ffmpeg.filesPath"
+                    (inputUpdated)="settings.settingsUpdate('ffmpeg', 'filesPath')" />
+                  <vi-button
+                    [buttonColor]="'dark'"
+                    [buttonIcon]="'more'"
+                    [class]="'more'"
+                    (click)="settings.settingsUpdatePath()" />
+                </div>
+                <div [class]="'settings-option'" [style.height]="'57px'">
+                  <p>{{ 'VIDEO_SETTINGS.FFMPEG.VERSION' | translate }}</p>
+                  @if (settings.settingsVersion().length) {
+                    <p [class]="'text-sm'">{{ settings.settingsVersion() }}</p>
+                  } @else {
+                    <vi-button
+                      [buttonColor]="'dark'"
+                      [buttonIcon]="'done'"
+                      [buttonIconClass]="'-ml-[24px] opacity-0'"
+                      [buttonText]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate"
+                      [tooltip]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.TEXT' | translate"
+                      [tooltipDelay]="[400, 0]"
+                      [tooltipPlace]="'bottom'"
+                      (click)="download.downloadUpdateDownload()" />
+                  }
+                </div>
+                <div
+                  [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.NAME' | translate }}</p>
+                  <vi-checkbox
+                    [(checkboxValue)]="settings.options.ffmpeg.commandsSave"
+                    (click)="settings.settingsUpdate('ffmpeg', 'commandsSave')" />
+                </div>
+              </div>
+            }
+          }
+        </div>
       </div>
     </div>
-    <div class="w-[400px]">
-      <div class="settings-title">
-        <p>{{ 'VIDEO_SETTINGS.TITLE' | translate: { title: 'VIDEO_SETTINGS.SETTINGS.' + settingIndex | translate } }}</p>
-      </div>
-      <div class="settings-options">
-        <div *ngIf="settingIndex == 0">
-          <div [tooltip]="'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
-            <p>{{ 'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.NAME' | translate }}</p>
-            <ui-checkbox (click)="settingUpdate('general', 'createThumbs')" [(checkboxValue)]="store.state.settings.general.createThumbs"></ui-checkbox>
-          </div>
-          <div [tooltip]="'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
-            <p>{{ 'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.NAME' | translate }}</p>
-            <ui-checkbox (click)="settingUpdate('general', 'showRecent')" [(checkboxValue)]="store.state.settings.general.showRecent"></ui-checkbox>
-          </div>
-        </div>
-        <div *ngIf="settingIndex == 1">
-          <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
-            <ui-input [inputLabel]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.NAME' | translate" (inputUpdated)="settingUpdate('ffmpeg', 'filesPath')" [(inputValue)]="store.state.settings.ffmpeg.filesPath"></ui-input>
-            <ui-button buttonColor="dark" buttonIcon="more" (click)="settingPath('ffmpeg', 'filesPath')" class="more"></ui-button>
-          </div>
-          <div class="settings-option h-[57px]">
-            <p>{{ 'VIDEO_SETTINGS.FFMPEG.VERSION' | translate }}</p>
-            <p *ngIf="settingVersion.length > 0" class="text-sm">{{ settingVersion }}</p>
-            <ui-button *ngIf="settingVersion.length == 0" buttonColor="dark" buttonIcon="done" buttonIconClass="-ml-[24px] opacity-0" (click)="videoDownload.$videoDownload()"
-              [tooltip]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom">{{ 'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate }}</ui-button>
-          </div>
-          <div [tooltip]="'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.TEXT' | translate" [tooltipDelay]="[400, 0]" tooltipPlace="bottom" class="settings-option">
-            <p>{{ 'VIDEO_SETTINGS.FFMPEG.SAVE_COMMANDS.NAME' | translate }}</p>
-            <ui-checkbox (click)="settingUpdate('ffmpeg', 'saveCommands')" [(checkboxValue)]="store.state.settings.ffmpeg.saveCommands"></ui-checkbox>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ui-modal>
-<video-download #videoDownload (finished)="$settingVersion()"></video-download>
+  </vi-modal>
+}

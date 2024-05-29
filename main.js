@@ -1,15 +1,17 @@
+// Import Electron elements.
 const { app, BrowserWindow } = require('electron');
 
+// Create app window.
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 1080,
+    width: process.env.NODE_ENV ? 1330 : 1080,
     height: 680,
     show: false,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      webSecurity: false
-    }
+      webSecurity: false,
+    },
   });
   // Manage fullscreen state.
   let fullscreen = false;

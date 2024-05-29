@@ -1,6 +1,0 @@
-<div *ngIf="optionLoaded" (click)="optionsClick()" class="option-container" [class]="optionValue == select.selectValue ? 'bg-dark-800' : 'hover:bg-dark-800'">
-  <div class="pointer-events-none">
-    <p *ngIf="optionLabel">{{ optionLabel }}</p>
-    <ng-content></ng-content>
-  </div>
-</div>

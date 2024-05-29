@@ -1,9 +1,0 @@
-.loading-ring {
-  @apply border-4 border-dark-100 border-t-transparent h-14 rounded-[50%] w-14;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}

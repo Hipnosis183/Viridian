@@ -1,0 +1,55 @@
+/* Video crop tool resizable. */
+:host {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+.crop-resizable {
+  @apply absolute border border-white cursor-all-scroll overflow-hidden;
+  box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);
+}
+:host ::ng-deep .resizable-handle-w {
+  @apply left-0 !important;
+}
+:host ::ng-deep .resizable-handle-nw {
+  @apply border-l-2 border-t-2 border-white left-0 top-0 !important;
+}
+:host ::ng-deep .resizable-handle-n {
+  @apply top-0 !important;
+}
+:host ::ng-deep .resizable-handle-ne {
+  @apply border-r-2 border-t-2 border-white right-0 top-0 !important;
+}
+:host ::ng-deep .resizable-handle-e {
+  @apply right-0 !important;
+}
+:host ::ng-deep .resizable-handle-se {
+  @apply border-b-2 border-r-2 border-white bottom-0 right-0 !important;
+}
+:host ::ng-deep .resizable-handle-s {
+  @apply bottom-0 !important;
+}
+:host ::ng-deep .resizable-handle-sw {
+  @apply border-b-2 border-l-2 border-white bottom-0 left-0 !important;
+}
+
+/* Video crop tool canvas. */
+.crop-canvas {
+  @apply flex flex-col py-1 space-y-2;
+}
+.crop-canvas > div {
+  @apply flex space-x-2;
+}
+.crop-canvas > div > div {
+  @apply flex items-center space-x-2;
+}
+.crop-canvas > span {
+  @apply bg-dark-100 h-px px-2 w-full;
+}
+.crop-canvas input {
+  @apply p-0.5 pl-1 rounded text-dark-800 w-[80px];
+  border: solid 1px #ccc;
+}
+.crop-canvas p {
+  @apply text-dark-800 w-[14px] !important;
+}

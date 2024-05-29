@@ -1,0 +1,90 @@
+<!-- Video clips list. -->
+@if (store.storeFiles()[0]) {
+  <div id="playerClips" [class]="['clips-list', !segments.segmentsOpen() ? store.storeFiles()[0].fileClips()[0]?.clipElement() ? 'hidden' : 'loading' : 'segments']">
+    @for (file of store.storeFiles(); track file; let i = $index) {
+      <div [hidden]="i != store.storeIndex()">
+        @for (clip of file.fileClips(); track clip; let k = $index) {
+          <div>
+            <!-- Clips container. -->
+            <div #playerClip
+              rendered
+              [class]="'clips-container'" [class.selected]="k == file.fileClipIndex()"
+              [style.backgroundColor]="k == file.fileClipIndex() ? store.storeColors[clip.clipColor()][600] : store.storeColors[clip.clipColor()][800]"
+              [style.borderColor]="k == file.fileClipIndex() ? store.storeColors[clip.clipColor()][500] : store.storeColors[clip.clipColor()][700]"
+              [tooltip]="clipInfo"
+              [tooltipFollow]="'horizontal'"
+              [tooltipKeep]="true"
+              [tooltipPlace]="'bottom'"
+              [tooltipTheme]="'tooltip-lite'"
+              [tooltipTrigger]="'mouseenter'"
+              (mousedown)="store.storeFiles()[i].fileClipIndex.set(k)"
+              (rendered)="segments.clipLoaded($event)"></div>
+            <!-- Clips information. -->
+            <div #clipInfo [class]="'clips-info'">
+              <div>
+                <img
+                  [src]="'assets/images/clip-h-set.svg'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate" />
+                <input
+                  [ngModel]="clip.clipStart() / store.storeVideos()[i].videoFrameRate | duration: true"
+                  [step]="'0.001'"
+                  [type]="'time'"
+                  (change)="segments.clipInputTime('start', $event.target, k, playerClip)" />
+                <input
+                  [min]="0"
+                  [ngModel]="clip.clipStart() | numberInput: '1.0-1'"
+                  [type]="'number'"
+                  (input)="segments.clipInputFrame('start', $event.target, k, playerClip)" />
+              </div>
+              <div>
+                <img
+                  [class]="'rotate-180'"
+                  [src]="'assets/images/clip-h-set.svg'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate" />
+                <input
+                  [ngModel]="clip.clipEnd() / store.storeVideos()[i].videoFrameRate | duration: true"
+                  [step]="'0.001'"
+                  [type]="'time'"
+                  (change)="segments.clipInputTime('end', $event.target, k, playerClip)" />
+                <input
+                  [min]="0"
+                  [ngModel]="clip.clipEnd() | numberInput: '1.0-1'"
+                  [type]="'number'"
+                  (input)="segments.clipInputFrame('end', $event.target, k, playerClip)" />
+              </div>
+              <span></span>
+              <div>
+                <img [src]="'assets/images/clip-h-pos.svg'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate" />
+                <input
+                  [ngModel]="clip.clipStart() / store.storeVideos()[i].videoFrameRate | duration: true"
+                  [step]="'0.001'"
+                  [type]="'time'"
+                  (change)="segments.clipInputTime('position', $event.target, k, playerClip)" />
+                <input
+                  [min]="0"
+                  [ngModel]="clip.clipStart() | numberInput: '1.0-1'"
+                  [type]="'number'"
+                  (input)="segments.clipInputFrame('position', $event.target, k, playerClip)" />
+              </div>
+              <div>
+                <img [src]="'assets/images/clip-h-len.svg'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate" />
+                <input
+                  [ngModel]="(clip.clipEnd() - clip.clipStart()) / store.storeVideos()[i].videoFrameRate | duration: true"
+                  [step]="'0.001'"
+                  [type]="'time'"
+                  (change)="segments.clipInputTime('length', $event.target, k, playerClip)" />
+                <input
+                  [min]="0"
+                  [ngModel]="(clip.clipEnd() - clip.clipStart()) | numberInput: '1.0-1'"
+                  [type]="'number'"
+                  (input)="segments.clipInputFrame('length', $event.target, k, playerClip)" />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

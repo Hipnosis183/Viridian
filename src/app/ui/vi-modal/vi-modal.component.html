@@ -1,0 +1,11 @@
+<!-- Modal container. -->
+<div [class]="'modal-container'" [class.hide]="modalHidden()">
+  <!-- Modal overlay. -->
+  <div [class]="'modal-overlay'"></div>
+  <!-- Modal dialog. -->
+  <div [class]="'modal-dialog'">
+    <div>
+      <ng-content />
+    </div>
+  </div>
+</div>

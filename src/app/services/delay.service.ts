@@ -1,33 +1,36 @@
+// Import Angular elements.
 import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
-
+@Injectable({
+  providedIn: 'root',
+})
 export class DelayService {
-
-  debounce(func: Function, wait: number) {
-    // Set timer.
-    let timer: any;
+  // Debounce function.
+  public debounce(functionInput: Function, delayTime: number) {
+    // Set delay timer.
+    let delayTimer: NodeJS.Timeout;
     // Debounced function.
     return (...args: any[]) => {
       // Reset timer (cancel timeout function).
-      clearTimeout(timer);
+      clearTimeout(delayTimer);
       // Set timeout function.
-      timer = setTimeout(() => { func.apply(this, args) }, wait);
-    }
-  }
+      delayTimer = setTimeout(() => { functionInput.apply(this, args); }, delayTime);
+    };
+  };
 
-  throttle(func: Function, wait: number) {
-    // Set waiter.
-    let waiting: boolean = false;
+  // Throttle function.
+  public throttle(functionInput: Function, delayTime: number) {
+    // Set waiting state.
+    let stateWaiting: boolean = false;
     // Throttled function.
     return (...args: any[]) => {
-      if (!waiting) {
-        func.apply(this, args);
+      if (!stateWaiting) {
+        functionInput.apply(this, args);
         // Start waiting.
-        waiting = true;
+        stateWaiting = true;
         // Set timeout function.
-        setTimeout(() => { waiting = false }, wait);
+        setTimeout(() => { stateWaiting = false; }, delayTime);
       }
-    }
-  }
-}
+    };
+  };
+};

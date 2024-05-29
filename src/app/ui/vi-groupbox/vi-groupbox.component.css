@@ -1,0 +1,24 @@
+/* Groupbox container. */
+.groupbox-container > div {
+  @apply flex mb-2;
+}
+.groupbox-container.normal {
+  @apply border border-dark-400 p-3 relative rounded;
+}
+.groupbox-container.normal label {
+  @apply absolute bg-dark-600 left-4 px-2 text-dark-200 top-[-12px];
+}
+.groupbox-container.slim {
+  @apply border-t border-t-dark-400 relative;
+}
+.groupbox-container.slim label {
+  @apply absolute bg-dark-600 px-2 text-dark-200 top-[-12px];
+}
+
+/* Groupbox label. */
+.groupbox-label.center {
+  @apply justify-center;
+}
+.groupbox-label:not(.center) {
+  @apply pl-4;
+}

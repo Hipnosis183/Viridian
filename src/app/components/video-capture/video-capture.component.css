@@ -1,23 +1,26 @@
-.capture-buttons {
-  @apply flex flex-col space-y-4 w-[110px];
-}
-
-:host ::ng-deep .capture-buttons > ui-button > button {
-  @apply w-full;
-}
-
+/* Video frame capture container. */
 .capture-container {
   @apply flex items-center space-x-4;
 }
 
+/* Video frame capture buttons. */
+.capture-buttons {
+  @apply flex flex-col space-y-4 w-[110px];
+}
+:host ::ng-deep .capture-buttons button {
+  @apply w-full;
+}
+
+/* Video frame capture output box. */
 .capture-output {
   @apply flex space-x-2;
 }
-
-:host ::ng-deep .capture-output ui-button {
+:host ::ng-deep vi-groupbox:has(.capture-output) {
+  @apply mt-1;
+}
+:host ::ng-deep .capture-output vi-button {
   @apply flex items-end pb-1.5 [&_img]:h-6 [&_img]:w-8 !important;
 }
-
-:host ::ng-deep .capture-output ui-input {
+:host ::ng-deep .capture-output vi-input {
   @apply w-[500px];
 }

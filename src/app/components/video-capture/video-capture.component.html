@@ -1,14 +1,31 @@
-<ui-modal [modalHidden]="!videoCapture.videoCapture">
-  <div class="capture-container">
-    <div class="capture-buttons">
-      <ui-button buttonColor="success" buttonIcon="done" (click)="videoCaptureFrame()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-      <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoCapture()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+<!-- Video frame capture dialog. -->
+<vi-modal [modalHidden]="!capture.captureOpen()">
+  <!-- Video frame capture container. -->
+  <div [class]="'capture-container'">
+    <!-- Video frame capture buttons. -->
+    <div [class]="'capture-buttons'">
+      <vi-button
+        [buttonColor]="'success'"
+        [buttonIcon]="'done'"
+        [buttonText]="'VIDEO_SAVE.EXPORT' | translate"
+        (click)="capture.captureFrame()" />
+      <vi-button
+        [buttonColor]="'secondary'"
+        [buttonIcon]="'close'"
+        [buttonText]="'GENERAL.CANCEL' | translate"
+        (click)="capture.captureUpdateOpen()" />
     </div>
-    <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate" class="flex mt-1">
-      <div class="capture-output">
-        <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoCapture.videoOutput"></ui-input>
-        <ui-button buttonColor="dark" buttonIcon="more" (click)="videoCaptureDirectory()"></ui-button>
+    <!-- Video frame capture output box. -->
+    <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+      <div [class]="'capture-output'">
+        <vi-input
+          [inputLabel]="'VIDEO_SAVE.PATH' | translate"
+          [(inputValue)]="capture.captureOutput" />
+        <vi-button
+          [buttonColor]="'dark'"
+          [buttonIcon]="'more'"
+          (click)="capture.captureUpdateOutput()" />
       </div>
-    </ui-group-box>
+    </vi-groupbox>
   </div>
-</ui-modal>
+</vi-modal>

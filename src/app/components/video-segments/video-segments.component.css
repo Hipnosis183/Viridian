@@ -1,49 +1,50 @@
-.clip {
-  @apply border-4 cursor-pointer h-fit px-4 py-3 rounded-sm space-y-2 w-full [&>*]:pointer-events-none [&>p]:text-sm;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-}
-
-.clip-title {
-  @apply flex items-center overflow-hidden space-x-2 whitespace-nowrap;
-}
-
-.file {
-  @apply hover:bg-dark-800 cursor-pointer h-fit p-4 space-y-4 w-full;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-}
-
-.file-info {
-  @apply flex pointer-events-none space-x-4;
-}
-
-.file-info > div {
-  @apply text-sm whitespace-nowrap;
-}
-
-.file-info > img {
-  @apply bg-dark-900 border border-dark-400 h-[54px] object-cover w-[96px];
-}
-
-.file-title {
-  @apply flex items-center overflow-hidden pointer-events-none space-x-2 [&>*]:whitespace-nowrap;
-}
-
-.segments-buttons {
-  @apply absolute bg-dark-800 border-b border-b-dark-500 border-t border-t-dark-400 bottom-0 flex h-[51px] justify-between pb-0 pt-[0.45rem] px-4 w-full;
-}
-
-.segments-buttons > div {
-  @apply space-x-2;
-}
-
+/* Video segments container. */
 .segments-container {
   @apply absolute bg-dark-900 border-l border-l-dark-500 h-[calc(100%-136px)] right-0 w-[316px];
 }
-
 .segments-container > p {
   @apply bg-dark-700 border-b border-b-dark-500 p-2 text-center;
 }
 
+/* Video segments files. */
 .segments-files {
   @apply max-h-[calc(100%-92px)] overflow-y-auto;
+}
+
+/* Video file information. */
+.segments-file {
+  @apply hover:bg-dark-800 cursor-pointer h-fit p-4 space-y-4 w-full;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+.segments-file.selected {
+  @apply bg-dark-800;
+}
+.segments-file > div:first-child {
+  @apply flex items-center overflow-hidden pointer-events-none space-x-2 [&>*]:whitespace-nowrap;
+}
+.segments-file > div:last-child {
+  @apply flex pointer-events-none space-x-4;
+}
+.segments-file > div:last-child > div {
+  @apply text-sm whitespace-nowrap;
+}
+.segments-file > div:last-child > img {
+  @apply bg-dark-900 border border-dark-400 h-[54px] object-cover w-[96px];
+}
+
+/* Video file clips. */
+.segments-clip {
+  @apply border-4 cursor-pointer h-fit px-4 py-3 rounded-sm space-y-2 w-full [&>*]:pointer-events-none [&>p]:text-sm;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+.segments-clip > div {
+  @apply flex items-center overflow-hidden space-x-2 whitespace-nowrap;
+}
+
+/* Video segments buttons. */
+.segments-buttons {
+  @apply absolute bg-dark-800 border-b border-b-dark-500 border-t border-t-dark-400 bottom-0 flex h-[51px] justify-between pb-0 pt-[0.45rem] px-4 w-full;
+}
+.segments-buttons > div {
+  @apply space-x-2;
 }

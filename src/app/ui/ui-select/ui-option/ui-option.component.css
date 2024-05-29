@@ -1,4 +1,0 @@
-.option-container {
-  @apply cursor-pointer flex h-10 items-center overflow-hidden px-3 [&_p]:whitespace-nowrap;
-  transition: background-color 0.2s ease-in-out;
-}

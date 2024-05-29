@@ -1,232 +1,459 @@
-<ui-modal [modalHidden]="!videoSave.videoSave">
-  <div class="save-container">
-    <div class="save-side">
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.STATUS' | translate">
-        <b [class]="videoReencode ? 'text-red-500' : videoSave.videoCut ? videoOutput.videoCut == 'smart' ? 'text-yellow-400' : videoOutput.videoCut == 'lossy' ? 'text-red-500' : 'text-green-500' : 'text-green-500'">
-          {{ videoReencode ? ('VIDEO_SAVE.LOSSY' | translate) : videoSave.videoCut ? videoOutput.videoCut == 'smart' ? ('VIDEO_SAVE.LOSSLESS' | translate)
-          : videoOutput.videoCut == 'lossy' ? ('VIDEO_SAVE.LOSSY' | translate) : ('VIDEO_SAVE.LOSSLESS' | translate) : ('VIDEO_SAVE.LOSSLESS' | translate) }}</b>
-      </ui-group-box>
+<!-- Video save dialog. -->
+<vi-modal [modalHidden]="!save.saveOpen()">
+  <!-- Video save container. -->
+  <div [class]="'save-container'">
+    <!-- Video save side panel. -->
+    <div [class]="'save-side'">
+      <!-- Video save status. -->
+      <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.STATUS' | translate">
+        <b
+          [class]="'save-status'"
+          [class.lossy]="(save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()"
+          [class.mixed]="save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'smart'">
+          @if ((save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()) {
+            {{ 'VIDEO_SAVE.LOSSY' | translate }}
+          } @else { {{ 'VIDEO_SAVE.LOSSLESS' | translate }} }
+        </b>
+      </vi-groupbox>
+      <!-- Video save buttons. -->
       <div>
         <span>
-          <ui-button buttonColor="dark" buttonIcon="clear" [buttonToggle]="filters.filterInfo.filterClear"
-            [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate" (click)="videoFilterClear()"></ui-button>
-          <ui-button buttonColor="dark" buttonIcon="noaudio" [buttonToggle]="filters.filterInfo.filterNoAudio"
-            [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate" (click)="videoFilterNoAudio()"></ui-button>
+          <vi-button
+            [buttonColor]="'dark'"
+            [buttonIcon]="'clear'"
+            [buttonToggle]="filters.filterClear()"
+            [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate"
+            (click)="filters.filterUpdateClear()" />
+          <vi-button
+            [buttonColor]="'dark'"
+            [buttonIcon]="'noaudio'"
+            [buttonToggle]="filters.filterNoAudio()"
+            [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate"
+            (click)="filters.filterUpdateNoAudio()" />
         </span>
-        <div class="save-separator"></div>
-        <ui-button buttonColor="danger" buttonIcon="rotate" (click)="videoSaveReset()">{{ 'VIDEO_SAVE.RESET' | translate }}</ui-button>
-        <ui-button buttonColor="primary" buttonIcon="edit" (click)="videoSaveEdit()">{{ 'VIDEO_SAVE.MANUAL' | translate }}</ui-button>
-        <div class="save-separator"></div>
-        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveExport()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="$videoSave(true)">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+        <div [class]="'save-separator'"></div>
+        <vi-button
+          [buttonColor]="'danger'"
+          [buttonIcon]="'rotate'"
+          [buttonText]="'VIDEO_SAVE.RESET' | translate"
+          (click)="save.saveReset()" />
+        <vi-button
+          [buttonColor]="'primary'"
+          [buttonIcon]="'edit'"
+          [buttonText]="'VIDEO_SAVE.MANUAL' | translate"
+          (click)="save.saveUpdateEdit()" />
+        <div [class]="'save-separator'"></div>
+        <vi-button
+          [buttonColor]="'success'"
+          [buttonIcon]="'done'"
+          [buttonText]="'VIDEO_SAVE.EXPORT' | translate"
+          (click)="save.saveExport()" />
+        <vi-button
+          [buttonColor]="'secondary'"
+          [buttonIcon]="'close'"
+          [buttonText]="'GENERAL.CANCEL' | translate"
+          (click)="save.saveUpdateOpen()" />
       </div>
     </div>
-    <div *ngIf="store.state.playerInfo.playerVideo[0]" class="save-options">
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.FORMAT.FORMATCODEC' | translate">
-        <div class="save-section">
-          <ui-select [selectLabel]="'VIDEO_SAVE.FORMAT.FORMAT' | translate" [(selectValue)]="videoOutput.videoFormat"
-            (selectUpdate)="videoOutputFormat($event)">
-            <ui-option-group *ngIf="videoFormat as f" [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
-              <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionSelected]="true" [optionValue]="f"></ui-option>
-            </ui-option-group>
-            <ui-option-group *ngIf="videoFormats.length > 0" [optionLabel]="'VIDEO_SAVE.FORMAT.CONTAINERS' | translate">
-              <div *ngFor="let f of videoFormats">
-                <ui-option [optionLabel]="f.extensions[0] + ' | ' + f.name" [optionValue]="f"></ui-option>
-              </div>
-            </ui-option-group>
-          </ui-select>
-          <ui-select *ngIf="videoOutput.videoFormat" [selectLabel]="'GENERAL.CODEC' | translate"
-            [(selectValue)]="videoOutput.videoCodec" (selectUpdate)="videoOutputCodec()">
-            <ui-option-group *ngIf="videoCodec as c" [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
-              <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionSelected]="true" [optionValue]="c"></ui-option>
-            </ui-option-group>
-            <ui-option-group *ngIf="videoCodecs.length > 0" [optionLabel]="'VIDEO_SAVE.FORMAT.CODECS' | translate">
-              <div *ngFor="let c of videoCodecs">
-                <ui-option [optionLabel]="c.code + ' | ' + c.name" [optionValue]="c"></ui-option>
-              </div>
-            </ui-option-group>
-          </ui-select>
-          <ui-select *ngIf="videoOutput.videoCodec as c" [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
-            [(selectValue)]="videoOutput.videoEncoder" (selectUpdate)="videoOutputEncoder($event)">
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-              <ui-option *ngIf="(videoSave.$videoFilters.length == 0 && store.state.filterInfo.filterConcat.length == 0)
-                && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name"
-                [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate" [optionSelected]="true" [optionValue]="null"></ui-option>
-              <ui-option *ngIf="(videoSave.$videoFilters.length > 0 || store.state.filterInfo.filterConcat.length > 0)
-                || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name"
-                [optionLabel]="c.encoders[0]" [optionSelected]="!videoOutput.videoEncoder" [optionValue]="c.encoders[0]"></ui-option>
-            </ui-option-group>
-            <ui-option-group *ngIf="((videoSave.$videoFilters.length > 0 || store.state.filterInfo.filterConcat.length > 0)
-                || videoOutput.videoCodec.code != store.state.videoInfo[0].videoStreams[1].codec_name)
-                && c.encoders.length == 1 ? false : true" [optionLabel]="'VIDEO_SAVE.FORMAT.ENCODERS' | translate">
-              <div *ngFor="let e of c.encoders; index as i">
-                <ui-option *ngIf="((videoSave.$videoFilters.length == 0 && store.state.filterInfo.filterConcat.length == 0)
-                  && videoOutput.videoCodec.code == store.state.videoInfo[0].videoStreams[1].codec_name)
-                  || (c.encoders.length > 0 && i != 0)" [optionLabel]="e" [optionValue]="e"></ui-option>
-              </div>
-            </ui-option-group>
-          </ui-select>
-        </div>
-      </ui-group-box>
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.ENCODING.ENCODING' | translate">
-        <div class="save-section">
-          <ui-select [selectDisabled]="!videoReencode || !videoOutput.videoRate"
-            [selectLabel]="'VIDEO_SAVE.ENCODING.RATE' | translate" [(selectValue)]="videoOutput.videoRate">
-            <div *ngIf="videoRates.length > 0">
-              <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-                <ui-option [optionLabel]="videoRates[0].text" [optionSelected]="true" [optionValue]="videoRates[0].value"></ui-option>
-              </ui-option-group>
-              <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
-                <div *ngFor="let e of videoRates; index as i">
-                  <ui-option *ngIf="i != 0 && (videoSave.videoCut ? (e.value == 'vbv2' || e.value == 'abr2') ? false : true : true)"
-                    [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
-                </div>
-              </ui-option-group>
-            </div>
-          </ui-select>
-          <div>
-            <ui-input [inputDisabled]="!videoReencode || !videoOutput.videoRate || !videoEncoder.rates[videoOutput.videoRate].includes('$crf')"
-              [inputLabel]="'VIDEO_SAVE.ENCODING.QUALITY' | translate: { max: (videoEncoder?.quality[1] || 0) }"
-              [inputMax]="videoEncoder?.quality[1] || 0" inputType="number" [(inputValue)]="videoOutput.videoQuality"></ui-input>
-            <ui-input [inputDisabled]="!videoReencode || !videoOutput.videoRate || !videoEncoder.rates[videoOutput.videoRate].includes('$bit')"
-              [inputLabel]="'VIDEO_SAVE.ENCODING.BITRATE' | translate" [inputPlaceholder]="'GENERAL.DEFAULT' | translate"
-              inputType="number" [(inputValue)]="videoOutput.videoBitrate"></ui-input>
+    <!-- Video save options panel. -->
+    @if (store.storePlayer.playerVideo()[0]) {
+      <div [class]="'save-options'">
+        <!-- Format and codec section. -->
+        <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.FORMAT.FORMATCODEC' | translate">
+          <div [class]="'save-section'">
+            <!-- Format selection. -->
+            <vi-select
+              [selectLabel]="'VIDEO_SAVE.FORMAT.FORMAT' | translate"
+              [(selectValue)]="save.saveSettings.saveFormat"
+              (selectUpdate)="save.saveUpdateFormat($event)">
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
+                @for (format of save.saveFormats(); track format) {
+                  @if ($first) {
+                    <vi-option
+                      [optionLabel]="format.extensions[0] + ' | ' + format.name"
+                      [optionSelected]="true"
+                      [optionValue]="format" />
+                  }
+                }
+              </vi-option-group>
+              @if (save.saveFormats().length > 1) {
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.CONTAINERS' | translate">
+                  @for (format of save.saveFormats(); track format) {
+                    @if (!$first) {
+                      <vi-option
+                        [optionLabel]="format.extensions[0] + ' | ' + format.name"
+                        [optionValue]="format" />
+                    }
+                  }
+                </vi-option-group>
+              }
+            </vi-select>
+            <!-- Codec selection. -->
+            @if (save.saveSettings.saveFormat()) {
+              <vi-select
+                [selectLabel]="'GENERAL.CODEC' | translate"
+                [(selectValue)]="save.saveSettings.saveCodec"
+                (selectUpdate)="save.saveUpdateCodec()">
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
+                  @for (codec of save.saveCodecs(); track codec) {
+                    @if ($first) {
+                      <vi-option
+                        [optionLabel]="codec.code + ' | ' + codec.name"
+                        [optionSelected]="true"
+                        [optionValue]="codec" />
+                    }
+                  }
+                </vi-option-group>
+                @if (save.saveCodecs().length > 1) {
+                  <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.CODECS' | translate">
+                    @for (codec of save.saveCodecs(); track codec) {
+                      @if (!$first) {
+                        <vi-option
+                          [optionLabel]="codec.code + ' | ' + codec.name"
+                          [optionValue]="codec" />
+                      }
+                    }
+                  </vi-option-group>
+                }
+              </vi-select>
+            }
+            <!-- Encoder selection. -->
+            @if (save.saveSettings.saveCodec()) {
+              <vi-select
+                [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
+                [(selectValue)]="save.saveSettings.saveEncoder"
+                (selectUpdate)="save.saveUpdateEncoder($event)">
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+                  @if ((!save.saveInfo.saveFilters$().length && !filters.filterConcat().length)
+                    && save.saveSettings.saveCodec().code == store.storeVideos()[0].videoStreams[1].codec_name) {
+                    <vi-option
+                      [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate"
+                      [optionSelected]="true"
+                      [optionValue]="null" />
+                  }
+                  @if ((save.saveInfo.saveFilters$().length || filters.filterConcat().length)
+                    || save.saveSettings.saveCodec().code != store.storeVideos()[0].videoStreams[1].codec_name) {
+                    <vi-option
+                      [optionLabel]="save.saveSettings.saveCodec().encoders[0]"
+                      [optionSelected]="!save.saveSettings.saveEncoder()"
+                      [optionValue]="save.saveSettings.saveCodec().encoders[0]" />
+                  }
+                </vi-option-group>
+                @if (((save.saveInfo.saveFilters$().length || filters.filterConcat().length)
+                  || save.saveSettings.saveCodec().code != store.storeVideos()[0].videoStreams[1].codec_name)
+                  && save.saveSettings.saveCodec().encoders.length == 1 ? false : true) {
+                  <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.ENCODERS' | translate">
+                    @for (encoder of save.saveSettings.saveCodec().encoders; track encoder) {
+                      @if (((!save.saveInfo.saveFilters$().length && !filters.filterConcat().length)
+                        && save.saveSettings.saveCodec().code == store.storeVideos()[0].videoStreams[1].codec_name)
+                        || (save.saveSettings.saveCodec().encoders.length && !$first)) {
+                        <vi-option [optionLabel]="encoder" [optionValue]="encoder" />
+                      }
+                    }
+                  </vi-option-group>
+                }
+              </vi-select>
+            }
           </div>
-          <ui-select [selectDisabled]="!videoReencode || !videoOutput.videoPreset"
-            [selectLabel]="'VIDEO_SAVE.ENCODING.PRESET' | translate" [(selectValue)]="videoOutput.videoPreset">
-            <div *ngIf="videoPresets.length > 0">
-              <ui-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
-                <ui-option [optionLabel]="videoPresets[0].text" [optionSelected]="true" [optionValue]="videoPresets[0].value"></ui-option>
-              </ui-option-group>
-              <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
-                <div *ngFor="let e of videoPresets; index as i">
-                  <ui-option *ngIf="i != 0" [optionLabel]="e.text" [optionValue]="e.value"></ui-option>
-                </div>
-              </ui-option-group>
+        </vi-groupbox>
+        <!-- Encoding section. -->
+        <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.ENCODING.ENCODING' | translate">
+          <div [class]="'save-section'">
+            <!-- Control rate mode selection. -->
+            <vi-select
+              [selectDisabled]="!save.saveReencode() || !save.saveSettings.saveRate()"
+              [selectLabel]="'VIDEO_SAVE.ENCODING.RATE' | translate"
+              [(selectValue)]="save.saveSettings.saveRate">
+              @if (save.saveRates().length) {
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+                  <vi-option
+                    [optionLabel]="save.saveRates()[0].text"
+                    [optionSelected]="true"
+                    [optionValue]="save.saveRates()[0].value" />
+                </vi-option-group>
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
+                  @for (rate of save.saveRates(); track rate) {
+                    @if (!$first && (save.saveInfo.saveCut() ? (rate.value == 'vbv2' || rate.value == 'abr2') ? false : true : true)) {
+                      <vi-option [optionLabel]="rate.text" [optionValue]="rate.value" />
+                    }
+                  }
+                </vi-option-group>
+              }
+            </vi-select>
+            <!-- Quality and bitrate selection. -->
+            <div>
+              <vi-input
+                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder().rates[save.saveSettings.saveRate()].includes('$crf')"
+                [inputLabel]="'VIDEO_SAVE.ENCODING.QUALITY' | translate: { max: (save.saveEncoder()?.quality![1] ?? 0) }"
+                [inputMax]="save.saveEncoder()?.quality![1] ?? 0"
+                [inputType]="'number'"
+                [(inputValue)]="save.saveSettings.saveQuality" />
+              <vi-input
+                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder().rates[save.saveSettings.saveRate()].includes('$bit')"
+                [inputLabel]="'VIDEO_SAVE.ENCODING.BITRATE' | translate"
+                [inputPlaceholder]="'GENERAL.DEFAULT' | translate"
+                [inputType]="'number'"
+                [(inputValue)]="save.saveSettings.saveBitrate" />
             </div>
-          </ui-select>
-        </div>
-      </ui-group-box>
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.SCALING.SCALING' | translate">
-        <div class="save-section">
-          <div>
-            <ui-input [inputLabel]="'VIDEO_SAVE.SCALING.WIDTH' | translate" inputType="number"
-              [(inputValue)]="filters.filterInfo.filterWidth" (inputUpdated)="videoScalerWidth($event)"></ui-input>
-            <ui-input [inputLabel]="'VIDEO_SAVE.SCALING.HEIGHT' | translate" inputType="number"
-              [(inputValue)]="filters.filterInfo.filterHeight" (inputUpdated)="videoScalerHeight($event)"></ui-input>
-            <ui-button buttonColor="dark" [buttonIcon]="videoOutput.videoLock ? 'lock' : 'unlock'"
-              [buttonToggle]="!videoOutput.videoLock" (click)="videoScalerLock()"></ui-button>
+            <!-- Preset selection. -->
+            <vi-select
+              [selectDisabled]="!save.saveReencode() || !save.saveSettings.savePreset()"
+              [selectLabel]="'VIDEO_SAVE.ENCODING.PRESET' | translate"
+              [(selectValue)]="save.saveSettings.savePreset">
+              @if (save.savePresets().length) {
+                <vi-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
+                  <vi-option
+                    [optionLabel]="save.savePresets()[0].text"
+                    [optionSelected]="true"
+                    [optionValue]="save.savePresets()[0].value" />
+                </vi-option-group>
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
+                  @for (preset of save.savePresets(); track preset) {
+                    @if (!$first) {
+                      <vi-option [optionLabel]="preset.text" [optionValue]="preset.value" />
+                    }
+                  }
+                </vi-option-group>
+              }
+            </vi-select>
           </div>
-          <div>
-            <div class="w-[132px]">
-              <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.SCALE' | translate"
-                [(selectValue)]="videoOutput.videoScale" (selectClick)="videoScalerScale($event)">
-                <div *ngFor="let s of videoScaler.scale; index as i">
-                  <ui-option *ngIf="i == 0 && videoOutput.videoScale == 0" [optionLabel]="s.text" [optionValue]="s.value"></ui-option>
-                  <ui-option *ngIf="i > 0" [optionLabel]="s.text" [optionSelected]="i == 1" [optionValue]="s.value"></ui-option>
-                </div>
-              </ui-select>
+        </vi-groupbox>
+        <!-- Scaling section. -->
+        <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.SCALING.SCALING' | translate">
+          <div [class]="'save-section'">
+            <!-- Width and height selection. -->
+            <div>
+              <vi-input
+                [inputLabel]="'VIDEO_SAVE.SCALING.WIDTH' | translate"
+                [inputType]="'number'"
+                [(inputValue)]="filters.filterWidth"
+                (inputUpdated)="save.saveUpdateWidth($event)" />
+              <vi-input
+                [inputLabel]="'VIDEO_SAVE.SCALING.HEIGHT' | translate"
+                [inputType]="'number'"
+                [(inputValue)]="filters.filterHeight"
+                (inputUpdated)="save.saveUpdateHeight($event)" />
+              <vi-button
+                [buttonColor]="'dark'"
+                [buttonIcon]="save.saveSettings.saveLock() ? 'lock' : 'unlock'"
+                [buttonToggle]="!save.saveSettings.saveLock()"
+                (click)="save.saveUpdateLock()" />
             </div>
-            <div class="w-[180px]">
-              <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.ASPECT_RATIO' | translate"
-                [(selectValue)]="videoOutput.videoRatio" (selectClick)="videoScalerRatio($event)">
-                <div *ngFor="let a of videoScaler.ratio; index as i">
-                  <ui-option *ngIf="i == 0 && videoOutput.videoRatio == 0" [optionLabel]="a.text" [optionValue]="a.value"></ui-option>
-                  <ui-option *ngIf="i > 0" [optionLabel]="a.text" [optionSelected]="i == 1" [optionValue]="a.value"></ui-option>
-                </div>
-              </ui-select>
-            </div>
-          </div>
-          <ui-select [selectLabel]="'VIDEO_SAVE.SCALING.ALGORITHM' | translate" [(selectValue)]="filters.filterInfo.filterAlgorithm">
-            <ui-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
-              <ui-option [optionLabel]="videoScaler.algorithm[0].text" [optionSelected]="true" [optionValue]="videoScaler.algorithm[0].value"></ui-option>
-            </ui-option-group>
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
-              <div *ngFor="let s of videoScaler.algorithm; index as i">
-                <ui-option *ngIf="i != 0" [optionLabel]="s.text" [optionValue]="s.value"></ui-option>
+            <!-- Scale and aspect ratio selection. -->
+            <div>
+              <div [style.width]="'132px'">
+                <vi-select
+                  [selectLabel]="'VIDEO_SAVE.SCALING.SCALE' | translate"
+                  [(selectValue)]="save.saveSettings.saveScale"
+                  (selectClick)="save.saveUpdateScale($event)">
+                  @for (scale of save.saveScaler.scale; track scale) {
+                    @if ($first) {
+                      @if (save.saveSettings.saveScale() == 0) {
+                        <vi-option [optionLabel]="scale.text" [optionValue]="scale.value" />
+                      }
+                    } @else {
+                      <vi-option
+                        [optionLabel]="scale.text"
+                        [optionSelected]="$index == 1"
+                        [optionValue]="scale.value" />
+                    }
+                  }
+                </vi-select>
               </div>
-            </ui-option-group>
-          </ui-select>
-        </div>
-      </ui-group-box>
-      <ui-group-box [groupBoxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
-        <div class="save-section">
-          <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CLIP_CONCAT' | translate" [(selectValue)]="videoOutput.videoConcat">
-            <div *ngFor="let c of videoConcat; index as i">
-              <ui-option *ngIf="i == 0" [optionLabel]="c.name" [optionSelected]="true" [optionValue]="c.code"></ui-option>
-              <ui-option *ngIf="i > 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
-            </div>
-          </ui-select>
-          <ui-select [selectDisabled]="!videoSave.videoCut" [selectLabel]="'VIDEO_SAVE.CLIP_CUT' | translate" [(selectValue)]="videoOutput.videoCut">
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-              <ui-option [optionLabel]="videoCut[0].name" [optionSelected]="true" [optionValue]="videoCut[0].code"></ui-option>
-            </ui-option-group>
-            <ui-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
-              <div *ngFor="let c of videoCut; index as i">
-                <ui-option *ngIf="i != 0" [optionLabel]="c.name" [optionValue]="c.code"></ui-option>
+              <div [style.width]="'180px'">
+                <vi-select
+                  [selectLabel]="'VIDEO_SAVE.SCALING.ASPECT_RATIO' | translate"
+                  [(selectValue)]="save.saveSettings.saveRatio"
+                  (selectClick)="save.saveUpdateRatio($event)">
+                  @for (ratio of save.saveScaler.ratio; track ratio) {
+                    @if ($first) {
+                      @if (save.saveSettings.saveRatio() == 0) {
+                        <vi-option [optionLabel]="ratio.text" [optionValue]="ratio.value" />
+                      }
+                    } @else {
+                      <vi-option
+                        [optionLabel]="ratio.text"
+                        [optionSelected]="$index == 1"
+                        [optionValue]="ratio.value" />
+                    }
+                  }
+                </vi-select>
               </div>
-            </ui-option-group>
-          </ui-select>
-          <div class="save-output">
-            <ui-input [inputLabel]="'VIDEO_SAVE.PATH' | translate" [(inputValue)]="videoSave.videoOutput"></ui-input>
-            <ui-button buttonColor="dark" buttonIcon="more" (click)="videoSaveDirectory()"></ui-button>
+            </div>
+            <!-- Scaling algorithm selection. -->
+            <vi-select
+              [selectLabel]="'VIDEO_SAVE.SCALING.ALGORITHM' | translate"
+              [(selectValue)]="filters.filterAlgorithm">
+              <vi-option-group [optionLabel]="'GENERAL.DEFAULT' | translate">
+                <vi-option
+                  [optionLabel]="save.saveScaler.algorithm[0].text"
+                  [optionSelected]="true"
+                  [optionValue]="save.saveScaler.algorithm[0].value" />
+              </vi-option-group>
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.PRESETS' | translate">
+                @for (algorithm of save.saveScaler.algorithm; track algorithm) {
+                  @if (!$first) {
+                    <vi-option [optionLabel]="algorithm.text" [optionValue]="algorithm.value" />
+                  }
+                }
+              </vi-option-group>
+            </vi-select>
           </div>
-        </div>
-      </ui-group-box>
-    </div>
+        </vi-groupbox>
+        <!-- Output section. -->
+        <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.OUTPUT' | translate">
+          <div [class]="'save-section'">
+            <!-- Concatenation mode selection. -->
+            <vi-select
+              [selectDisabled]="!save.saveInfo.saveCut()"
+              [selectLabel]="'VIDEO_SAVE.CLIP_CONCAT' | translate"
+              [(selectValue)]="save.saveSettings.saveConcat">
+              @for (concat of save.saveConcat(); track concat) {
+                @if ($first) {
+                  <vi-option
+                    [optionLabel]="concat.name"
+                    [optionSelected]="true"
+                    [optionValue]="concat.code" />
+                } @else {
+                  <vi-option [optionLabel]="concat.name" [optionValue]="concat.code" />
+                }
+              }
+            </vi-select>
+            <!-- Cut mode selection. -->
+            <vi-select
+              [selectDisabled]="!save.saveInfo.saveCut()"
+              [selectLabel]="'VIDEO_SAVE.CLIP_CUT' | translate"
+              [(selectValue)]="save.saveSettings.saveCut">
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+                <vi-option
+                  [optionLabel]="save.saveCut()[0].name"
+                  [optionSelected]="true"
+                  [optionValue]="save.saveCut()[0].code" />
+              </vi-option-group>
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.ENCODING.RATES' | translate">
+                @for (cut of save.saveCut(); track cut) {
+                  @if (!$first) {
+                    <vi-option [optionLabel]="cut.name" [optionValue]="cut.code" />
+                  }
+                }
+              </vi-option-group>
+            </vi-select>
+            <!-- File path selection. -->
+            <div [class]="'save-output'">
+              <vi-input
+                [inputLabel]="'VIDEO_SAVE.PATH' | translate"
+                [(inputValue)]="save.saveInfo.saveOutput" />
+              <vi-button
+                [buttonColor]="'dark'"
+                [buttonIcon]="'more'"
+                (click)="save.saveUpdateOutput()" />
+            </div>
+          </div>
+        </vi-groupbox>
+      </div>
+    }
   </div>
-</ui-modal>
-<ui-modal *ngIf="videoSave.videoEditing">
-  <div class="save-edit">
-    <div class="save-edit-panel">
-      <div class="save-edit-commands">
-        <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="command.color">
-          <div class="save-edit-command" [class]="videoCommandIndex == i ? 'bg-dark-800' : ''">
-            <div>{{ command.name }}</div>
-          </div>
+</vi-modal>
+<!-- Manual editing dialog. -->
+@if (save.saveEditing()) {
+  <vi-modal>
+    <div [class]="'save-edit'">
+      <!-- Manual editing commands name. -->
+      <div [class]="'save-commands'">
+        <div [class]="'save-command'">
+          @for (command of save.saveInfo.saveCommands(); track $index) {
+            <div [style.borderLeftColor]="command.color" (click)="save.saveCommandSelect($index)">
+              <div [class.selected]="save.saveCommandIndex() == $index">
+                <div>{{ command.name }}</div>
+              </div>
+            </div>
+          }
+        </div>
+        <div [class]="'save-separator'" [style.width]="'90%'"></div>
+        <div [class]="'save-buttons'">
+          <vi-button
+            [buttonColor]="'success'"
+            [buttonIcon]="'done'"
+            [buttonText]="'VIDEO_SAVE.EXPORT' | translate"
+            (click)="save.saveExportManual()" />
+          <vi-button
+            [buttonColor]="'secondary'"
+            [buttonIcon]="'close'"
+            [buttonText]="'GENERAL.CANCEL' | translate"
+            (click)="save.saveUpdateEdit()" />
         </div>
       </div>
-      <div class="save-separator !w-11/12"></div>
-      <div class="save-buttons-v">
-        <ui-button buttonColor="success" buttonIcon="done" (click)="videoSaveRun()">{{ 'VIDEO_SAVE.EXPORT' | translate }}</ui-button>
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveEdit()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
+      <!-- Manual editing commands contents. -->
+      <div [class]="'save-contents'">
+        @for (command of save.saveInfo.saveCommands(); track $index) {
+          <div [style.borderLeftColor]="store.storeColors[$index][600]" (click)="save.saveCommandSelect($index)">
+            <div
+              [class]="save.saveCommandIndex() == $index ? 'text-dark-100' : 'text-dark-200'"
+              [style.backgroundColor]="save.saveCommandIndex() == $index ? store.storeColors[$index][600] : ''">
+              {{ command.full }}
+            </div>
+            <vi-textarea
+              [class.selected]="save.saveCommandIndex() == $index"
+              [(textareaValue)]="save.saveInfo.saveCommands()[$index].text" />
+          </div>
+        }
       </div>
     </div>
-    <div class="save-edit-text">
-      <div *ngFor="let command of videoSave.videoCommands; index as i" (click)="$videoCommandIndex(i)" [style.borderLeftColor]="store.state.colorInfo[i][600]">
-        <div [class]="videoCommandIndex == i ? 'text-dark-100' : 'text-dark-200'" [style.backgroundColor]="videoCommandIndex == i ? store.state.colorInfo[i][600] : ''">{{ command.full }}</div>
-        <ui-textarea [(textareaValue)]="videoSave.videoCommands[i].text" (textareaUpdated)="videoSave.videoCommands[i].text = $event" [class]="videoCommandIndex == i ? 'selected' : ''"></ui-textarea>
-      </div>
+  </vi-modal>
+}
+<!-- Video saving dialog. -->
+@if (save.saveState()) {
+  <vi-modal>
+    <div [class]="'save-saving'">
+      @if (save.saveState() == 'saving' || save.saveState() == 'canceling') {
+        <div>
+          <vi-loading />
+          <p>{{ (save.saveState() == 'canceling' ? 'VIDEO_SAVE.SAVE.CANCEL' : 'VIDEO_SAVE.SAVE.SAVING') | translate }}</p>
+          <div [class]="'save-buttons'" [class.cancel]="save.saveState() == 'canceling'">
+            <vi-button
+              [buttonColor]="'secondary'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CANCEL' | translate"
+              (click)="save.saveCancel()" />
+          </div>
+        </div>
+      } @else {
+        <!-- Video saving results. -->
+        <div>
+          @if (save.saveErrorText()) {
+            <img [src]="'assets/images/save-error.svg'" />
+            <p>{{ 'VIDEO_SAVE.SAVE.SAVE_ERROR' | translate }}</p>
+          } @else {
+            <img [src]="'assets/images/save-done.svg'" />
+            <p>{{ 'VIDEO_SAVE.SAVE.SAVE_OK' | translate }}</p>
+          }
+          <div [class]="'save-buttons'">
+            @if (save.saveErrorText()) {
+              <vi-button
+                [buttonColor]="'danger'"
+                [buttonIcon]="'list'"
+                [buttonText]="'VIDEO_SAVE.ERROR_LOG' | translate"
+                (click)="save.saveUpdateError()" />
+            } @else {
+              <vi-button
+                [buttonColor]="'primary'"
+                [buttonIcon]="'open-folder'"
+                [buttonText]="'VIDEO_SAVE.OPEN' | translate"
+                (click)="save.saveExportOpen()" />
+            }
+            <vi-button
+              [buttonColor]="save.saveErrorText() ? 'secondary' : 'success'"
+              [buttonIcon]="save.saveErrorText() ? 'close' : 'done'"
+              [buttonText]="'GENERAL.CLOSE' | translate"
+              (click)="save.saveClose()" />
+          </div>
+          @if (save.saveErrorOpen()) {
+            <div [class]="'save-error'">
+              <span [innerText]="save.saveErrorText()"></span>
+            </div>
+          }
+        </div>
+      }
     </div>
-  </div>
-</ui-modal>
-<ui-modal *ngIf="videoSave.videoSaving || videoSave.videoSaved">
-  <div class="save-saving">
-    <div *ngIf="videoSave.videoSaving">
-      <ui-loading></ui-loading>
-      <p>{{ (videoSave.videoCancel ? 'VIDEO_SAVE.SAVE.CANCEL' : 'VIDEO_SAVE.SAVE.SAVING') | translate }}</p>
-      <div class="save-buttons-h" [class]="videoSave.videoCancel ? 'pointer-events-none' : ''">
-        <ui-button buttonColor="secondary" buttonIcon="close" (click)="videoSaveCancel()">{{ 'GENERAL.CANCEL' | translate }}</ui-button>
-      </div>
-    </div>
-    <div *ngIf="!videoSave.videoSaving">
-      <div *ngIf="!videoSave.videoErrorText" class="contents">
-        <img src="assets/images/save-done.svg">
-        <p>{{ 'VIDEO_SAVE.SAVE.SAVE_OK' | translate }}</p>
-      </div>
-      <div *ngIf="videoSave.videoErrorText" class="contents">
-        <img src="assets/images/save-error.svg">
-        <p>{{ 'VIDEO_SAVE.SAVE.SAVE_ERROR' | translate }}</p>
-      </div>
-      <div class="save-buttons-h">
-        <ui-button *ngIf="videoSave.videoErrorText" buttonColor="danger" buttonIcon="list" (click)="videoSaveError()">{{ 'VIDEO_SAVE.ERROR_LOG' | translate }}</ui-button>
-        <ui-button *ngIf="!videoSave.videoErrorText" buttonColor="primary" buttonIcon="open-folder" (click)="videoSaveOpen()">{{ 'VIDEO_SAVE.OPEN' | translate }}</ui-button>
-        <ui-button [buttonColor]="videoSave.videoErrorText ? 'secondary' : 'success'" [buttonIcon]="videoSave.videoErrorText ? 'close' : 'done'"
-          (click)="videoSaveClose()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
-      </div>
-      <div *ngIf="videoSave.videoErrorView" class="save-error">
-        <span [innerText]="videoSave.videoErrorText"></span>
-      </div>
-    </div>
-  </div>
-</ui-modal>
+  </vi-modal>
+}

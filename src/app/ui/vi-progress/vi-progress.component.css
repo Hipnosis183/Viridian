@@ -1,0 +1,45 @@
+/* Progress bar container. */
+.progress-container {
+  @apply flex pointer-events-none relative;
+}
+.progress-container > progress[value] {
+  @apply appearance-none cursor-pointer h-2 w-full;
+}
+.progress-container > progress[value]::-webkit-progress-bar {
+  @apply bg-dark-800 rounded-sm;
+}
+.progress-container > progress[value]::-webkit-progress-value {
+  @apply bg-dark-900 rounded-sm;
+}
+
+/* Progress bar thumb. */
+.progress-thumb {
+  @apply absolute bg-dark-100 h-4 -mt-1 rounded-sm w-2 z-30;
+}
+.progress-thumb > div {
+  @apply absolute bg-dark-100 h-[60px] left-1 pointer-events-none w-px;
+}
+
+/* Progress bar keyframes. */
+.progress-frames > div {
+  @apply absolute bg-dark-200/20 h-14 pointer-events-none w-px z-20;
+}
+
+/* Progress bar thumbnails. */
+.progress-thumbs {
+  @apply absolute cursor-pointer h-6 -mt-3 w-full;
+}
+.progress-tooltip {
+  @apply -mx-[9px] -my-[5px];
+}
+.progress-tooltip > img {
+  @apply object-cover rounded-t-sm w-[120px];
+}
+.progress-tooltip > p {
+  @apply my-2 px-3 text-center text-dark-800;
+}
+
+/* Progress bar hover line. */
+.progress-line {
+  @apply absolute bg-dark-100 h-[56px] pointer-events-none top-[50px] w-px z-40;
+}

@@ -1,0 +1,13 @@
+<!-- Option container. -->
+@if (optionValue() || optionValue() == null) {
+  <div
+    [class]="'option-container'"
+    [class.selected]="optionValue() == select.selectValue()"
+    (click)="optionClick()">
+    <!-- Option label. -->
+    <div [class]="'option-label'">
+      @if (optionLabel()) { <p>{{ optionLabel() }}</p> }
+      <ng-content />
+    </div>
+  </div>
+}

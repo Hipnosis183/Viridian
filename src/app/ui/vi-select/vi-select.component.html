@@ -1,0 +1,20 @@
+<!-- Select container. -->
+<div [class]="'select-container'" [class.disabled]="selectDisabled()">
+  <!-- Select label. -->
+  @if (selectLabel()) { <label>{{ selectLabel() }}</label> }
+  <!-- Select input. -->
+  <div
+    [class]="['select-input', select.selectOptions() ? selectPosition() ? 'inverted' : 'opened' : 'closed']"
+    (click)="selectOptions()">
+    <input [disabled]="true" [ngModel]="select.selectLabel()" />
+    <div [class]="'select-arrow'" [class.opened]="select.selectOptions()"></div>
+  </div>
+  <!-- Select options. -->
+  <div
+    [class]="'select-options'" [class.inverted]="selectPosition()"
+    [hidden]="!select.selectOptions()">
+    <div>
+      <ng-content />
+    </div>
+  </div>
+</div>

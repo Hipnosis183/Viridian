@@ -1,0 +1,18 @@
+<!-- Button container. -->
+<button
+  [class]="['button-container', buttonColor(), buttonStyle()]"
+  [class.active]="buttonToggle()"
+  [class.text]="(buttonText() || buttonLabel.innerHTML) && buttonIcon()"
+  [tooltip]="buttonTooltip()">
+  <!-- Button icon. -->
+  @if (buttonIcon()) {
+    <img [class]="buttonIconClass()" [src]="'assets/images/' + buttonIcon() + '.svg'" />
+  }
+  <!-- Button label. -->
+  @if (buttonText() && !buttonLabel.innerHTML) {
+    <div>{{ buttonText() }}</div>
+  }
+  <div #buttonLabel>
+    <ng-content />
+  </div>
+</button>

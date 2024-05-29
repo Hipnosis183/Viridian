@@ -1,5 +1,0 @@
-<button [tooltip]="buttonTooltip" [ngClass]="[buttonBorder, buttonColor, buttonOutline, (buttonToggle ? 'active' : ''),
-  (buttonText.innerHTML.length && buttonIcon ? 'button-text' : buttonIcon ? 'button-icon' : '')]">
-  <img *ngIf="buttonIcon" [src]="'assets/images/' + buttonIcon + '.svg'" [class]="buttonIconClass">
-  <div #buttonText><ng-content></ng-content></div>
-</button>

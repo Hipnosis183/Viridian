@@ -1,0 +1,9 @@
+<!-- Slider container. -->
+<div [class]="'slider-container'" [class.vertical]="sliderVertical()">
+  <!-- Slider input. -->
+  <input #sliderInput
+    [min]="sliderMin()"
+    [max]="sliderMax()"
+    [(ngModel)]="sliderValue"
+    [type]="'range'" />
+</div>

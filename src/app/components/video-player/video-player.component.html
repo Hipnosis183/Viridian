@@ -1,227 +1,302 @@
-<ui-modal *ngIf="store.state.playerInfo.playerLoading">
-  <div class="player-loading">
-    <div class="player-loading-i">
-      <ui-loading></ui-loading>
-      <img [src]="store.state.fileInfo[store.state.fileInfo.length - 1].fileThumb">
-    </div>
-    <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.videoFileOpenT - this.videoFileOpen.length, total: this.videoFileOpenT } }}</p>
-  </div>
-</ui-modal>
-<ui-modal *ngIf="videoFileRecent">
-  <div class="player-recent-error">
-    <img src="assets/images/save-error.svg">
-    <p>{{ 'VIDEO_PLAYER.FILE_ERROR' | translate }}</p>
-    <ui-button buttonColor="danger" buttonIcon="close" (click)="$videoFileRecent()">{{ 'GENERAL.CLOSE' | translate }}</ui-button>
-  </div>
-</ui-modal>
-<ui-modal *ngIf="store.state.playerInfo.playerLoaded && (videoFileCompatible || videoFileIncompatible)">
-  <div class="player-compatibility">
-    <div *ngIf="videoFileCompatible">
-      <p>{{ 'VIDEO_SEGMENTS.COMPATIBLE' | translate }}</p>
-    </div>
-    <span *ngIf="videoFileCompatible && videoFileIncompatible"></span>
-    <div *ngIf="videoFileIncompatible">
-      <p>{{ 'VIDEO_SEGMENTS.INCOMPATIBLE' | translate }}</p>
-    </div>
-    <ui-button buttonColor="success" buttonIcon="done" (click)="videoFileCompatibility()">{{ 'GENERAL.OK' | translate }}</ui-button>
-  </div>
-</ui-modal>
-<div class="flex">
-  <div id="playerEdit" class="player-edit" [class]="videoSegments.videoSegments ? 'h-[calc(100%-186px)] w-[calc(100%-316px)]' : 'h-[calc(100%-100px)] w-full'">
-    <div id="playerContainer" class="player-video" [class]="store.state.playerInfo.playerLoaded ? 'flex' : 'hidden'">
-      <div id="$playerContainer" class="player-video flex">
-        <div *ngFor="let file of store.state.fileInfo; index as i" class="contents">
-          <video [hidden]="!store.state.playerInfo.playerLoaded || i != store.i" [muted]="true"
-            [src]="'file://' + file.filePath" (loadedmetadata)="$videoFileLoaded($event)" (timeupdate)="null"></video>
-        </div>
-      </div>
-      <div id="playerCrop" [hidden]="!filters.filterInfo.filterCrop" [tooltip]="playerCrop" [tooltipKeep]="true"
-        tooltipPlace="bottom" tooltipTheme="tooltip-lite" tooltipTrigger="mouseenter" class="resizable"></div>
-      <div #playerCrop class="player-crop">
-        <div>
-          <div>
-            <p>W:</p>
-            <input [(ngModel)]="store.state.filterInfo.filterWidth" (input)="videoSetCoordinates('w', $event)"
-              min="0" [max]="store.state.playerInfo.playerWidth" type="number">
-          </div>
-          <div>
-            <p>H:</p>
-            <input [(ngModel)]="store.state.filterInfo.filterHeight" (input)="videoSetCoordinates('h', $event)"
-              min="0" [max]="store.state.playerInfo.playerHeight" type="number">
-          </div>
-        </div>
-        <span></span>
-        <div>
-          <div>
-            <p>X:</p>
-            <input [(ngModel)]="store.state.filterInfo.filterX" type="number" (input)="videoSetCoordinates('x', $event)"
-              min="0" [max]="store.state.playerInfo.playerWidth - store.state.filterInfo.filterWidth">
-          </div>
-          <div>
-            <p>Y:</p>
-            <input [(ngModel)]="store.state.filterInfo.filterY" type="number" (input)="videoSetCoordinates('y', $event)"
-              min="0" [max]="store.state.playerInfo.playerHeight - store.state.filterInfo.filterHeight">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="videoSegments" [class]="$videoSegments.videoSegments ? 'flex' : 'hidden'" class="player-segments">
-      <div class="flex">
-        <ui-button buttonColor="darker" buttonIcon="next" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" (click)="videoPlayerFrame(0)"></ui-button>
-        <ui-button buttonColor="darker" buttonIcon="next" [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" (click)="videoPlayerFrame(1)"></ui-button>
-        <p>{{ (playerInfo.playerVideo[store.i]?.currentTime * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }} / {{ (playerInfo.playerVideo[store.i]?.duration * store.state.videoInfo[store.i]?.videoFrameRate) | number: '1.1-1' }}</p>
-      </div>
+<!-- Video player loading dialog. -->
+@if (load.filesLoadState() == 'loading') {
+  <vi-modal>
+    <div [class]="'player-loading'">
       <div>
-        <ui-button buttonColor="darker" buttonIcon="split" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate" [dropdown]="clipSplit"></ui-button>
+        <vi-loading />
+        @if (store.storeFiles()[store.storeFiles().length - 1]) {
+          <img [src]="store.storeFiles()[store.storeFiles().length - 1].fileThumb" />
+        }
+      </div>
+      <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.load.filesLoadTotal() - this.load.filesLoadList().length, total: this.load.filesLoadTotal() } }}</p>
+    </div>
+  </vi-modal>
+}
+<!-- Video file compatibility dialog. -->
+@if (load.filesLoadState() == 'loaded' && load.fileCompat().length) {
+  <vi-modal>
+    <div [class]="'player-compatibility'">
+      <!-- Lossy concatenation compatibility message. -->
+      @if (load.fileCompat().includes('lossyConcat')) {
+        <div>
+          <p>{{ 'VIDEO_SEGMENTS.COMPATIBILITY.LOSSY_CONCAT' | translate }}</p>
+        </div>
+      }
+      <!-- Separator. -->
+      @if (load.fileCompat().includes('lossyConcat') && load.fileCompat().includes('noConcat')) { <span></span> }
+      <!-- No concatenation compatibility message. -->
+      @if (load.fileCompat().includes('noConcat')) {
+        <div>
+          <p>{{ 'VIDEO_SEGMENTS.COMPATIBILITY.NO_CONCAT' | translate }}</p>
+        </div>
+      }
+      <vi-button
+        [buttonColor]="'success'"
+        [buttonIcon]="'done'"
+        [buttonText]="'GENERAL.OK' | translate"
+        (click)="load.fileUpdateCompat()" />
+    </div>
+  </vi-modal>
+}
+<!-- Video player container. -->
+<div [class]="'player-container'">
+  <div id="playerEdit" [class]="'player-edit'" [class.segments]="segments.segmentsOpen()">
+    <!-- Video player contents. -->
+    <div id="playerContents" [class]="['player-contents', load.filesLoadState() != 'loaded' ? 'hidden' : 'flex']">
+      <!-- Video player video player. -->
+      <div id="playerVideo" [class]="'player-video'">
+        @for (file of store.storeFiles(); track file) {
+          <video
+            [hidden]="load.filesLoadState() == 'loading' || $index != store.storeIndex()"
+            [muted]="true"
+            [src]="'file://' + file.filePath"
+            (loadedmetadata)="load.filesLoaded($event)"
+            (timeupdate)="null"></video>
+        }
+      </div>
+      <!-- Video player crop tool. -->
+      <video-crop id="playerCrop" />
+    </div>
+    <!-- Video player extra controls. -->
+    <div [class]="['player-extra', segments.segmentsOpen() ? 'flex' : 'hidden']">
+      <!-- Player extra controls. -->
+      <div [class]="'flex'">
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'next'"
+          [buttonIconClass]="'-scale-x-100'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate"
+          (click)="player.playerFrameAdvance(false)" />
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'next'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate"
+          (click)="player.playerFrameAdvance(true)" />
+        @if (load.filesLoadState() == 'loaded') {
+          <p>{{ (store.storePlayer.playerVideo()[store.storeIndex()].currentTime * store.storeVideos()[store.storeIndex()].videoFrameRate) | number: '1.1-1' }} / {{ (store.storePlayer.playerVideo()[store.storeIndex()].duration * store.storeVideos()[store.storeIndex()].videoFrameRate) | number: '1.1-1' }}</p>
+        }
+      </div>
+      <!-- Navigation/split extra controls. -->
+      <div>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'split'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SPLIT.' | translate"
+          [dropdown]="clipSplit" />
         <div #clipSplit>
-          <div dropdownIgnore class="player-split">
-            <ui-input [inputMin]="2" [inputMax]="100" inputType="number" [(inputValue)]="$videoSegments.videoSplit"></ui-input>
+          <div [class]="'player-split'">
+            <vi-input
+              [inputMax]="100"
+              [inputMin]="2"
+              [inputType]="'number'"
+              [(inputValue)]="segments.segmentsSplit" />
           </div>
-          <span (click)="$videoSegments.$videoClipSplit(0)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: $videoSegments.videoSplit } }}</span>
-          <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.$videoClipSplit(1)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</span>
+          <span (click)="segments.clipSplit(false)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: segments.segmentsSplit() } }}</span>
+          <div [class]="'separator'"></div>
+          <span (click)="segments.clipSplit(true)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</span>
         </div>
-        <div class="player-separator-dark"></div>
-        <ui-button buttonColor="darker" buttonIcon="clip-set" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate" (click)="$videoSegments.videoClipSet(1)"></ui-button>
-        <ui-button buttonColor="darker" buttonIcon="clip-set" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate" (click)="$videoSegments.videoClipSet(0)"></ui-button>
-        <div class="player-separator-dark"></div>
-        <ui-button buttonColor="darker" buttonIcon="clip-nav" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavStart"></ui-button>
+        <div [class]="['player-separator', 'dark']"></div>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-set'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate"
+          (click)="segments.clipSet(true)" />
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-set'"
+          [buttonIconClass]="'-scale-x-100'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate"
+          (click)="segments.clipSet(false)" />
+        <div [class]="['player-separator', 'dark']"></div>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-nav'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
+          [dropdown]="clipNavStart" />
         <div #clipNavStart>
-          <span (click)="$videoSegments.videoClipNavigate(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</span>
-          <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.videoClipNavigate(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</span>
+          <span (click)="segments.clipNavigate(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</span>
+          <div [class]="'separator'"></div>
+          <span (click)="segments.clipNavigate(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="darker" buttonIcon="clip-nav" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate" [dropdown]="clipNavEnd"></ui-button>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-nav'"
+          [buttonIconClass]="'-scale-x-100'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
+          [dropdown]="clipNavEnd" />
         <div #clipNavEnd>
-          <span (click)="$videoSegments.videoClipNavigate(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</span>
-          <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.videoClipNavigate(0, 0)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</span>
+          <span (click)="segments.clipNavigate(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</span>
+          <div [class]="'separator'"></div>
+          <span (click)="segments.clipNavigate(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="darker" buttonIcon="clip-snap" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate" [dropdown]="clipSnapStart"></ui-button>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-snap'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate"
+          [dropdown]="clipSnapStart" />
         <div #clipSnapStart>
-          <span (click)="$videoSegments.videoClipSnap(1, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</span>
-          <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.videoClipSnap(1, 0)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</span>
+          <span (click)="segments.clipSnap(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</span>
+          <div [class]="'separator'"></div>
+          <span (click)="segments.clipSnap(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</span>
         </div>
-        <ui-button buttonColor="darker" buttonIcon="clip-snap" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate" [dropdown]="clipSnapEnd"></ui-button>
+        <vi-button
+          [buttonColor]="'darker'"
+          [buttonIcon]="'clip-snap'"
+          [buttonIconClass]="'-scale-x-100'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate"
+          [dropdown]="clipSnapEnd" />
         <div #clipSnapEnd>
-          <span (click)="$videoSegments.videoClipSnap(0, 1)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</span>
-          <div class="tippy-separator"></div>
-          <span (click)="$videoSegments.videoClipSnap(0, 0)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</span>
+          <span (click)="segments.clipSnap(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</span>
+          <div [class]="'separator'"></div>
+          <span (click)="segments.clipSnap(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</span>
         </div>
       </div>
     </div>
-    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded" class="player-open group" [class]="store.state.filePaths.recentFiles.length > 0 && store.state.settings.general.showRecent ? 'w-1/2' : 'w-full'">
-      <div [class]="store.state.playerInfo.playerLoading ? 'hidden' : 'flex'">
-        <img [src]="'assets/images/open-file.svg'">
-        <h1 *ngIf="store.state.filePaths.recentFiles.length == 0 || !store.state.settings.general.showRecent">{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
-        <p *ngIf="store.state.filePaths.recentFiles.length == 0 || !store.state.settings.general.showRecent">{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
-        <span class="group-hover:bg-dark-800/20"></span>
-      </div>
-      <input title="" type="file" multiple (change)="$videoFileOpen($event.target.files, $event);" />
-    </div>
-    <div *ngIf="store.state.fileInfo.length == 0 && !store.state.playerInfo.playerLoaded && (store.state.filePaths.recentFiles.length > 0 && store.state.settings.general.showRecent)" class="player-recent">
-      <div>
-        <h1>{{ 'VIDEO_PLAYER.RECENT' | translate }}</h1>
-        <ui-button buttonColor="dark" buttonIcon="close" buttonIconClass="!h-6 my-0.5" (click)="videoFileRecentClear()">{{ 'GENERAL.CLEAR' | translate }}</ui-button>
-        <div class="player-recent-list">
-          <div *ngFor="let file of store.state.filePaths.recentFiles; index as i" (click)="videoFileRecentOpen(file, i)" class="player-recent-file group">
-            <div class="player-recent-text">
-              <p>{{ file.name }}</p>
-              <p class="text-dark-200 text-sm">{{ file.path.slice(0, -file.name.length - 1) }}</p>
-            </div>
-            <div class="player-recent-close">
-              <img src="assets/images/close.svg" (click)="videoFileRecentRemove(i); $event.stopPropagation();">
-            </div>
-          </div>
+    @if (!store.storeFiles().length && !load.filesLoadState()) {
+      <!-- Video player open/add files. -->
+      <div [class]="['player-open', 'group', recent.recentFiles().length && settings.options.general.recentFiles() ? 'w-1/2' : 'w-full']">
+        <div [class]="load.filesLoadState() == 'loading' ? 'hidden' : 'flex'">
+          <img [src]="'assets/images/open-file.svg'" />
+          @if (!recent.recentFiles().length || !settings.options.general.recentFiles()) {
+            <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
+            <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
+          }
+          <span [class]="'group-hover:bg-dark-800/20'"></span>
         </div>
+        <!-- Open/drag and drop input. -->
+        <input
+          [multiple]="true"
+          [title]="''"
+          [type]="'file'"
+          (change)="load.filesLoadInit($event.target.files)" />
       </div>
-    </div>
+      <!-- Video player recent files. -->
+      <video-recent />
+    }
   </div>
-  <video-segments #videoSegments (added)="$videoFileOpen($event.target.files)" (inited)="$videoSegments = videoSegments"
-    (loaded)="videoSetPosition(filters.filterInfo.filterRotate)" (removed)="videoFileClose()"></video-segments>
+  <!-- Video player segments. -->
+  <video-segments />
 </div>
-<div class="player-controls" [ngClass]="[videoSegments.videoSegments ? 'h-[106px]' : 'h-[70px]', !store.state.playerInfo.playerLoaded ? 'pointer-events-none' : '']">
-  <div class="player-buttons">
-    <div class="flex">
-      <ui-button buttonColor="dark" [buttonIcon]="(!playerInfo.playerVideo[store.i] || playerInfo.playerVideo[store.i].paused) || playerInfo.playerVideo[store.i]?.ended ? 'play' : 'pause'"
-        [buttonToggle]="playerInfo.playerVideo[store.i] && !playerInfo.playerVideo[store.i].paused" [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" (click)="videoPlayerPlay()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="stop" [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate" (click)="videoPlayerStop()"></ui-button>
-      <ui-button buttonColor="dark" [buttonIcon]="playerInfo.playerVideo[store.i]?.muted || playerInfo.playerVideo[store.i]?.volume == 0 ? 'mute' : 'volume'"
-        [tooltip]="playerVolume" [tooltipDelay]="[0, 0]" [tooltipKeep]="true" [tooltipOffset]="[-3, 10]" tooltipPlace="right" (click)="videoPlayerMute()"></ui-button>
+<!-- Video player controls. -->
+<div [class]="'player-controls'" [class.loaded]="load.filesLoadState() == 'loaded'" [class.segments]="segments.segmentsOpen()">
+  <!-- Video player buttons. -->
+  <div [class]="'player-buttons'">
+    <div>
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="(!store.storePlayer.playerVideo()[store.storeIndex()] || store.storePlayer.playerVideo()[store.storeIndex()].paused) || store.storePlayer.playerVideo()[store.storeIndex()]?.ended ? 'play' : 'pause'"
+        [buttonToggle]="store.storePlayer.playerVideo()[store.storeIndex()] && !store.storePlayer.playerVideo()[store.storeIndex()].paused"
+        [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate"
+        (click)="player.playerPlayback()" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'stop'"
+        [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate"
+        (click)="player.playerStop()" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="store.storePlayer.playerVideo()[store.storeIndex()]?.muted || !store.storePlayer.playerVideo()[store.storeIndex()]?.volume ? 'mute' : 'volume'"
+        [tooltip]="playerVolume"
+        [tooltipDelay]="[0, 0]"
+        [tooltipKeep]="true"
+        [tooltipOffset]="[-3, 10]"
+        [tooltipPlace]="'right'"
+        (click)="player.playerMute()" />
+      <!-- Video player volume control. -->
       <div #playerVolume>
-        <ui-slider *ngIf="playerInfo.playerVideo[store.i]" [sliderValue]="playerInfo.playerVideo[store.i].volume * 100" (sliderValueChange)="videoPlayerVolume($event / 100)"></ui-slider>
+        @if (store.storePlayer.playerVideo()[store.storeIndex()]) {
+          <vi-slider
+            [sliderValue]="store.storePlayer.playerVideo()[store.storeIndex()].volume * 100"
+            (sliderValueChange)="player.playerVolume($event / 100)" />
+        }
       </div>
-      <p>{{ (playerInfo.playerVideo[store.i]?.currentTime || 0) | duration: true }} / {{ (playerInfo.playerVideo[store.i]?.duration || 0) | duration: true }}</p>
+      <p>{{ (store.storePlayer.playerVideo()[store.storeIndex()]?.currentTime || 0) | duration: true }} / {{ (store.storePlayer.playerVideo()[store.storeIndex()]?.duration || 0) | duration: true }}</p>
     </div>
     <div>
-      <ui-button buttonColor="dark" buttonIcon="settings" [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate" (click)="videoSettings.$videoSettings()" class="pointer-events-auto"></ui-button>
-      <div class="player-separator-lite"></div>
-      <ui-button buttonColor="dark" buttonIcon="capture" [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate" (click)="videoCapture.$videoCapture()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="segments" [buttonToggle]="$videoSegments.videoSegments" [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate" (click)="$videoSegments.$videoSegments()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="list" [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate" (click)="$videoInfo.$videoInfo()"></ui-button>
-      <div class="player-separator-lite"></div>
-      <ui-button buttonColor="dark" buttonIcon="rotate" buttonIconClass="-scale-x-100" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate" (click)="videoFilterRotate(false)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="rotate" [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate" (click)="videoFilterRotate(true)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="flip" buttonIconClass="rotate-90" [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate" (click)="videoFilterFlip(true)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="flip" [buttonTooltip]="'VIDEO_PLAYER.FLIP_H' | translate" (click)="videoFilterFlip(false)"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="crop" [buttonToggle]="filters.filterInfo.filterCrop" [buttonTooltip]="'VIDEO_PLAYER.CROP' | translate" (click)="videoFilterCrop()"></ui-button>
-      <div class="player-separator-lite"></div>
-      <ui-button buttonColor="dark" buttonIcon="done" [buttonTooltip]="'VIDEO_PLAYER.DONE' | translate" (click)="$videoSave.$videoSave()"></ui-button>
-      <ui-button buttonColor="dark" buttonIcon="close" [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate" (click)="videoFileClose()"></ui-button>
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'settings'"
+        [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate"
+        [class]="'pointer-events-auto'"
+        (click)="settings.settingsUpdateOpen()" />
+      <div [class]="'player-separator'"></div>
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'capture'"
+        [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate"
+        (click)="capture.captureUpdateOpen()" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'segments'"
+        [buttonToggle]="segments.segmentsOpen()"
+        [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate"
+        (click)="segments.segmentsUpdateOpen()" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'list'"
+        [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate"
+        (click)="info.infoUpdateOpen()" />
+      <div [class]="'player-separator'"></div>
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'rotate'"
+        [buttonIconClass]="'-scale-x-100'"
+        [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate"
+        (click)="player.playerFilterRotate(false)" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'rotate'"
+        [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate"
+        (click)="player.playerFilterRotate(true)" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'flip'"
+        [buttonIconClass]="'rotate-90'"
+        [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate"
+        (click)="player.playerFilterFlip(true)" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'flip'"
+        [buttonTooltip]="'VIDEO_PLAYER.FLIP_H' | translate"
+        (click)="player.playerFilterFlip(false)" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'crop'"
+        [buttonToggle]="filters.filterCrop()"
+        [buttonTooltip]="'VIDEO_PLAYER.CROP' | translate"
+        (click)="player.playerFilterCrop()" />
+      <div [class]="'player-separator'"></div>
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'done'"
+        [buttonTooltip]="'VIDEO_PLAYER.DONE' | translate"
+        (click)="save.saveUpdateOpen()" />
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'close'"
+        [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate"
+        (click)="load.filesClose()" />
     </div>
   </div>
-  <ui-progress [progressTime]="playerInfo.playerVideo[store.i]?.currentTime" [progressDuration]="playerInfo.playerVideo[store.i]?.duration" [progressExtend]="videoSegments.videoSegments"
-    [progressHover]="store.state.fileInfo[store.i]?.fileThumbs || []" [progressInterval]="store.state.fileInfo[store.i]?.fileInterval || 0" [progressFrames]="store.state.videoInfo[store.i]?.videoKeyFrames"
-    (progressTimeChange)="playerInfo.playerVideo[store.i].currentTime = $event"></ui-progress>
-  <div id="playerClip" class="player-clips" [class]="!videoSegments.videoSegments ? store.state.fileInfo[0]?.fileClips[0]?.e ? 'hidden' : 'flex mt-0' : 'flex h-8 mt-4'">
-    <div *ngFor="let file of store.state.fileInfo; index as i" [hidden]="i != store.i">
-      <div *ngFor="let clip of file.fileClips; index as k">
-        <div #playerClip rendered (rendered)="$videoSegments.videoClipCreate($event)" (mousedown)="store.state.fileInfo[i].fileIndex = k"
-          [tooltip]="playerClip_" tooltipFollow="horizontal" [tooltipKeep]="true" tooltipPlace="bottom" tooltipTheme="tooltip-lite" tooltipTrigger="mouseenter"
-          [ngStyle]="{ 'border-color': k == file.fileIndex ? store.state.colorInfo[file.fileClips[k].color][500] : store.state.colorInfo[file.fileClips[k].color][700] }"
-          [class]="k == file.fileIndex ? 'cursor-move opacity-90 z-10' : 'cursor-pointer opacity-80'"></div>
-        <div #playerClip_ class="player-clip">
-          <div>
-            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate" src="assets/images/clip-h-set.svg">
-            <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-              (input)="$videoSegments.videoClipManualInput(1, $event, k, playerClip)"
-              (keyup)="$videoSegments.videoClipManualKeyUp(1, $event, k, playerClip)"
-              (keydown)="$videoSegments.videoClipManualKeyDown()">
-            <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(1, $event, k, playerClip)" type="number" min="0">
-          </div>
-          <div>
-            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate" src="assets/images/clip-h-set.svg" class="rotate-180">
-            <input [ngModel]="clip.end / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-              (input)="$videoSegments.videoClipManualInput(2, $event, k, playerClip)"
-              (keyup)="$videoSegments.videoClipManualKeyUp(2, $event, k, playerClip)"
-              (keydown)="$videoSegments.videoClipManualKeyDown()">
-            <input [ngModel]="clip.end | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(2, $event, k, playerClip)" type="number" min="0">
-          </div>
-          <span></span>
-          <div>
-            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate" src="assets/images/clip-h-pos.svg">
-            <input [ngModel]="clip.start / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-              (input)="$videoSegments.videoClipManualInput(0, $event, k, playerClip)"
-              (keyup)="$videoSegments.videoClipManualKeyUp(0, $event, k, playerClip)"
-              (keydown)="$videoSegments.videoClipManualKeyDown()">
-            <input [ngModel]="clip.start | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(0, $event, k, playerClip)" type="number" min="0">
-          </div>
-          <div>
-            <img [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate" src="assets/images/clip-h-len.svg">
-            <input [ngModel]="(clip.end - clip.start) / store.state.videoInfo[i].videoFrameRate | duration: true" type="time" step="0.001"
-              (input)="$videoSegments.videoClipManualInput(3, $event, k, playerClip)"
-              (keyup)="$videoSegments.videoClipManualKeyUp(3, $event, k, playerClip)"
-              (keydown)="$videoSegments.videoClipManualKeyDown()">
-            <input [ngModel]="(clip.end - clip.start) | numberInput: '1.0-1'" (input)="$videoSegments.videoClipManualFrame(3, $event, k, playerClip)" type="number" min="0">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Video player progress bar. -->
+  <vi-progress
+    [progressDuration]="store.storePlayer.playerVideo()[store.storeIndex()]?.duration ?? 0"
+    [progressExtend]="segments.segmentsOpen()"
+    [progressFrames]="store.storeVideos()[store.storeIndex()]?.videoKeyframes ?? []"
+    [progressHover]="store.storeFiles()[store.storeIndex()]?.fileThumbs ?? []"
+    [progressInterval]="store.storeFiles()[store.storeIndex()]?.fileInterval ?? 0"
+    [progressTime]="store.storePlayer.playerVideo()[store.storeIndex()]?.currentTime ?? 0"
+    (progressTimeChange)="store.storePlayer.playerVideo()[store.storeIndex()].currentTime = $event" />
+  <!-- Video player clips. -->
+  <video-clips />
 </div>
-<video-capture #videoCapture [currentTime]="playerInfo.playerVideo[store.i]?.currentTime" (inited)="$videoCapture = videoCapture"></video-capture>
-<video-info #videoInfo (inited)="$videoInfo = videoInfo" (loaded)="videoFileLoaded()"></video-info>
-<video-save #videoSave *ngIf="store.state.playerInfo.playerLoaded" (loaded)="$videoSave = videoSave"></video-save>
-<video-settings #videoSettings></video-settings>
-<video-download #videoDownload (loaded)="$videoDownload = videoDownload" (settings)="videoSettings.$videoSettings()"></video-download>
+<!-- Frame capture component. -->
+<video-capture />
+<!-- Video information component. -->
+<video-info />
+<!-- Video save component. -->
+<video-save />
+<!-- App settings component. -->
+<video-settings />
+<!-- FFmpeg download component. -->
+<video-download />

@@ -1,0 +1,30 @@
+<!-- Input container. -->
+<div [class]="'input-container'" [class.disabled]="inputDisabled()">
+  <!-- Input label. -->
+  @if (inputLabel()) {
+    <label>{{ inputLabel() }}</label>
+  }
+  <!-- Input element. -->
+  <div [class]="'input-element'">
+    <input
+      [disabled]="inputDisabled()"
+      [(ngModel)]="inputValue"
+      [placeholder]="inputPlaceholder()"
+      [required]="inputRequired()"
+      [spellcheck]="false"
+      [type]="inputType()"
+      (click)="inputClick($event)"
+      (input)="inputUpdate()" />
+    <!-- Input arrows. -->
+    @if (inputType() == 'number') {
+      <div [class]="'input-arrows'">
+        <div (click)="inputStepUp($event)">
+          <div></div>
+        </div>
+        <div (click)="inputStepDown($event)">
+          <div></div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

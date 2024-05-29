@@ -1,62 +1,52 @@
-import { Injectable } from '@angular/core';
-import store from 'src/app/app.store';
+// Import Angular elements.
+import { Injectable, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+// Import components, services, directives, pipes, types and interfaces.
+import { FileInfo, PlayerInfo, VideoInfo} from '@app/models/store';
 
+// Import Tailwind color values.
+import DefaultColors from 'tailwindcss/colors'
+
+@Injectable({
+  providedIn: 'root',
+})
 export class StoreService {
+  // Define store state.
+  public storeIndex = signal<number>(0);
+  public storeFiles = signal<FileInfo[]>([]);
+  public storeVideos = signal<VideoInfo[]>([]);
+  public storePlayer: PlayerInfo = {
+    playerCrop: null,
+    playerVideo: signal<HTMLVideoElement[]>([]),
+    playerHeight: signal<number>(0),
+    playerWidth: signal<number>(0),
+  };
 
-  i: number = store.playerInfo.playerIndex;
-  state: any = store;
+  // Reset store state.
+  public storeReset(): void {
+    this.storeIndex.set(0);
+    this.storeFiles.set([]);
+    this.storeVideos.set([]);
+    this.storePlayer.playerVideo.set([]);
+    this.storePlayer.playerHeight.set(0);
+    this.storePlayer.playerWidth.set(0);
+  };
 
-  resetSettings(): void {
-    localStorage.clear();
-    this.state.settings = {
-      ffmpeg: {
-        filesPath: process.cwd() + '/ffmpeg/',
-        saveCommands: true,
-      },
-      general: {
-        createThumbs: false,
-        showRecent: true,
-      }
-    };
-  }
-
-  resetAll(): void {
-    this.resetFileInfo();
-    this.resetFilterInfo();
-    this.resetPlayerInfo();
-    this.resetVideoInfo();
-    this.i = 0;
-  }
-
-  resetFileInfo(): void {
-    this.state.fileInfo = [];
-  }
-
-  resetFilterInfo(): void {
-    this.state.filterInfo = {
-      filterConcat: [],
-      filterHeight: 0,
-      filterWidth: 0,
-      filterX: 0,
-      filterY: 0,
-    };
-  }
-
-  resetPlayerInfo(): void {
-    this.state.playerInfo = {
-      playerCrop: this.state.playerInfo.playerCrop,
-      playerIndex: 0,
-      playerLoaded: null,
-      playerLoading: null,
-      playerVideo: [],
-      playerHeight: 0,
-      playerWidth: 0,
-    };
-  }
-
-  resetVideoInfo(): void {
-    this.state.videoInfo = [];
-  }
-}
+  // Define colors list for general usage.
+  public storeColors: any[] = [
+    DefaultColors.blue,
+    DefaultColors.red,
+    DefaultColors.green,
+    DefaultColors.yellow,
+    DefaultColors.purple,
+    DefaultColors.pink,
+    DefaultColors.teal,
+    DefaultColors.indigo,
+    DefaultColors.amber,
+    DefaultColors.sky,
+    DefaultColors.rose,
+    DefaultColors.lime,
+    DefaultColors.fuchsia,
+    DefaultColors.orange,
+  ];
+};

@@ -1,11 +1,11 @@
-<br>
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/images/logo-lite.svg">
     <img src="assets/images/logo-dark.svg" width="80%">
   </picture>
 </div>
-<br>
+
+#
 
 **Viridian** is an **FFmpeg**-based, feature-rich **video editor**, offering a wide variety of both **lossless** and **lossy** operations. It allows you to easily manipulate video files without having to deal with the command line and FFmpeg's complexity, ensuring always the **best output quality possible**.
 

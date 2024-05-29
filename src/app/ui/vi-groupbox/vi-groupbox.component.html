@@ -1,0 +1,9 @@
+<!-- Groupbox container. -->
+<div [class]="['groupbox-container', groupboxSlim() ? 'slim' : 'normal']">
+  <!-- Groupbox label. -->
+  <div [class]="'groupbox-label'" [class.center]="groupboxCenter()">
+    <label>{{ groupboxLabel() }}</label>
+  </div>
+  <!-- Groupbox contents. -->
+  <ng-content />
+</div>

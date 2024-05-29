@@ -1,0 +1,44 @@
+<!-- Recent file open error dialog. -->
+@if (recent.recentOpen()) {
+  <vi-modal>
+    <div [class]="'recent-error'">
+      <img [src]="'assets/images/save-error.svg'" />
+      <p>{{ 'VIDEO_PLAYER.FILE_ERROR' | translate }}</p>
+      <vi-button
+        [buttonColor]="'danger'"
+        [buttonIcon]="'close'"
+        [buttonText]="'GENERAL.CLOSE' | translate"
+        (click)="recent.recentUpdateOpen()" />
+    </div>
+  </vi-modal>
+}
+<!-- Recent files container. -->
+@if (recent.recentFiles().length && settings.options.general.recentFiles()) {
+  <div [class]="'recent-container'">
+    <div>
+      <h1>{{ 'VIDEO_PLAYER.RECENT' | translate }}</h1>
+      <!-- Clear recent files list. -->
+      <vi-button
+        [buttonColor]="'dark'"
+        [buttonIcon]="'close'"
+        [buttonIconClass]="'!h-6 my-0.5'"
+        [buttonText]="'GENERAL.CLEAR' | translate"
+        (click)="recent.recentClear()" />
+      <!-- Recent files list. -->
+      <div [class]="'recent-list'">
+        @for (file of recent.recentFiles(); track file) {
+          <div [class]="'group'" (click)="recentFileOpen(file)">
+            <div>
+              <p>{{ file.name }}</p>
+              <p>{{ file.path!.slice(0, -file.name!.length - 1) }}</p>
+            </div>
+            <div [class]="'group-hover:block hidden'">
+              <img [src]="'assets/images/close.svg'"
+                (click)="recent.recentFileRemove(file.path!); $event.stopPropagation();" />
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

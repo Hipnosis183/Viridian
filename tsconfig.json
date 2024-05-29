@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
+    "noPropertyAccessFromIndexSignature": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
@@ -23,9 +23,18 @@
     "target": "es2022",
     "module": "es2022",
     "lib": [
-      "es2022",
+      "es2023",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/app/components/*"],
+      "@directives/*": ["src/app/directives/*"],
+      "@pipes/*": ["src/app/pipes/*"],
+      "@services/*": ["src/app/services/*"],
+      "@ui/*": ["src/app/ui/*"],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

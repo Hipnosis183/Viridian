@@ -1,82 +1,41 @@
+/* Setup Tippy. */
 @import 'tippy.js/dist/tippy.css';
-@import 'app/directives/dropdown.directive.css';
-@import 'app/directives/tooltip.directive.css';
+@import 'app/directives/dropdown/dropdown.directive.css';
+@import 'app/directives/tooltip/tooltip.directive.css';
 
+/* Setup Tailwind. */
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Define fonts. */
 @font-face {
   font-family: 'Inter';
   src: url('./assets/fonts/Inter.ttf');
 }
 
+/* General styling. */
 *:focus {
   outline: none;
 }
-
 body {
   @apply bg-dark-600;
   font-family: 'Inter';
 }
-
 div, h1, p, span {
   @apply text-dark-100;
 }
-
 p, b {
   @apply cursor-default whitespace-pre-wrap;
 }
 
-video {
-  @apply max-w-none;
-}
-
+/* Scrollbars styling. */
 ::-webkit-scrollbar {
   @apply bg-transparent h-3 w-3 !important;
 }
-
 ::-webkit-scrollbar-corner {
   @apply bg-transparent !important;
 }
-
 ::-webkit-scrollbar-thumb {
   @apply bg-dark-400 bg-clip-content border-4 border-solid border-transparent rounded-full !important;
-}
-
-.resizable {
-  @apply absolute border border-white cursor-all-scroll overflow-hidden;
-  box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, 0.5);
-}
-
-.resizable-handle-w {
-  @apply left-0 !important;
-}
-
-.resizable-handle-nw {
-  @apply border-l-2 border-t-2 border-white left-0 top-0 !important;
-}
-
-.resizable-handle-n {
-  @apply top-0 !important;
-}
-
-.resizable-handle-ne {
-  @apply border-r-2 border-t-2 border-white right-0 top-0 !important;
-}
-
-.resizable-handle-e {
-  @apply right-0 !important;
-}
-
-.resizable-handle-se {
-  @apply border-b-2 border-r-2 border-white bottom-0 right-0 !important;
-}
-
-.resizable-handle-s {
-  @apply bottom-0 !important;
-}
-
-.resizable-handle-sw {
-  @apply border-b-2 border-l-2 border-white bottom-0 left-0 !important;
 }

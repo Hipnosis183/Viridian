@@ -1,0 +1,53 @@
+<!-- Video crop tool resizable. -->
+<div id="cropResizeable"
+  [class]="'crop-resizable'"
+  [hidden]="!filters.filterCrop()"
+  [tooltip]="cropCanvas"
+  [tooltipKeep]="true"
+  [tooltipPlace]="'bottom'"
+  [tooltipTheme]="'tooltip-lite'"
+  [tooltipTrigger]="'mouseenter'"></div>
+<!-- Video crop tool canvas. -->
+<div #cropCanvas [class]="'crop-canvas'">
+  <div>
+    <div>
+      <p>W:</p>
+      <input
+        [(ngModel)]="filters.filterCropW"
+        [max]="store.storePlayer.playerWidth()"
+        [min]="0"
+        [type]="'number'"
+        (input)="player.playerUpdateCrop('w', $event.target)" />
+    </div>
+    <div>
+      <p>H:</p>
+      <input
+        [(ngModel)]="filters.filterCropH"
+        [max]="store.storePlayer.playerHeight()"
+        [min]="0"
+        [type]="'number'"
+        (input)="player.playerUpdateCrop('h', $event.target)" />
+    </div>
+  </div>
+  <span></span>
+  <div>
+    <div>
+      <p>X:</p>
+      <input
+        [(ngModel)]="filters.filterCropX"
+        [max]="store.storePlayer.playerWidth() - filters.filterCropW()"
+        [min]="0"
+        [type]="'number'"
+        (input)="player.playerUpdateCrop('x', $event.target)" />
+    </div>
+    <div>
+      <p>Y:</p>
+      <input
+        [(ngModel)]="filters.filterCropY"
+        [max]="store.storePlayer.playerHeight() - filters.filterCropH()"
+        [min]="0"
+        [type]="'number'"
+        (input)="player.playerUpdateCrop('y', $event.target)" />
+    </div>
+  </div>
+</div>

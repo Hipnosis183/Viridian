@@ -1,0 +1,37 @@
+<!-- Progress bar container. -->
+<div #progressContainer [class]="'progress-container'">
+  <progress
+    [max]="progressDuration() | numberInput"
+    [attr.min]="0"
+    [value]="progressTime()"></progress>
+  <!-- Progress bar thumb. -->
+  <div [class]="'progress-thumb'">
+    <div [hidden]="!progressExtend()"></div>
+  </div>
+  <!-- Progress bar keyframes. -->
+  <div [class]="'progress-frames'" [hidden]="!progressExtend()">
+    @for (frame of progressFrames(); track frame) {
+      <div rendered (rendered)="progressUpdateFrame($event, $index)"></div>
+    }
+  </div>
+</div>
+<!-- Progress bar thumbnails. -->
+<div
+  [class]="'progress-thumbs'"
+  [tooltip]="hoverThumbs"
+  [tooltipDelay]="[200, 100]"
+  [tooltipFollow]="'horizontal'"
+  [tooltipHide]="false"
+  [tooltipTheme]="'tooltip-lite'"
+  (mouseenter)="progressInfoLine.set(1)"
+  (mouseleave)="progressInfoLine.set(0)"
+  (mousemove)="$progressUpdateInfo($event)"
+  (mouseup)="progressUpdate($event)"></div>
+<div #hoverThumbs [class]="'progress-tooltip'">
+  @if (progressHover().length) { <img [src]="progressInfoThumb()" /> }
+  <p>{{ progressInfoTime() | duration: true }}</p>
+</div>
+<!-- Progress bar hover line. -->
+@if (progressInfoLine() && progressExtend()) {
+  <div #progressLine [class]="'progress-line'"></div>
+}
