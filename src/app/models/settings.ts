@@ -12,7 +12,8 @@ export interface SettingsOptions {
     commandsSave: WritableSignal<boolean>,
   },
   general: {
-    createThumbs: WritableSignal<boolean>,
     recentFiles: WritableSignal<boolean>,
+    createThumbs: WritableSignal<boolean>,
+    keyFrames: WritableSignal<boolean>,
   },
 };

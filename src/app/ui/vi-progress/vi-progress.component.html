@@ -9,7 +9,7 @@
     <div [hidden]="!progressExtend()"></div>
   </div>
   <!-- Progress bar keyframes. -->
-  <div [class]="'progress-frames'" [hidden]="!progressExtend()">
+  <div [class]="'progress-frames'" [hidden]="progressFramesHide() || !progressExtend()">
     @for (frame of progressFrames(); track frame) {
       <div rendered (rendered)="progressUpdateFrame($event, $index)"></div>
     }

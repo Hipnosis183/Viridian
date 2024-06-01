@@ -26,6 +26,7 @@ export class SettingsService {
     general: {
       createThumbs: signal<boolean>(JSON.parse(localStorage.getItem('general.createThumbs') || 'false')),
       recentFiles: signal<boolean>(JSON.parse(localStorage.getItem('general.recentFiles') || 'true')),
+      keyFrames: signal<boolean>(JSON.parse(localStorage.getItem('general.keyFrames') || 'true')),
     },
   };
 
@@ -34,8 +35,9 @@ export class SettingsService {
     localStorage.clear();
     this.options.ffmpeg.filesPath.set(process.cwd() + '/ffmpeg/');
     this.options.ffmpeg.commandsSave.set(true);
-    this.options.general.createThumbs.set(false);
     this.options.general.recentFiles.set(true);
+    this.options.general.createThumbs.set(false);
+    this.options.general.keyFrames.set(true);
     this.settingsUpdateVersion();
   };
 

@@ -202,13 +202,17 @@
     },
     "GENERAL": {
       "NAME": "General",
+      "RECENT_FILES": {
+        "NAME": "Show Recent Files List",
+        "TEXT": "Display the recent opened files list in the startup screen if there are any, storing up to 20 files."
+      },
       "CREATE_THUMBS": {
         "NAME": "Generate Thumbnails",
         "TEXT": "Enable video thumbnails generation. This could slow down file load times considerably depending on the length of the video."
       },
-      "SHOW_RECENT": {
-        "NAME": "Show Recent Files List",
-        "TEXT": "Display the recent opened files list in the startup screen if there are any, storing up to 20 files."
+      "KEY_FRAMES": {
+        "NAME": "Show Keyframes",
+        "TEXT": "Display keyframe markers in the segments/clips section of the video player."
       }
     },
     "RESTORE": "Restore",

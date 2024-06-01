@@ -31,6 +31,7 @@ export class ViProgress {
   public progressDuration = input<number>(0);
   public progressExtend = input<boolean>(false);
   public progressFrames = input<number[]>([]);
+  public progressFramesHide = input<boolean>(false);
   public progressHover = input<string[]>([]);
   public progressInfoLine = signal<number>(0);
   public progressInfoTime = signal<number>(0);

@@ -283,6 +283,7 @@
     [progressDuration]="store.storePlayer.playerVideo()[store.storeIndex()]?.duration ?? 0"
     [progressExtend]="segments.segmentsOpen()"
     [progressFrames]="store.storeVideos()[store.storeIndex()]?.videoKeyframes ?? []"
+    [progressFramesHide]="!settings.options.general.keyFrames()"
     [progressHover]="store.storeFiles()[store.storeIndex()]?.fileThumbs ?? []"
     [progressInterval]="store.storeFiles()[store.storeIndex()]?.fileInterval ?? 0"
     [progressTime]="store.storePlayer.playerVideo()[store.storeIndex()]?.currentTime ?? 0"

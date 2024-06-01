@@ -46,6 +46,16 @@
               <div>
                 <div
                   [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.RECENT_FILES.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.RECENT_FILES.NAME' | translate }}</p>
+                  <vi-checkbox
+                    [(checkboxValue)]="settings.options.general.recentFiles"
+                    (click)="settings.settingsUpdate('general', 'recentFiles')" />
+                </div>
+                <div
+                  [class]="'settings-option'"
                   [tooltip]="'VIDEO_SETTINGS.GENERAL.CREATE_THUMBS.TEXT' | translate"
                   [tooltipDelay]="[400, 0]"
                   [tooltipPlace]="'bottom'">
@@ -56,13 +66,13 @@
                 </div>
                 <div
                   [class]="'settings-option'"
-                  [tooltip]="'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.TEXT' | translate"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.KEY_FRAMES.TEXT' | translate"
                   [tooltipDelay]="[400, 0]"
                   [tooltipPlace]="'bottom'">
-                  <p>{{ 'VIDEO_SETTINGS.GENERAL.SHOW_RECENT.NAME' | translate }}</p>
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.KEY_FRAMES.NAME' | translate }}</p>
                   <vi-checkbox
-                    [(checkboxValue)]="settings.options.general.recentFiles"
-                    (click)="settings.settingsUpdate('general', 'recentFiles')" />
+                    [(checkboxValue)]="settings.options.general.keyFrames"
+                    (click)="settings.settingsUpdate('general', 'keyFrames')" />
                 </div>
               </div>
             }
