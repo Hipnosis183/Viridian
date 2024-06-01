@@ -8,7 +8,9 @@ ipcMain.handle('dialog-open', (e, ...a) => {
   return dialog.showOpenDialogSync(a[0]);
 });
 ipcMain.handle('dialog-save', (e, ...a) => {
-  return dialog.showSaveDialogSync(a[0]);
+  return new Promise(async (resolve) => {
+    resolve((await dialog.showSaveDialog(a[0])).filePath);
+  });
 });
 
 // Create directory recursively.

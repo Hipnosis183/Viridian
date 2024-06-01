@@ -99,6 +99,8 @@ export class SaveService {
     this.saveSettings.saveEncoder.set(saveCodec.encoders[0]);
     // Update output path file extension.
     this.saveInfo.saveOutput.update((v) => v.replace(/(\.[\w\d_-]+)$/i, '.' + saveFormat.extensions[0]));
+    // Update save reencoding state.
+    this.saveUpdateReencode();
   };
 
   // Update save settings codec state.

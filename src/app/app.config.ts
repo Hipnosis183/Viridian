@@ -1,5 +1,5 @@
 // Import Angular elements.
-import { APP_INITIALIZER, ApplicationConfig, Injector } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, Injector, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 // Setup app routing.
@@ -16,6 +16,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 // Define app configuration.
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideExperimentalZonelessChangeDetection(),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes),
     TranslateModule.forRoot({

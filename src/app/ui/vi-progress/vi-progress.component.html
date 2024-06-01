@@ -32,6 +32,6 @@
   <p>{{ progressInfoTime() | duration: true }}</p>
 </div>
 <!-- Progress bar hover line. -->
-@if (progressInfoLine() && progressExtend()) {
-  <div #progressLine [class]="'progress-line'"></div>
-}
+<div #progressLine
+  [class]="'progress-line'"
+  [hidden]="!progressInfoLine() || !progressExtend()"></div>

@@ -6,8 +6,9 @@
     (click)="optionClick()">
     <!-- Option label. -->
     <div [class]="'option-label'">
-      @if (optionLabel()) { <p>{{ optionLabel() }}</p> }
-      <ng-content />
+      <ng-content>
+        @if (optionLabel()) { <p>{{ optionLabel() }}</p> }
+      </ng-content>
     </div>
   </div>
 }
