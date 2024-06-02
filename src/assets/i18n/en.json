@@ -5,7 +5,9 @@
     "CLOSE": "Close",
     "CODEC": "Codec",
     "DEFAULT": "Default",
-    "OK": "Ok"
+    "DELETE": "Delete",
+    "OK": "Ok",
+    "REMOVE": "Remove"
   },
   "VIDEO_DOWNLOAD": {
     "DOWNLOAD": "Download FFmpeg binaries?\n\nFFmpeg will be installed in",
@@ -213,6 +215,10 @@
       "KEY_FRAMES": {
         "NAME": "Show Keyframes",
         "TEXT": "Display keyframe markers in the segments/clips section of the video player."
+      },
+      "CLEAR_CACHE": {
+        "NAME": "Clear Cache",
+        "TEXT": "Remove all temporary files created inside the 'temp' folder (thumbnails, text files, etc.)."
       }
     },
     "RESTORE": "Restore",

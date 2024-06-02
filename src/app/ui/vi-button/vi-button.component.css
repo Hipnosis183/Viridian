@@ -3,6 +3,9 @@
   @apply cursor-pointer rounded;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
+.button-container.disabled {
+  @apply cursor-no-drop;
+}
 .button-container.text {
   @apply flex items-center pl-1 pr-4;
 }

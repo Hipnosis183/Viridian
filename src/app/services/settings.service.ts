@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { SettingsCategories, SettingsOptions } from '@app/models/settings';
-import { IpcService } from '@app/services';
+import { IpcService, StoreService } from '@app/services';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +11,7 @@ import { IpcService } from '@app/services';
 export class SettingsService {
   // Inject app services.
   private ipc = inject(IpcService);
+  private store = inject(StoreService);
 
   // Define video settings state.
   public settingsIndex = signal<SettingsCategories>('GENERAL');
@@ -83,5 +84,12 @@ export class SettingsService {
     // Get FFmpeg version.
     const fileVersion: string | null = await this.ipc.invoke('process-exec', `${filePath} -version`, null);
     this.settingsVersion.set(fileVersion?.match(/(?<=ffmpeg version )([^_\s]+)/g)![0] ?? '');
+  };
+
+  // Remove cached temporary files.
+  public async settingsClearCache(): Promise<void> {
+    if (!this.store.storeFiles().length) {
+      await this.ipc.invoke('dir-delete', process.cwd() + '/temp/');
+    }
   };
 };

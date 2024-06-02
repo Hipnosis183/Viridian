@@ -74,6 +74,20 @@
                     [(checkboxValue)]="settings.options.general.keyFrames"
                     (click)="settings.settingsUpdate('general', 'keyFrames')" />
                 </div>
+                <div
+                  [class]="'settings-option'"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.CLEAR_CACHE.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.CLEAR_CACHE.NAME' | translate }}</p>
+                  <vi-button
+                    [buttonColor]="'dark'"
+                    [buttonDisabled]="!!store.storeFiles().length"
+                    [buttonIcon]="'close'"
+                    [buttonIconClass]="'-ml-[24px] opacity-0'"
+                    [buttonText]="'GENERAL.DELETE' | translate"
+                    (click)="settings.settingsClearCache()" />
+                </div>
               </div>
             }
             <!-- FFmpeg settings. -->

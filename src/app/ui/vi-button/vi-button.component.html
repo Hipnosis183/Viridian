@@ -2,6 +2,8 @@
 <button
   [class]="['button-container', buttonColor(), buttonStyle()]"
   [class.active]="buttonToggle()"
+  [class.disabled]="buttonDisabled()"
+  [disabled]="buttonDisabled()"
   [class.text]="buttonText() && buttonIcon()"
   [tooltip]="buttonTooltip()">
   <!-- Button icon. -->

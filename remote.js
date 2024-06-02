@@ -1,6 +1,6 @@
 // Import Node and Electron elements.
 const { ipcMain } = require('electron');
-const { appendFile, chmod, createWriteStream, existsSync, mkdir, readdir, unlink, writeFile } = require('fs');
+const { appendFile, chmod, createWriteStream, existsSync, mkdir, readdir, rm, unlink, writeFile } = require('fs');
 
 // Manage dialogs display.
 const { dialog } = require('electron');
@@ -32,6 +32,15 @@ ipcMain.handle('dir-open', (e, ...a) => {
 ipcMain.handle('dir-read', (e, ...a) => {
   return new Promise((resolve) => {
     readdir(a[0], (error, stdout) => {
+      resolve(error ? error : stdout);
+    });
+  });
+});
+
+// Delete directory.
+ipcMain.handle('dir-delete', (e, ...a) => {
+  return new Promise((resolve) => {
+    rm(a[0], { force: true, recursive: true }, (error, stdout) => {
       resolve(error ? error : stdout);
     });
   });

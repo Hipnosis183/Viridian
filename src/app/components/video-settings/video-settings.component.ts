@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { VideoDownloadComponent } from '@app/components';
-import { DownloadService, SettingsService } from '@app/services';
+import { DownloadService, SettingsService, StoreService } from '@app/services';
 import { TooltipDirective } from '@app/directives';
 
 // Import UI components.
@@ -26,4 +26,5 @@ export class VideoSettingsComponent {
   // Inject app services.
   public download = inject(DownloadService);
   public settings = inject(SettingsService);
+  public store = inject(StoreService);
 };

@@ -19,6 +19,7 @@ type ButtonStyle = 'default' | 'outlined';
 export class ViButton {
   // Define button state.
   public buttonColor = input<ButtonColor>('');
+  public buttonDisabled = input<boolean>(false);
   public buttonIcon = input<string>('');
   public buttonIconClass = input<string>('');
   public buttonStyle = input<ButtonStyle>('default');
