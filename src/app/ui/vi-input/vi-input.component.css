@@ -1,3 +1,17 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --input-border: rgb(144, 164, 184);
+  --input-color: rgb(192, 202, 212);
+  --input-hover: rgb(176, 186, 196);
+  --input-icon: rgb(36, 42, 48);
+}
+[data-theme="dark"] :host {
+  --input-border: rgb(28, 36, 44);
+  --input-color: rgb(14, 18, 22);
+  --input-hover: rgb(8, 12, 16);
+  --input-icon: rgb(126, 136, 146);
+}
+
 /* Input container. */
 .input-container.disabled {
   @apply opacity-50 pointer-events-none;
@@ -8,13 +22,18 @@
 
 /* Input label. */
 .input-container > label {
-  @apply flex mb-1 ml-1 text-[15px] text-dark-100;
+  @apply flex mb-1 ml-1 text-[15px];
 }
 
 /* Input element. */
 .input-element > input {
-  @apply bg-dark-800 hover:bg-dark-900 cursor-text flex h-9 px-3 rounded text-dark-100 w-full;
-  transition: background-color 0.2s ease-in-out;
+  @apply cursor-text flex h-9 px-3 rounded w-full;
+  background-color: var(--input-color);
+  border: 1px solid var(--input-border);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.input-element > input:hover {
+  background-color: var(--input-hover);
 }
 .input-element > input[type=number]::-webkit-inner-spin-button,
 .input-element > input[type=number]::-webkit-outer-spin-button {
@@ -23,10 +42,14 @@
 
 /* Input arrows. */
 .input-arrows {
-  @apply absolute cursor-pointer flex flex-col right-0;
+  @apply absolute cursor-pointer flex flex-col right-[1px];
 }
 .input-arrows > div {
-  @apply hover:bg-dark-900 flex h-[18px] items-center justify-center w-6;
+  @apply flex h-[17px] items-center justify-center w-6;
+  transition: background-color 0.2s;
+}
+.input-arrows > div:hover {
+  background-color: var(--input-hover);
 }
 .input-arrows > div:first-child {
   @apply rounded-tr [&>div]:mt-0.5 [&>div]:rotate-180;
@@ -35,5 +58,7 @@
   @apply rounded-br [&>div]:mb-0.5;
 }
 .input-arrows > div > div {
-  @apply absolute border-t-[4px] border-t-dark-200 border-x-[4px] border-x-transparent;
+  @apply absolute border-x-[4px] border-x-transparent;
+  border-top: 4px solid var(--input-icon);
+  transition: border-color 0.2s;
 }

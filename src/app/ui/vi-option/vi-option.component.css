@@ -1,10 +1,19 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --option-color: rgb(208, 218, 228);
+}
+[data-theme="dark"] :host {
+  --option-color: rgb(14, 18, 22);
+}
+
 /* Option container. */
 .option-container {
-  @apply hover:bg-dark-800 cursor-pointer flex h-10 items-center overflow-hidden px-3;
-  transition: background-color 0.2s ease-in-out;
+  @apply cursor-pointer flex h-10 items-center overflow-hidden px-3;
+  transition: background-color 0.2s;
 }
+.option-container:hover,
 .option-container.selected {
-  @apply bg-dark-800;
+  background-color: var(--option-color);
 }
 
 /* Option label. */

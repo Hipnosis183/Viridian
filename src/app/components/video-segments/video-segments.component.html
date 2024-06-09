@@ -25,13 +25,12 @@
         <!-- Video file clips. -->
         @for (clip of store.storeFiles()[i].fileClips(); track clip; let k = $index) {
           <div>
-            <div
-              [class]="'segments-clip'"
-              [style.backgroundColor]="k == store.storeFiles()[i].fileClipIndex() ? store.storeColors[clip.clipColor()][600] : store.storeColors[clip.clipColor()][800]"
-              [style.borderColor]="+ k == store.storeFiles()[i].fileClipIndex() ? store.storeColors[clip.clipColor()][500] : store.storeColors[clip.clipColor()][900]"
-              (click)="segments.clipIndex(i, k)"
-              (mouseout)="$event.target.style.backgroundColor = k == store.storeFiles()[i].fileClipIndex() ? store.storeColors[clip.clipColor()][600] : store.storeColors[clip.clipColor()][800]"
-              (mouseover)="$event.target.style.backgroundColor = k == store.storeFiles()[i].fileClipIndex() ? store.storeColors[clip.clipColor()][600] : store.storeColors[clip.clipColor()][700]">
+            <div [class]="'segments-clip'">
+              <span
+                [class.unselected]="k != store.storeFiles()[i].fileClipIndex()"
+                [style.backgroundColor]="store.storeColors[clip.clipColor()][600]"
+                [style.borderColor]="store.storeColors[clip.clipColor()][700]"
+                (click)="segments.clipIndex(i, k)"></span>
               <div>
                 <b>{{ k + 1 }} |</b>
                 <p>{{ ((clip.clipEnd() - clip.clipStart()) / info.videoFrameRate) | duration: true }} ({{ (clip.clipEnd() - clip.clipStart()) | number: '1.0-0' }} frames)</p>
@@ -52,9 +51,9 @@
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_ADD.' | translate"
         [dropdown]="segmentAdd" />
       <div #segmentAdd>
-        <span (click)="videoAdd.click()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.FILE' | translate }}</span>
-        <div [class]="'separator'"></div>
-        <span (click)="segments.clipAdd()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate }}</span>
+        <button (click)="videoAdd.click()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.FILE' | translate }}</button>
+        <span></span>
+        <button (click)="segments.clipAdd()">{{ 'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate }}</button>
       </div>
       <vi-button
         [buttonColor]="'darker'"
@@ -62,9 +61,9 @@
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.' | translate"
         [dropdown]="segmentRemove" />
       <div #segmentRemove>
-        <span (click)="fileRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.FILE' | translate }}</span>
-        <div [class]="'separator'"></div>
-        <span (click)="segments.clipRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIP' | translate }}</span>
+        <button (click)="fileRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.FILE' | translate }}</button>
+        <span></span>
+        <button (click)="segments.clipRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIP' | translate }}</button>
       </div>
     </div>
     <div>
@@ -74,9 +73,9 @@
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.' | translate"
         [dropdown]="segmentMoveUp" />
       <div #segmentMoveUp>
-        <span (click)="segments.fileUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.FILE' | translate }}</span>
-        <div [class]="'separator'"></div>
-        <span (click)="segments.clipUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.CLIP' | translate }}</span>
+        <button (click)="segments.fileUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.FILE' | translate }}</button>
+        <span></span>
+        <button (click)="segments.clipUp()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_UP.CLIP' | translate }}</button>
       </div>
       <vi-button
         [buttonColor]="'darker'"
@@ -85,9 +84,9 @@
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.' | translate"
         [dropdown]="segmentMoveDown" />
       <div #segmentMoveDown>
-        <span (click)="segments.fileDown()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.FILE' | translate }}</span>
-        <div [class]="'separator'"></div>
-        <span (click)="segments.clipDown()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.CLIP' | translate }}</span>
+        <button (click)="segments.fileDown()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.FILE' | translate }}</button>
+        <span></span>
+        <button (click)="segments.clipDown()">{{ 'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.CLIP' | translate }}</button>
       </div>
     </div>
   </div>

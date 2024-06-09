@@ -1,6 +1,6 @@
 <!-- Button container. -->
 <button
-  [class]="['button-container', buttonColor(), buttonStyle()]"
+  [class]="['button-container', buttonColor()]"
   [class.active]="buttonToggle()"
   [class.disabled]="buttonDisabled()"
   [disabled]="buttonDisabled()"
@@ -8,7 +8,7 @@
   [tooltip]="buttonTooltip()">
   <!-- Button icon. -->
   @if (buttonIcon()) {
-    <img [class]="buttonIconClass()" [src]="'assets/images/' + buttonIcon() + '.svg'" />
+    <a [class]="buttonIconClass()" [style.maskImage]="'url(assets/images/' + buttonIcon() + '.svg)'"></a>
   }
   <!-- Button label. -->
   <ng-content>

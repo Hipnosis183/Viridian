@@ -19,9 +19,8 @@
       <h1>{{ 'VIDEO_PLAYER.RECENT' | translate }}</h1>
       <!-- Clear recent files list. -->
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'close'"
-        [buttonIconClass]="'!h-6 my-0.5'"
+        [buttonIconClass]="'!h-6 my-0.5 !w-6'"
         [buttonText]="'GENERAL.CLEAR' | translate"
         (click)="recent.recentClear()" />
       <!-- Recent files list. -->
@@ -33,8 +32,8 @@
               <p>{{ file.path!.slice(0, -file.name!.length - 1) }}</p>
             </div>
             <div [class]="'group-hover:block hidden'">
-              <img [src]="'assets/images/close.svg'"
-                (click)="recent.recentFileRemove(file.path!); $event.stopPropagation();" />
+              <a [style.maskImage]="'url(assets/images/close.svg)'"
+                (click)="recent.recentFileRemove(file.path!); $event.stopPropagation();"></a>
             </div>
           </div>
         }

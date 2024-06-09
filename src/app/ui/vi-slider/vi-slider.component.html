@@ -5,5 +5,13 @@
     [min]="sliderMin()"
     [max]="sliderMax()"
     [(ngModel)]="sliderValue"
+    [style.width]="sliderWidth()"
     [type]="'range'" />
+  <!-- Slider thumb. -->
+  <div #sliderThumb
+    [tooltip]="sliderTooltip()"
+    [tooltipAppend]="true"
+    [tooltipHide]="false"
+    [tooltipShow]="true"
+    [tooltipTrigger]="'manual'"></div>
 </div>

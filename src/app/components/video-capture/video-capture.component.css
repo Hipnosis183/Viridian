@@ -19,7 +19,13 @@
   @apply mt-1;
 }
 :host ::ng-deep .capture-output vi-button {
-  @apply flex items-end pb-1.5 [&_img]:h-6 [&_img]:w-8 !important;
+  @apply flex items-end pb-2;
+}
+:host ::ng-deep .capture-output vi-button a {
+  height: 18px !important;
+  margin-left: 3px;
+  margin-right: 3px;
+  width: 18px !important;
 }
 :host ::ng-deep .capture-output vi-input {
   @apply w-[500px];

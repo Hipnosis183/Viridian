@@ -6,7 +6,6 @@ import tippy, { followCursor, Placement } from 'tippy.js';
 
 // Define types and interfaces.
 type TooltipFollow = 'horizontal' | 'vertical';
-type TooltipTheme = 'tooltip-dark' | 'tooltip-lite';
 
 @Directive({
   selector: '[tooltip]',
@@ -25,13 +24,14 @@ export class TooltipDirective {
 
   // Define tooltip state.
   public tooltip = input<HTMLElement | string>();
+  public tooltipAppend = input<boolean>(false);
   public tooltipDelay = input<[number, number]>([800, 200]);
   public tooltipFollow = input<boolean | TooltipFollow>(false);
   public tooltipHide = input<boolean>(true);
   public tooltipKeep = input<boolean>(false);
   public tooltipOffset = input<[number, number]>([0, 10]);
   public tooltipPlace = input<Placement>('top');
-  public tooltipTheme = input<TooltipTheme>('tooltip-dark');
+  public tooltipShow = input<boolean>(false);
   public tooltipTrigger = input<string>('mouseenter focus');
 
   // Define lifecycle hooks.
@@ -39,7 +39,7 @@ export class TooltipDirective {
     if (this.tooltip()) {
       // Create Tippy instance for input element.
       tippy(this.elementRef.nativeElement, {
-        appendTo: () => document.body,
+        appendTo: () => this.tooltipAppend() ? this.elementRef.nativeElement : document.body,
         animation: 'fade',
         content: this.tooltip(),
         delay: this.tooltipKeep() ? [600, 100] : this.tooltipDelay(),
@@ -51,7 +51,8 @@ export class TooltipDirective {
         offset: this.tooltipOffset(),
         placement: this.tooltipPlace(),
         plugins: [followCursor],
-        theme: this.tooltipTheme(),
+        showOnCreate: this.tooltipShow(),
+        theme: 'tooltip',
         trigger: this.tooltipTrigger(),
       });
     }

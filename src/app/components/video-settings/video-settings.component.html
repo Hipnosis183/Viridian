@@ -9,13 +9,13 @@
           <div
             [class.selected]="settings.settingsIndex() == 'GENERAL'"
             (click)="settings.settingsUpdateIndex('GENERAL')">
-            <img [src]="'assets/images/settings.svg'">
+            <a [style.maskImage]="'url(assets/images/settings.svg)'"></a>
             <p>{{ 'VIDEO_SETTINGS.GENERAL.NAME' | translate }}</p>
           </div>
           <div
             [class.selected]="settings.settingsIndex() == 'FFMPEG'"
             (click)="settings.settingsUpdateIndex('FFMPEG')">
-            <img [src]="'assets/images/settings.svg'">
+            <a [style.maskImage]="'url(assets/images/settings.svg)'"></a>
             <p>{{ 'VIDEO_SETTINGS.FFMPEG.NAME' | translate }}</p>
           </div>
         </div>
@@ -44,6 +44,31 @@
             <!-- General settings. -->
             @case ('GENERAL') {
               <div>
+                <div
+                  [class]="'settings-option'"
+                  [style.height]="'42px'"
+                  [tooltip]="'VIDEO_SETTINGS.GENERAL.APP_THEME.TEXT' | translate"
+                  [tooltipDelay]="[400, 0]"
+                  [tooltipPlace]="'bottom'">
+                  <p>{{ 'VIDEO_SETTINGS.GENERAL.APP_THEME.NAME' | translate }}</p>
+                  <vi-select
+                    [style.width]="'120px'"
+                    [(selectValue)]="settings.options.general.appTheme"
+                    (selectUpdate)="settings.settingsUpdateTheme()">
+                    @for (theme of settings.settingsThemes; track theme) {
+                      <vi-option
+                        [optionLabel]="theme.text"
+                        [optionSelected]="settings.options.general.appTheme() == theme.value"
+                        [optionValue]="theme.value">
+                        <!-- Settings theme. -->
+                        <div [class]="'settings-theme'">
+                          <div [style.backgroundColor]="theme.color"></div>
+                          <p>{{ theme.text }}</p>
+                        </div>
+                      </vi-option>
+                    }
+                  </vi-select>
+                </div>
                 <div
                   [class]="'settings-option'"
                   [tooltip]="'VIDEO_SETTINGS.GENERAL.RECENT_FILES.TEXT' | translate"
@@ -81,7 +106,6 @@
                   [tooltipPlace]="'bottom'">
                   <p>{{ 'VIDEO_SETTINGS.GENERAL.CLEAR_CACHE.NAME' | translate }}</p>
                   <vi-button
-                    [buttonColor]="'dark'"
                     [buttonDisabled]="!!store.storeFiles().length"
                     [buttonIcon]="'close'"
                     [buttonIconClass]="'-ml-[24px] opacity-0'"
@@ -103,7 +127,6 @@
                     [(inputValue)]="settings.options.ffmpeg.filesPath"
                     (inputUpdated)="settings.settingsUpdate('ffmpeg', 'filesPath')" />
                   <vi-button
-                    [buttonColor]="'dark'"
                     [buttonIcon]="'more'"
                     [class]="'more'"
                     (click)="settings.settingsUpdatePath()" />
@@ -114,7 +137,6 @@
                     <p [class]="'text-sm'">{{ settings.settingsVersion() }}</p>
                   } @else {
                     <vi-button
-                      [buttonColor]="'dark'"
                       [buttonIcon]="'done'"
                       [buttonIconClass]="'-ml-[24px] opacity-0'"
                       [buttonText]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate"

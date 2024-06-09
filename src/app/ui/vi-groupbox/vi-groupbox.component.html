@@ -1,7 +1,7 @@
 <!-- Groupbox container. -->
-<div [class]="['groupbox-container', groupboxSlim() ? 'slim' : 'normal']">
+<div [class]="'groupbox-container'">
   <!-- Groupbox label. -->
-  <div [class]="'groupbox-label'" [class.center]="groupboxCenter()">
+  <div [class]="['groupbox-label', groupboxPosition()]">
     <label>{{ groupboxLabel() }}</label>
   </div>
   <!-- Groupbox contents. -->

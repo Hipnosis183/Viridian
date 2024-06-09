@@ -38,7 +38,7 @@
     "FLIP_V": "Flip Vertically",
     "LIST": "File Tracks",
     "LOADING": "Loading File... ({{ current }}/{{ total }})",
-    "MUTE": "Mute",
+    "MUTE": "Mute | Volume",
     "NO_AUDIO": "Remove Audio",
     "PLAY_PAUSE": "Play | Pause",
     "RECENT": "Recent files",
@@ -204,6 +204,10 @@
     },
     "GENERAL": {
       "NAME": "General",
+      "APP_THEME": {
+        "NAME": "Theme",
+        "TEXT": "Change the app color theme."
+      },
       "RECENT_FILES": {
         "NAME": "Show Recent Files List",
         "TEXT": "Display the recent opened files list in the startup screen if there are any, storing up to 20 files."

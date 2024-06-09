@@ -1,24 +1,36 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --groupbox-border: rgb(160, 170, 180);
+  --groupbox-color: rgb(222, 232, 242);
+  --groupbox-text: rgb(86, 96, 106);
+}
+[data-theme="dark"] :host {
+  --groupbox-border: rgb(36, 42, 48);
+  --groupbox-color: rgb(22, 28, 34);
+  --groupbox-text: rgb(126, 136, 146);
+}
+
 /* Groupbox container. */
-.groupbox-container > div {
-  @apply flex mb-2;
-}
-.groupbox-container.normal {
-  @apply border border-dark-400 p-3 relative rounded;
-}
-.groupbox-container.normal label {
-  @apply absolute bg-dark-600 left-4 px-2 text-dark-200 top-[-12px];
-}
-.groupbox-container.slim {
-  @apply border-t border-t-dark-400 relative;
-}
-.groupbox-container.slim label {
-  @apply absolute bg-dark-600 px-2 text-dark-200 top-[-12px];
+.groupbox-container {
+  @apply p-3 relative rounded;
+  border: 1px solid var(--groupbox-border);
+  transition: border-color 0.2s;
 }
 
 /* Groupbox label. */
-.groupbox-label.center {
-  @apply justify-center;
+.groupbox-label {
+  @apply flex mb-2;
 }
-.groupbox-label:not(.center) {
-  @apply pl-4;
+.groupbox-label > label {
+  @apply absolute px-2;
+  background-color: var(--groupbox-color);
+  color: var(--groupbox-text);
+  top: -12px;
+  transition: background-color 0.2s, color 0.2s;
+}
+.groupbox-label.left > label {
+  left: 16px;
+}
+.groupbox-label.right > label {
+  right: 16px;
 }

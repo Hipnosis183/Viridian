@@ -1,5 +1,8 @@
 // Import Angular elements.
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+// Define types and interfaces.
+type LoadingTheme = 'light' | 'dark' | '';
 
 @Component({
   selector: 'vi-loading',
@@ -8,4 +11,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ViLoading {};
+export class ViLoading {
+  // Define button state.
+  public loadingTheme = input<LoadingTheme>('');
+};

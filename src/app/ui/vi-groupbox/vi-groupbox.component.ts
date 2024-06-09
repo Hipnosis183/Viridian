@@ -1,6 +1,9 @@
 // Import Angular elements.
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
+// Define types and interfaces.
+type GroupboxPosition = 'left' | 'center' | 'right';
+
 @Component({
   selector: 'vi-groupbox',
   templateUrl: './vi-groupbox.component.html',
@@ -11,6 +14,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 export class ViGroupbox {
   // Define groupbox state.
   public groupboxLabel = input<string>('');
-  public groupboxCenter = input<boolean>(false);
-  public groupboxSlim = input<boolean>(false);
+  public groupboxPosition = input<GroupboxPosition>('left');
 };

@@ -2,8 +2,11 @@
 import { inject, Injectable, signal } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
-import { SettingsCategories, SettingsOptions } from '@app/models/settings';
+import { SettingsCategories, SettingsOptions, SettingsThemes } from '@app/models/settings';
 import { IpcService, StoreService } from '@app/services';
+
+// Import themes list.
+import { Themes } from 'src/assets/lists';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +19,7 @@ export class SettingsService {
   // Define video settings state.
   public settingsIndex = signal<SettingsCategories>('GENERAL');
   public settingsOpen = signal<boolean>(false);
+  public settingsThemes = Themes;
   public settingsVersion = signal<string>('');
 
   // Define settings options.
@@ -25,6 +29,7 @@ export class SettingsService {
       commandsSave: signal<boolean>(JSON.parse(localStorage.getItem('ffmpeg.commandsSave') || 'true')),
     },
     general: {
+      appTheme: signal<SettingsThemes>((localStorage.getItem('general.appTheme') as SettingsThemes) ?? 'dark'),
       createThumbs: signal<boolean>(JSON.parse(localStorage.getItem('general.createThumbs') || 'false')),
       recentFiles: signal<boolean>(JSON.parse(localStorage.getItem('general.recentFiles') || 'true')),
       keyFrames: signal<boolean>(JSON.parse(localStorage.getItem('general.keyFrames') || 'true')),
@@ -71,6 +76,12 @@ export class SettingsService {
       this.settingsUpdate('ffmpeg', 'filesPath');
       this.settingsUpdateVersion();
     }
+  };
+
+  // Update app theme state.
+  public settingsUpdateTheme(): void {
+    this.settingsUpdate('general', 'appTheme');
+    document.body.dataset.theme = this.options.general.appTheme();
   };
 
   // Update settings version state.

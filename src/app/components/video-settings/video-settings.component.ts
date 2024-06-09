@@ -8,7 +8,7 @@ import { DownloadService, SettingsService, StoreService } from '@app/services';
 import { TooltipDirective } from '@app/directives';
 
 // Import UI components.
-import { ViButton, ViCheckbox, ViInput, ViModal } from '@app/ui';
+import { ViButton, ViCheckbox, ViInput, ViModal, ViOption, ViSelect } from '@app/ui';
 
 @Component({
   selector: 'video-settings',
@@ -19,7 +19,7 @@ import { ViButton, ViCheckbox, ViInput, ViModal } from '@app/ui';
   imports: [
     TranslateModule,
     VideoDownloadComponent, TooltipDirective,
-    ViButton, ViCheckbox, ViInput, ViModal,
+    ViButton, ViCheckbox, ViInput, ViModal, ViOption, ViSelect,
   ],
 })
 export class VideoSettingsComponent {

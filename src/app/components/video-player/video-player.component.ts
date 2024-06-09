@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent } from '@app/components';
 import { CaptureService, FiltersService, InfoService, LoadService, PlayerService, RecentService, SaveService, SegmentsService, SettingsService, StoreService } from '@app/services';
 import { DropdownDirective, RenderedDirective, TooltipDirective } from '@app/directives';
-import { DurationPipe } from '@app/pipes';
+import { DurationPipe, NumberInputPipe } from '@app/pipes';
 
 // Import UI components.
 import { ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider } from '@app/ui';
@@ -23,7 +23,7 @@ import { ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider } from '@ap
     FormsModule, TranslateModule, DecimalPipe,
     VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent,
     DropdownDirective, RenderedDirective, TooltipDirective,
-    DurationPipe,
+    DurationPipe, NumberInputPipe,
     ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider,
   ],
   host: {

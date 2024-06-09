@@ -1,9 +1,19 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --list-color: rgb(192, 202, 212);
+}
+[data-theme="dark"] :host {
+  --list-color: rgb(4, 8, 12);
+}
+
 /* Video clips list. */
 :host {
   display: contents;
 }
 .clips-list {
-  @apply bg-dark-1000/80 overflow-hidden relative rounded-sm w-full [&>div]:w-full;
+  @apply overflow-hidden relative rounded-sm w-full [&>div]:w-full;
+  background-color: var(--list-color);
+  transition: background-color 0.2s;
 }
 .clips-list.loading {
   @apply flex mt-0;
@@ -14,8 +24,8 @@
 
 /* Clips container. */
 .clips-container {
-  @apply absolute border-4 cursor-pointer h-8 opacity-80;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply absolute border-4 cursor-pointer h-8 opacity-70;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 .clips-container.selected {
   @apply cursor-move opacity-90 z-10;
@@ -28,20 +38,17 @@
 .clips-info > div {
   @apply flex items-center space-x-2;
 }
-.clips-info > span {
-  @apply bg-zinc-300 h-px opacity-80 w-[calc(100%-8px)];
-}
-.clips-info input {
-  @apply h-7 p-0.5 pl-1 rounded text-dark-800;
-  border: solid 1px #ccc;
+.clips-info > div > a {
+  display: block;
+  height: 24px;
+  width: 24px;
 }
 .clips-info input[type="number"] {
-  @apply w-[96px];
+  width: 96px;
 }
 .clips-info input[type="time"] {
-  @apply w-[136px];
+  width: 136px;
 }
 .clips-info input[type="time"]::-webkit-calendar-picker-indicator {
-  @apply hover:bg-dark-100 cursor-pointer rounded;
-  transition: background-color 0.2s ease-in-out;
+  @apply cursor-pointer rounded;
 }

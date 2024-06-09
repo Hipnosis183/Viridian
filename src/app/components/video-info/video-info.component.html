@@ -1,6 +1,6 @@
 <!-- Video information dialog. -->
-@if (store.storeVideos()[store.storeIndex()]?.videoStreams && info.infoOpen()) {
-  <vi-modal>
+@if (store.storeVideos()[store.storeIndex()]?.videoStreams) {
+  <vi-modal [modalHidden]="!info.infoOpen()">
     <!-- Video file streams. -->
     <table [class]="'info-streams'">
       <thead>
@@ -35,25 +35,24 @@
                 }
               }
             </tr>
+            <!-- Video stream details. -->
+            <tr [class]="'info-details'">
+              <td [attr.colspan]="'100%'">
+                <div
+                  [hidden]="i != info.infoExpanded()"
+                  rendered
+                  (rendered)="info.infoRendered($event, i)">
+                  <span [innerHtml]="store.storeVideos()[store.storeIndex()].videoStreamsText[i]"></span>
+                </div>
+              </td>
+            </tr>
           </div>
-          <!-- Video stream details. -->
-          <tr>
-            <td [attr.colspan]="'100%'">
-              <div
-                [class]="'info-details'"
-                [hidden]="i != info.infoExpanded()"
-                rendered
-                (rendered)="info.infoRendered($event, i)">
-                <span [innerHtml]="store.storeVideos()[store.storeIndex()].videoStreamsText[i]"></span>
-              </div>
-            </td>
-          </tr>
         }
       </tbody>
     </table>
     <!-- Close dialog. -->
     <button [class]="'info-close'" (click)="info.infoUpdateOpen()">
-      <img [src]="'assets/images/close.svg'" />
+      <a [style.maskImage]="'url(assets/images/close.svg)'"></a>
     </button>
   </vi-modal>
 }

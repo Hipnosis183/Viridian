@@ -1,18 +1,43 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --close-border: rgb(126, 136, 146);
+  --close-hover: rgb(176, 186, 196);
+  --list-border: rgb(160, 170, 180);
+  --list-hover: rgb(192, 202, 212);
+  --recent-border: rgb(144, 164, 184);
+  --recent-color: rgb(208, 218, 228);
+}
+[data-theme="dark"] :host {
+  --close-border: rgb(36, 42, 48);
+  --close-hover: rgb(22, 28, 34);
+  --list-border: rgb(18, 24, 30);
+  --list-hover: rgb(8, 12, 16);
+  --recent-border: rgb(86, 96, 106);
+  --recent-color: rgb(2, 6, 10);
+}
+:host {
+  --close-color: rgb(86, 96, 106);
+}
+
 /* Recent files container. */
 :host {
   display: contents;
 }
 .recent-container {
   @apply flex h-full items-center justify-center ml-auto relative w-1/2;
+  background-color: var(--recent-color);
+  transition: background-color 0.2s;
 }
 .recent-container > div {
   @apply absolute flex flex-col max-h-[80%] min-h-[80%] pl-2 pr-4 w-full;
 }
 .recent-container > div > h1 {
-  @apply border-b-2 border-b-dark-100/20 mb-4 mr-2 pb-1.5 pointer-events-none text-xl;
+  @apply mb-4 mr-2 pb-1.5 pointer-events-none text-xl;
+  border-bottom: 1px solid var(--recent-border);
+  transition: border-color 0.2s;
 }
 .recent-container > div > vi-button {
-  @apply absolute border border-dark-600 right-7 rounded -top-1;
+  @apply absolute right-7 rounded -top-1;
 }
 
 /* Recent files list. */
@@ -20,18 +45,31 @@
   @apply flex flex-col overflow-x-hidden overflow-y-auto pr-2 space-y-1.5;
 }
 .recent-list > div {
-  @apply hover:bg-dark-900 border border-transparent hover:border-dark-700 cursor-pointer flex items-center px-2.5 py-1.5 hover:pr-11 relative rounded;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply border border-transparent cursor-pointer flex items-center px-2.5 py-1.5 hover:pr-11 relative rounded;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.recent-list > div:hover {
+  background-color: var(--list-hover);
+  border-color: var(--list-border);
 }
 .recent-list > div > div:first-child {
   @apply flex flex-col overflow-hidden space-y-0.5 [&>p]:pointer-events-none [&>p]:whitespace-nowrap;
 }
 .recent-list > div > div:first-child > p:last-child {
-  @apply text-dark-200 text-sm;
+  @apply text-sm;
+  color: var(--close-color);
 }
 .recent-list > div > div:last-child {
-  @apply absolute hover:bg-dark-600 border border-transparent hover:border-dark-400 cursor-pointer my-auto right-2 rounded-sm [&>img]:h-6;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply absolute border border-transparent cursor-pointer my-auto right-2 rounded-sm [&>a]:h-6 [&>a]:w-6;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.recent-list > div > div:last-child:hover {
+  background-color: var(--close-hover);
+  border-color: var(--close-border);
+}
+.recent-list > div > div:last-child > a {
+  @apply block h-6 w-6;
+  background-color: var(--close-color);
 }
 
 /* Recent file open error dialog. */

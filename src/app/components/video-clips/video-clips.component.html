@@ -8,23 +8,23 @@
             <!-- Clips container. -->
             <div #playerClip
               rendered
-              [class]="'clips-container'" [class.selected]="k == file.fileClipIndex()"
-              [style.backgroundColor]="k == file.fileClipIndex() ? store.storeColors[clip.clipColor()][600] : store.storeColors[clip.clipColor()][800]"
-              [style.borderColor]="k == file.fileClipIndex() ? store.storeColors[clip.clipColor()][500] : store.storeColors[clip.clipColor()][700]"
+              [class]="'clips-container'"
+              [class.selected]="k == file.fileClipIndex()"
+              [style.backgroundColor]="store.storeColors[clip.clipColor()][600]"
+              [style.borderColor]="store.storeColors[clip.clipColor()][700]"
               [tooltip]="clipInfo"
               [tooltipFollow]="'horizontal'"
               [tooltipKeep]="true"
-              [tooltipPlace]="'bottom'"
-              [tooltipTheme]="'tooltip-lite'"
+              [tooltipPlace]="'top'"
               [tooltipTrigger]="'mouseenter'"
               (mousedown)="store.storeFiles()[i].fileClipIndex.set(k)"
               (rendered)="segments.clipLoaded($event)"></div>
             <!-- Clips information. -->
             <div #clipInfo [class]="'clips-info'">
               <div>
-                <img
-                  [src]="'assets/images/clip-h-set.svg'"
-                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate" />
+                <a
+                  [style.maskImage]="'url(assets/images/clip-h-set.svg)'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.START' | translate"></a>
                 <input
                   [ngModel]="clip.clipStart() / store.storeVideos()[i].videoFrameRate | duration: true"
                   [step]="'0.001'"
@@ -37,10 +37,10 @@
                   (input)="segments.clipInputFrame('start', $event.target, k, playerClip)" />
               </div>
               <div>
-                <img
+                <a
                   [class]="'rotate-180'"
-                  [src]="'assets/images/clip-h-set.svg'"
-                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate" />
+                  [style.maskImage]="'url(assets/images/clip-h-set.svg)'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate"></a>
                 <input
                   [ngModel]="clip.clipEnd() / store.storeVideos()[i].videoFrameRate | duration: true"
                   [step]="'0.001'"
@@ -52,10 +52,10 @@
                   [type]="'number'"
                   (input)="segments.clipInputFrame('end', $event.target, k, playerClip)" />
               </div>
-              <span></span>
               <div>
-                <img [src]="'assets/images/clip-h-pos.svg'"
-                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate" />
+                <a
+                  [style.maskImage]="'url(assets/images/clip-h-pos.svg)'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.POSITION' | translate"></a>
                 <input
                   [ngModel]="clip.clipStart() / store.storeVideos()[i].videoFrameRate | duration: true"
                   [step]="'0.001'"
@@ -68,8 +68,9 @@
                   (input)="segments.clipInputFrame('position', $event.target, k, playerClip)" />
               </div>
               <div>
-                <img [src]="'assets/images/clip-h-len.svg'"
-                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate" />
+                <a
+                  [style.maskImage]="'url(assets/images/clip-h-len.svg)'"
+                  [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.LENGTH' | translate"></a>
                 <input
                   [ngModel]="(clip.clipEnd() - clip.clipStart()) / store.storeVideos()[i].videoFrameRate | duration: true"
                   [step]="'0.001'"

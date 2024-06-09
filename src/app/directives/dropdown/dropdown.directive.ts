@@ -41,7 +41,7 @@ export class DropdownDirective {
     // Attach listener to close dropdowns upon clicking inside.
     if (!this.dropdownHover()) {
       this.renderer.listen(this.elementRef.nativeElement._tippy.popper, 'click', (e) => {
-        if (e.target.getAttribute('dropdownIgnore') == null) {
+        if (e.target.getAttribute('dropdownIgnore') == null && e.target.localName != 'input') {
           this.elementRef.nativeElement._tippy.hide();
         }
       });

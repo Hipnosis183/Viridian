@@ -1,9 +1,34 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --file-color: rgb(222, 232, 242);
+  --container-border: rgb(160, 170, 180);
+  --container-color: rgb(192, 202, 212);
+  --container-title: rgb(208, 218, 228);
+  --buttons-color: rgb(208, 218, 228);
+}
+[data-theme="dark"] :host {
+  --file-color: rgb(14, 18, 22);
+  --container-border: rgb(28, 36, 44);
+  --container-color: rgb(8, 12, 16);
+  --container-title: rgb(18, 24, 30);
+  --buttons-color: rgb(14, 18, 22);
+}
+:host {
+  --clips-text: rgb(232, 238, 244);
+}
+
 /* Video segments container. */
 .segments-container {
-  @apply absolute bg-dark-900 border-l border-l-dark-500 h-[calc(100%-136px)] right-0 w-[316px];
+  @apply absolute h-[calc(100%-136px)] right-0 w-[316px];
+  background-color: var(--container-color);
+  border-left: 1px solid var(--container-border);
+  transition: background-color 0.2s, border-color 0.2s;
 }
 .segments-container > p {
-  @apply bg-dark-700 border-b border-b-dark-500 p-2 text-center;
+  @apply p-2 text-center;
+  background-color: var(--container-title);
+  border-bottom: 1px solid var(--container-border);
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 /* Video segments files. */
@@ -13,11 +38,12 @@
 
 /* Video file information. */
 .segments-file {
-  @apply hover:bg-dark-800 cursor-pointer h-fit p-4 space-y-4 w-full;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply cursor-pointer h-fit p-4 space-y-4 w-full;
+  transition: background-color 0.2s;
 }
+.segments-file:hover,
 .segments-file.selected {
-  @apply bg-dark-800;
+  background-color: var(--file-color);
 }
 .segments-file > div:first-child {
   @apply flex items-center overflow-hidden pointer-events-none space-x-2 [&>*]:whitespace-nowrap;
@@ -29,21 +55,45 @@
   @apply text-sm whitespace-nowrap;
 }
 .segments-file > div:last-child > img {
-  @apply bg-dark-900 border border-dark-400 h-[54px] object-cover w-[96px];
+  @apply h-[54px] object-cover w-[96px];
+  border: 1px solid var(--container-border);
+  transition: border-color 0.2s;
 }
 
 /* Video file clips. */
 .segments-clip {
-  @apply border-4 cursor-pointer h-fit px-4 py-3 rounded-sm space-y-2 w-full [&>*]:pointer-events-none [&>p]:text-sm;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply cursor-pointer h-fit px-4 py-3 relative rounded-sm w-full [&>p]:text-sm;
+}
+.segments-clip b,
+.segments-clip p {
+  color: var(--clips-text);
 }
 .segments-clip > div {
-  @apply flex items-center overflow-hidden space-x-2 whitespace-nowrap;
+  @apply flex items-center mb-2 overflow-hidden space-x-2 whitespace-nowrap;
+}
+.segments-clip > span {
+  @apply absolute border-4 h-full left-0 top-0 w-full;
+  transition: opacity 0.2s;
+}
+.segments-clip > span.unselected {
+  opacity: 0.8;
+}
+.segments-clip > span.unselected:hover {
+  opacity: 1;
+}
+.segments-clip > :not(span) {
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
 }
 
 /* Video segments buttons. */
 .segments-buttons {
-  @apply absolute bg-dark-800 border-b border-b-dark-500 border-t border-t-dark-400 bottom-0 flex h-[51px] justify-between pb-0 pt-[0.45rem] px-4 w-full;
+  @apply absolute bottom-0 flex h-[51px] justify-between pt-[5px] px-4 w-full;
+  background-color: var(--buttons-color);
+  border-bottom: 1px solid var(--container-border);
+  border-top: 1px solid var(--container-border);
+  transition: background-color 0.2s, border-color 0.2s;
 }
 .segments-buttons > div {
   @apply space-x-2;

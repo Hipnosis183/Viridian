@@ -1,3 +1,15 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --checkbox-border: rgb(144, 164, 184);
+  --checkbox-color: rgb(192, 202, 212);
+  --checkbox-fill: rgb(36, 42, 48);
+}
+[data-theme="dark"] :host {
+  --checkbox-border: rgb(36, 42, 48);
+  --checkbox-color: rgb(8, 12, 16);
+  --checkbox-fill: rgb(222, 232, 242);
+}
+
 /* Checkbox container. */
 .checkbox-container {
   @apply cursor-pointer;
@@ -5,13 +17,15 @@
 
 /* Checkbox box. */
 .checkbox-box {
-  @apply hover:brightness-90 bg-dark-900 border border-dark-400 flex h-5 items-center justify-center rounded w-5;
-  transition: filter 0.1s ease-in-out;
+  @apply hover:brightness-90 flex h-5 items-center justify-center rounded w-5;
+  background-color: var(--checkbox-color);
+  border: 1px solid var(--checkbox-border);
+  transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
 }
 .checkbox-box > div {
   @apply h-[10px] rounded-sm w-[10px];
-  transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.2s;
 }
 .checkbox-box > div.checked {
-  @apply bg-dark-100/90;
+  background-color: var(--checkbox-fill);
 }

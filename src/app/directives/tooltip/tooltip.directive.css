@@ -1,45 +1,58 @@
-/* Tooltip dark theme. */
-.tippy-box[data-theme ~= 'tooltip-dark'] {
-  @apply bg-dark-800 border border-dark-600 !important;
+/* Define theme colors. */
+[data-theme="light"] {
+  --tooltip-border: rgb(22, 28, 34);
+  --tooltip-color: rgb(14, 18, 22);
+  --tooltip-text: rgb(232, 238, 244);
 }
-.tippy-box[data-theme ~= 'tooltip-dark'] > .tippy-content {
-  @apply text-dark-100 !important;
+[data-theme="dark"] {
+  --tooltip-border: rgb(144, 164, 184);
+  --tooltip-color: rgb(232, 238, 244);
+  --tooltip-text: rgb(22, 28, 34);
 }
-.tippy-box[data-theme ~= 'tooltip-dark'] > .tippy-arrow::before {
-  transform: scale(0.75);
-}
-.tippy-box[data-theme ~= 'tooltip-dark'][data-placement ^= top] > .tippy-arrow:before {
-  @apply border-t-dark-800;
-}
-.tippy-box[data-theme ~= 'tooltip-dark'][data-placement ^= bottom] > .tippy-arrow:before {
-  @apply border-b-dark-800;
-}
-.tippy-box[data-theme ~= 'tooltip-dark'][data-placement ^= left] > .tippy-arrow:before {
-  @apply border-l-dark-800;
-}
-.tippy-box[data-theme ~= 'tooltip-dark'][data-placement ^= right] > .tippy-arrow:before {
-  @apply border-r-dark-800;
+[data-theme='tooltip'] {
+  --input-border: rgb(144, 164, 184);
+  --input-color: rgb(22, 28, 34);
 }
 
-/* Tooltip light theme. */
-.tippy-box[data-theme ~= 'tooltip-lite'] {
-  @apply bg-dark-100 !important;
+/* Tooltip. */
+.tippy-box[data-theme='tooltip'] {
+  background-color: var(--tooltip-color);
 }
-.tippy-box[data-theme ~= 'tooltip-lite'] > .tippy-content {
-  @apply text-dark-800 !important;
-}
-.tippy-box[data-theme ~= 'tooltip-lite'] > .tippy-arrow::before {
+.tippy-box[data-theme='tooltip'] .tippy-arrow::before {
   transform: scale(0.75);
 }
-.tippy-box[data-theme ~= 'tooltip-lite'][data-placement ^= top] > .tippy-arrow:before {
-  @apply border-t-dark-100;
+.tippy-box[data-theme='tooltip'][data-placement^=top] .tippy-arrow:before {
+  border-top-color: var(--tooltip-color);
 }
-.tippy-box[data-theme ~= 'tooltip-lite'][data-placement ^= bottom] > .tippy-arrow:before {
-  @apply border-b-dark-100;
+.tippy-box[data-theme='tooltip'][data-placement^=bottom] .tippy-arrow:before {
+  border-bottom-color: var(--tooltip-color);
 }
-.tippy-box[data-theme ~= 'tooltip-lite'][data-placement ^= left] > .tippy-arrow:before {
-  @apply border-l-dark-100;
+.tippy-box[data-theme='tooltip'][data-placement^=left] .tippy-arrow:before {
+  border-left-color: var(--tooltip-color);
 }
-.tippy-box[data-theme ~= 'tooltip-lite'][data-placement ^= right] > .tippy-arrow:before {
-  @apply border-r-dark-100;
+.tippy-box[data-theme='tooltip'][data-placement^=right] .tippy-arrow:before {
+  border-right-color: var(--tooltip-color);
+}
+
+/* Tooltip text. */
+.tippy-box[data-theme='tooltip'] .tippy-content,
+.tippy-box[data-theme='tooltip'] .tippy-content p {
+  color: var(--tooltip-text);
+}
+
+/* Tooltip icons. */
+.tippy-box[data-theme='tooltip'] .tippy-content a {
+  background-color: var(--tooltip-text);
+}
+
+/* Tooltip input. */
+.tippy-box[data-theme='tooltip'] .tippy-content input[type="number"],
+.tippy-box[data-theme='tooltip'] .tippy-content input[type="text"],
+.tippy-box[data-theme='tooltip'] .tippy-content input[type="time"] {
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  color: var(--input-color);
+  height: 28px;
+  padding: 4px;
+  width: 80px;
 }

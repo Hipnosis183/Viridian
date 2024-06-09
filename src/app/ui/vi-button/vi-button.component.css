@@ -1,7 +1,27 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --button-border: rgb(144, 164, 184);
+  --button-color: rgb(192, 202, 212);
+  --button-color-dark: rgb(176, 186, 196);
+  --button-hover: rgb(176, 186, 196);
+  --button-hover-dark: rgb(160, 170, 180);
+  --button-icon: rgb(14, 18, 22);
+  --button-text: rgb(22, 28, 34);
+}
+[data-theme="dark"] :host {
+  --button-border: rgb(28, 36, 44);
+  --button-color: rgb(14, 18, 22);
+  --button-color-dark: rgb(8, 12, 16);
+  --button-hover: rgb(8, 12, 16);
+  --button-hover-dark: rgb(2, 6, 10);
+  --button-icon: rgb(232, 238, 244);
+  --button-text: rgb(232, 238, 244);
+}
+
 /* Button container. */
 .button-container {
   @apply cursor-pointer rounded;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 .button-container.disabled {
   @apply cursor-no-drop;
@@ -9,136 +29,104 @@
 .button-container.text {
   @apply flex items-center pl-1 pr-4;
 }
+.button-container > a {
+  @apply block h-9 w-9;
+  background-color: var(--button-icon);
+  transition: background-color 0.2s;
+}
 .button-container > div {
-  transition: color 0.2s ease-in-out;
-}
-.button-container > img {
-  @apply h-9;
+  transition: color 0.2s;
 }
 
-/* Button primary colors. */
-button.primary.default {
-  @apply bg-blue-600 hover:bg-blue-700 [&>div]:text-dark-100;
+/* Button default colors. */
+button {
+  background-color: var(--button-color);
+  border: 1px solid var(--button-border);
+  transition: background-color 0.2s, border-color 0.2s;
 }
-button.primary.default.active {
-  @apply bg-blue-700;
+button:hover,
+button.active {
+  background-color: var(--button-hover);
 }
-button.primary.default.bordered {
-  @apply border border-blue-800;
-}
-button.primary.outlined {
-  @apply border border-blue-600 hover:bg-blue-600 [&>div]:text-blue-600 [&>div]:hover:text-dark-100;
-}
-button.primary.outlined.active {
-  @apply bg-blue-600 [&>div]:hover:text-dark-100;
-}
-
-/* Button secondary colors. */
-button.secondary.default {
-  @apply bg-slate-600 hover:bg-slate-700 [&>div]:text-dark-100;
-}
-button.secondary.default.active {
-  @apply bg-slate-700;
-}
-button.secondary.default.bordered {
-  @apply border border-slate-800;
-}
-button.secondary.outlined {
-  @apply border border-slate-600 hover:bg-slate-600 [&>div]:text-slate-600 [&>div]:hover:text-dark-100;
-}
-button.secondary.outlined.active {
-  @apply bg-slate-600 [&>div]:text-dark-100;
-}
-
-/* Button success colors. */
-button.success.default {
-  @apply bg-green-600 hover:bg-green-700 [&>div]:text-dark-100;
-}
-button.success.default.active {
-  @apply bg-green-700;
-}
-button.success.default.bordered {
-  @apply border border-green-800;
-}
-button.success.outlined {
-  @apply border border-green-600 hover:bg-green-600 [&>div]:text-green-600 [&>div]:hover:text-dark-100;
-}
-button.success.outlined.active {
-  @apply bg-green-600 [&>div]:text-dark-100;
-}
-
-/* Button danger colors. */
-button.danger.default {
-  @apply bg-red-600 hover:bg-red-700 [&>div]:text-dark-100;
-}
-button.danger.default.active {
-  @apply bg-red-700;
-}
-button.danger.default.bordered {
-  @apply border border-red-800;
-}
-button.danger.outlined {
-  @apply border border-red-600 hover:bg-red-600 [&>div]:text-red-600 [&>div]:hover:text-dark-100;
-}
-button.danger.outlined.active {
-  @apply bg-red-600 [&>div]:text-dark-100;
-}
-
-/* Button warning colors. */
-button.warning.default {
-  @apply bg-amber-400 hover:bg-amber-500 [&>div]:text-dark-800;
-}
-button.warning.default.active {
-  @apply bg-amber-500;
-}
-button.warning.default.bordered {
-  @apply border border-amber-600;
-}
-button.warning.outlined {
-  @apply border border-amber-400 hover:bg-amber-400 [&>div]:text-amber-400 [&>div]:hover:text-dark-800;
-}
-button.warning.outlined.active {
-  @apply bg-amber-400 [&>div]:text-dark-800;
-}
-
-/* Button light colors. */
-button.light.default {
-  @apply bg-slate-100 hover:bg-slate-300 [&>div]:text-slate-900;
-}
-button.light.default.active {
-  @apply bg-slate-300;
-}
-button.light.default.bordered {
-  @apply border border-slate-400;
-}
-button.light.outlined {
-  @apply border border-slate-100 hover:bg-slate-100 [&>div]:text-dark-100 [&>div]:hover:text-slate-900;
-}
-button.light.outlined.active {
-  @apply bg-slate-100 [&>div]:text-slate-900;
-}
-
-/* Button dark colors. */
-button.dark.default {
-  @apply bg-dark-800 hover:bg-dark-900 [&>div]:text-dark-100;
-}
-button.dark.default.active {
-  @apply bg-dark-900;
-}
-button.dark.default.bordered {
-  @apply border border-dark-700;
-}
-button.dark.outlined {
-  @apply border border-dark-800 hover:bg-dark-800 [&>div]:text-dark-800 [&>div]:hover:text-dark-100;
-}
-button.dark.outlined.active {
-  @apply bg-dark-800 [&>div]:text-dark-100;
+button > div {
+  color: var(--button-text);
 }
 
 /* Button darker colors. */
-button.darker.default {
-  @apply bg-dark-900 hover:bg-dark-1000 [&>div]:text-dark-100;
+button.darker {
+  background-color: var(--button-color-dark);
 }
-button.darker.default.active {
-  @apply bg-dark-1000;
+button.darker:hover,
+button.darker.active {
+  background-color: var(--button-hover-dark);
+}
+
+/* Button primary colors. */
+button.primary {
+  @apply bg-blue-600 hover:bg-blue-700 border-none;
+}
+button.primary.active {
+  @apply bg-blue-700;
+}
+button.primary > a {
+  background-color: rgb(232, 238, 244);
+}
+button.primary > div {
+  color: rgb(232, 238, 244);
+}
+
+/* Button secondary colors. */
+button.secondary {
+  @apply bg-slate-600 hover:bg-slate-700 border-none;
+}
+button.secondary.active {
+  @apply bg-slate-700;
+}
+button.secondary > a {
+  background-color: rgb(232, 238, 244);
+}
+button.secondary > div {
+  color: rgb(232, 238, 244);
+}
+
+/* Button success colors. */
+button.success {
+  @apply bg-green-600 hover:bg-green-700 border-none;
+}
+button.success.active {
+  @apply bg-green-700;
+}
+button.success > a {
+  background-color: rgb(232, 238, 244);
+}
+button.success > div {
+  color: rgb(232, 238, 244);
+}
+
+/* Button danger colors. */
+button.danger {
+  @apply bg-red-600 hover:bg-red-700 border-none;
+}
+button.danger.active {
+  @apply bg-red-700;
+}
+button.danger > a {
+  background-color: rgb(232, 238, 244);
+}
+button.danger > div {
+  color: rgb(232, 238, 244);
+}
+
+/* Button warning colors. */
+button.warning {
+  @apply bg-amber-400 hover:bg-amber-500 border-none;
+}
+button.warning.active {
+  @apply bg-amber-500;
+}
+button.warning > a {
+  background-color: rgb(14, 18, 22);
+}
+button.warning > div {
+  color: rgb(14, 18, 22);
 }

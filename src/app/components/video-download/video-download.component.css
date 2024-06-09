@@ -1,3 +1,13 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --path-border: rgb(144, 164, 184);
+  --path-color: rgb(192, 202, 212);
+}
+[data-theme="dark"] :host {
+  --path-border: rgb(28, 36, 44);
+  --path-color: rgb(14, 18, 22);
+}
+
 /* General styling. */
 :host ::ng-deep button {
   @apply justify-center w-[132px] !important;
@@ -17,7 +27,9 @@
   @apply text-center;
 }
 .download-download span {
-  @apply bg-dark-800 px-2 py-1 rounded;
+  @apply px-2 py-1 rounded;
+  background-color: var(--path-color);
+  border: 1px solid var(--path-border);
 }
 
 /* Downloading FFmpeg dialog. */

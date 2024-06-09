@@ -1,0 +1,4 @@
+[
+  { "text": "Dark", "value": "dark", "color": "rgb(2, 6, 10)" },
+  { "text": "Light", "value": "light", "color": "rgb(232, 238, 244)" }
+]

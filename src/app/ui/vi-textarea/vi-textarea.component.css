@@ -1,5 +1,16 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --textarea-hover: rgb(192, 202, 212);
+}
+[data-theme="dark"] :host {
+  --textarea-hover: rgb(14, 18, 22);
+}
+
 /* Textarea element. */
 textarea {
-  @apply align-top bg-transparent hover:bg-dark-800 break-all overflow-hidden p-3 resize-none w-full;
-  transition: background-color 0.2s ease-in-out;
+  @apply align-top bg-transparent break-all overflow-hidden p-3 resize-none w-full;
+  transition: background-color 0.2s;
+}
+textarea:hover {
+  background-color: var(--textarea-hover);
 }

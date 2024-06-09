@@ -14,19 +14,57 @@
   src: url('./assets/fonts/Inter.ttf');
 }
 
+/* Define colors palette. */
+palette {
+  --: rgb(2, 6, 10);
+  --: rgb(4, 8, 12);
+  --: rgb(8, 12, 16);
+  --: rgb(14, 18, 22);
+  --: rgb(18, 24, 30);
+  --: rgb(22, 28, 34);
+  --: rgb(28, 36, 44);
+  --: rgb(36, 42, 48);
+  --: rgb(60, 68, 76);
+  --: rgb(86, 96, 106);
+  --: rgb(106, 116, 126);
+  --: rgb(126, 136, 146);
+  --: rgb(144, 164, 184);
+  --: rgb(160, 170, 180);
+  --: rgb(176, 186, 196);
+  --: rgb(192, 202, 212);
+  --: rgb(208, 218, 228);
+  --: rgb(222, 232, 242);
+  --: rgb(232, 238, 244);
+}
+
+/* Define theme colors. */
+[data-theme="light"] {
+  --color-body: rgb(222, 232, 242);
+  --color-font: rgb(22, 28, 34);
+  --color-scroll: rgb(160, 170, 180);
+}
+[data-theme="dark"] {
+  --color-body: rgb(22, 28, 34);
+  --color-font: rgb(232, 238, 244);
+  --color-scroll: rgb(36, 42, 48);
+}
+
 /* General styling. */
 *:focus {
   outline: none;
 }
 body {
-  @apply bg-dark-600;
+  background-color: var(--color-body);
   font-family: 'Inter';
+  transition: background-color 0.2s;
 }
 div, h1, p, span {
-  @apply text-dark-100;
+  color: var(--color-font);
+  transition: color 0.2s;
 }
 p, b {
-  @apply cursor-default whitespace-pre-wrap;
+  cursor: default;
+  white-space: pre-wrap;
 }
 
 /* Scrollbars styling. */
@@ -37,5 +75,6 @@ p, b {
   @apply bg-transparent !important;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-dark-400 bg-clip-content border-4 border-solid border-transparent rounded-full !important;
+  @apply bg-clip-content border-4 border-solid border-transparent rounded-full !important;
+  background-color: var(--color-scroll);
 }

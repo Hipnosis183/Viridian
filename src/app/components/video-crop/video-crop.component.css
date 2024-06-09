@@ -43,13 +43,6 @@
 .crop-canvas > div > div {
   @apply flex items-center space-x-2;
 }
-.crop-canvas > span {
-  @apply bg-dark-100 h-px px-2 w-full;
-}
-.crop-canvas input {
-  @apply p-0.5 pl-1 rounded text-dark-800 w-[80px];
-  border: solid 1px #ccc;
-}
 .crop-canvas p {
-  @apply text-dark-800 w-[14px] !important;
+  width: 14px;
 }

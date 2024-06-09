@@ -19,13 +19,11 @@
       <div>
         <span>
           <vi-button
-            [buttonColor]="'dark'"
             [buttonIcon]="'clear'"
             [buttonToggle]="filters.filterClear()"
             [buttonTooltip]="'VIDEO_PLAYER.CLEAR' | translate"
             (click)="filters.filterUpdateClear()" />
           <vi-button
-            [buttonColor]="'dark'"
             [buttonIcon]="'noaudio'"
             [buttonToggle]="filters.filterNoAudio()"
             [buttonTooltip]="'VIDEO_PLAYER.NO_AUDIO' | translate"
@@ -234,7 +232,6 @@
                 [(inputValue)]="filters.filterHeight"
                 (inputUpdated)="save.saveUpdateHeight($event)" />
               <vi-button
-                [buttonColor]="'dark'"
                 [buttonIcon]="save.saveSettings.saveLock() ? 'lock' : 'unlock'"
                 [buttonToggle]="!save.saveSettings.saveLock()"
                 (click)="save.saveUpdateLock()" />
@@ -344,7 +341,6 @@
                 [inputLabel]="'VIDEO_SAVE.PATH' | translate"
                 [(inputValue)]="save.saveInfo.saveOutput" />
               <vi-button
-                [buttonColor]="'dark'"
                 [buttonIcon]="'more'"
                 (click)="save.saveUpdateOutput()" />
             </div>
@@ -388,7 +384,7 @@
         @for (command of save.saveInfo.saveCommands(); track $index) {
           <div [style.borderLeftColor]="store.storeColors[$index][600]" (click)="save.saveCommandSelect($index)">
             <div
-              [class]="save.saveCommandIndex() == $index ? 'text-dark-100' : 'text-dark-200'"
+              [class.selected]="save.saveCommandIndex() == $index"
               [style.backgroundColor]="save.saveCommandIndex() == $index ? store.storeColors[$index][600] : ''">
               {{ command.full }}
             </div>
@@ -421,10 +417,10 @@
         <!-- Video saving results. -->
         <div>
           @if (save.saveErrorText()) {
-            <img [src]="'assets/images/save-error.svg'" />
+            <a [style.maskImage]="'url(assets/images/save-error.svg)'"></a>
             <p>{{ 'VIDEO_SAVE.SAVE.SAVE_ERROR' | translate }}</p>
           } @else {
-            <img [src]="'assets/images/save-done.svg'" />
+            <a [style.maskImage]="'url(assets/images/save-done.svg)'"></a>
             <p>{{ 'VIDEO_SAVE.SAVE.SAVE_OK' | translate }}</p>
           }
           <div [class]="'save-buttons'">

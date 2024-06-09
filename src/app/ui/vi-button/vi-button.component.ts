@@ -6,7 +6,6 @@ import { TooltipDirective } from '@app/directives';
 
 // Define types and interfaces.
 type ButtonColor = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'light' | 'dark' | 'darker' | '';
-type ButtonStyle = 'default' | 'outlined';
 
 @Component({
   selector: 'vi-button',
@@ -22,7 +21,6 @@ export class ViButton {
   public buttonDisabled = input<boolean>(false);
   public buttonIcon = input<string>('');
   public buttonIconClass = input<string>('');
-  public buttonStyle = input<ButtonStyle>('default');
   public buttonText = input<string>('');
   public buttonToggle = input<boolean>(false);
   public buttonTooltip = input<string>('');

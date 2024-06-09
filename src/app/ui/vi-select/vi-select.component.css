@@ -1,3 +1,19 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --select-border: rgb(144, 164, 184);
+  --select-color: rgb(176, 186, 196);
+  --select-icon: rgb(36, 42, 48);
+  --select-input: rgb(192, 202, 212);
+  --select-options: rgb(192, 202, 212);
+}
+[data-theme="dark"] :host {
+  --select-border: rgb(28, 36, 44);
+  --select-color: rgb(8, 12, 16);
+  --select-icon: rgb(232, 238, 244);
+  --select-input: rgb(14, 18, 22);
+  --select-options: rgb(8, 12, 16);
+}
+
 /* Select container. */
 :host {
   @apply relative w-full;
@@ -8,29 +24,36 @@
 
 /* Select label. */
 .select-container > label {
-  @apply flex mb-1 ml-1 text-[15px] text-dark-100;
+  @apply flex mb-1 ml-1 text-[15px];
 }
 
 /* Select input. */
 .select-input {
-  @apply hover:bg-dark-900 border cursor-pointer flex h-9 items-center relative w-full;
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+  @apply cursor-pointer flex h-9 items-center relative w-full;
+  background-color: var(--select-color);
+  border: 1px solid var(--select-border);
+  transition: background-color 0.2s, border-color 0.2s;
 }
 .select-input.closed {
-  @apply bg-dark-800 border-transparent rounded;
+  @apply rounded;
+  background-color: var(--select-input);
 }
 .select-input.opened {
-  @apply bg-dark-900 border-dark-500 rounded-t;
+  @apply rounded-t;
 }
 .select-input.inverted {
-  @apply bg-dark-900 border-dark-500 rounded-b;
+  @apply rounded-b;
+}
+.select-input:hover {
+  background-color: var(--select-color);
 }
 .select-input > input {
-  @apply bg-transparent pl-3 pr-8 pointer-events-none text-base text-dark-100 w-full;
+  @apply bg-transparent pl-3 pr-8 pointer-events-none text-base w-full;
 }
 .select-arrow {
-  @apply absolute border-t-[5px] border-t-dark-200 border-x-[5px] border-x-transparent pointer-events-none right-3;
-  transition: transform 0.2s;
+  @apply absolute border-x-[5px] border-x-transparent pointer-events-none right-3;
+  border-top: 5px solid var(--select-icon);
+  transition: border-color 0.2s, transform 0.2s;
 }
 .select-arrow.opened {
   @apply rotate-180;
@@ -38,7 +61,9 @@
 
 /* Select options. */
 .select-options {
-  @apply absolute bg-dark-900 border border-dark-500 overflow-hidden w-full z-50;
+  @apply absolute overflow-hidden w-full z-50;
+  background-color: var(--select-options);
+  border: 1px solid var(--select-border);
 }
 .select-options.inverted {
   @apply border-b-0 rounded-t;

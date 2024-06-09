@@ -3,7 +3,7 @@
   <vi-modal>
     <div [class]="'player-loading'">
       <div>
-        <vi-loading />
+        <vi-loading [loadingTheme]="'light'" />
         @if (store.storeFiles()[store.storeFiles().length - 1]) {
           <img [src]="store.storeFiles()[store.storeFiles().length - 1].fileThumb" />
         }
@@ -85,15 +85,15 @@
           [dropdown]="clipSplit" />
         <div #clipSplit>
           <div [class]="'player-split'">
-            <vi-input
-              [inputMax]="100"
-              [inputMin]="2"
-              [inputType]="'number'"
-              [(inputValue)]="segments.segmentsSplit" />
+            <input
+              [max]="100"
+              [min]="2"
+              [(ngModel)]="segments.segmentsSplit"
+              [type]="'number'" />
           </div>
-          <span (click)="segments.clipSplit(false)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: segments.segmentsSplit() } }}</span>
-          <div [class]="'separator'"></div>
-          <span (click)="segments.clipSplit(true)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</span>
+          <button (click)="segments.clipSplit(false)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: segments.segmentsSplit() } }}</button>
+          <span></span>
+          <button (click)="segments.clipSplit(true)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</button>
         </div>
         <div [class]="['player-separator', 'dark']"></div>
         <vi-button
@@ -114,9 +114,9 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
           [dropdown]="clipNavStart" />
         <div #clipNavStart>
-          <span (click)="segments.clipNavigate(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</span>
-          <div [class]="'separator'"></div>
-          <span (click)="segments.clipNavigate(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</span>
+          <button (click)="segments.clipNavigate(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</button>
+          <span></span>
+          <button (click)="segments.clipNavigate(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -125,9 +125,9 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
           [dropdown]="clipNavEnd" />
         <div #clipNavEnd>
-          <span (click)="segments.clipNavigate(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</span>
-          <div [class]="'separator'"></div>
-          <span (click)="segments.clipNavigate(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</span>
+          <button (click)="segments.clipNavigate(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</button>
+          <span></span>
+          <button (click)="segments.clipNavigate(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -135,9 +135,9 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate"
           [dropdown]="clipSnapStart" />
         <div #clipSnapStart>
-          <span (click)="segments.clipSnap(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</span>
-          <div [class]="'separator'"></div>
-          <span (click)="segments.clipSnap(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</span>
+          <button (click)="segments.clipSnap(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</button>
+          <span></span>
+          <button (click)="segments.clipSnap(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -146,9 +146,9 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate"
           [dropdown]="clipSnapEnd" />
         <div #clipSnapEnd>
-          <span (click)="segments.clipSnap(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</span>
-          <div [class]="'separator'"></div>
-          <span (click)="segments.clipSnap(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</span>
+          <button (click)="segments.clipSnap(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</button>
+          <span></span>
+          <button (click)="segments.clipSnap(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</button>
         </div>
       </div>
     </div>
@@ -156,12 +156,12 @@
       <!-- Video player open/add files. -->
       <div [class]="['player-open', 'group', recent.recentFiles().length && settings.options.general.recentFiles() ? 'w-1/2' : 'w-full']">
         <div [class]="load.filesLoadState() == 'loading' ? 'hidden' : 'flex'">
-          <img [src]="'assets/images/open-file.svg'" />
+          <a [style.maskImage]="'url(assets/images/open-file.svg)'"></a>
           @if (!recent.recentFiles().length || !settings.options.general.recentFiles()) {
             <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
             <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
           }
-          <span [class]="'group-hover:bg-dark-800/20'"></span>
+          <span [class]="'group-hover:bg-[var(--open-hover)]'"></span>
         </div>
         <!-- Open/drag and drop input. -->
         <input
@@ -183,30 +183,25 @@
   <div [class]="'player-buttons'">
     <div>
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="(!store.storePlayer.playerVideo()[store.storeIndex()] || store.storePlayer.playerVideo()[store.storeIndex()].paused) || store.storePlayer.playerVideo()[store.storeIndex()]?.ended ? 'play' : 'pause'"
         [buttonToggle]="store.storePlayer.playerVideo()[store.storeIndex()] && !store.storePlayer.playerVideo()[store.storeIndex()].paused"
         [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate"
         (click)="player.playerPlayback()" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'stop'"
         [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate"
         (click)="player.playerStop()" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="store.storePlayer.playerVideo()[store.storeIndex()]?.muted || !store.storePlayer.playerVideo()[store.storeIndex()]?.volume ? 'mute' : 'volume'"
-        [tooltip]="playerVolume"
-        [tooltipDelay]="[0, 0]"
-        [tooltipKeep]="true"
-        [tooltipOffset]="[-3, 10]"
-        [tooltipPlace]="'right'"
+        [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate"
         (click)="player.playerMute()" />
       <!-- Video player volume control. -->
-      <div #playerVolume>
+      <div [class]="'player-volume'">
         @if (store.storePlayer.playerVideo()[store.storeIndex()]) {
           <vi-slider
+            [sliderTooltip]="((store.storePlayer.playerVideo()[store.storeIndex()].volume * 100) | numberInput) + '%'"
             [sliderValue]="store.storePlayer.playerVideo()[store.storeIndex()].volume * 100"
+            [sliderWidth]="'100px'"
             (sliderValueChange)="player.playerVolume($event / 100)" />
         }
       </div>
@@ -214,65 +209,54 @@
     </div>
     <div>
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'settings'"
         [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate"
         [class]="'pointer-events-auto'"
         (click)="settings.settingsUpdateOpen()" />
       <div [class]="'player-separator'"></div>
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'capture'"
         [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate"
         (click)="capture.captureUpdateOpen()" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'segments'"
         [buttonToggle]="segments.segmentsOpen()"
         [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate"
         (click)="segments.segmentsUpdateOpen()" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'list'"
         [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate"
         (click)="info.infoUpdateOpen()" />
       <div [class]="'player-separator'"></div>
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'rotate'"
         [buttonIconClass]="'-scale-x-100'"
         [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate"
         (click)="player.playerFilterRotate(false)" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'rotate'"
         [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate"
         (click)="player.playerFilterRotate(true)" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'flip'"
         [buttonIconClass]="'rotate-90'"
         [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate"
         (click)="player.playerFilterFlip(true)" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'flip'"
         [buttonTooltip]="'VIDEO_PLAYER.FLIP_H' | translate"
         (click)="player.playerFilterFlip(false)" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'crop'"
         [buttonToggle]="filters.filterCrop()"
         [buttonTooltip]="'VIDEO_PLAYER.CROP' | translate"
         (click)="player.playerFilterCrop()" />
       <div [class]="'player-separator'"></div>
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'done'"
         [buttonTooltip]="'VIDEO_PLAYER.DONE' | translate"
         (click)="save.saveUpdateOpen()" />
       <vi-button
-        [buttonColor]="'dark'"
         [buttonIcon]="'close'"
         [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate"
         (click)="load.filesClose()" />
