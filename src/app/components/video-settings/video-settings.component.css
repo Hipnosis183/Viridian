@@ -15,6 +15,14 @@
   --options-border: rgb(36, 42, 48);
   --title-border: rgb(160, 170, 180);
 }
+[data-theme="slate"] :host {
+  --category-border: rgb(36, 40, 58);
+  --category-color: rgb(14, 16, 26);
+  --category-hover: rgb(18, 22, 36);
+  --category-icon: rgb(232, 238, 244);
+  --options-border: rgb(60, 66, 84);
+  --title-border: rgb(160, 170, 180);
+}
 
 /* Settings container. */
 .settings-container {

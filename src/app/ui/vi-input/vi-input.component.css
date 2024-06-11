@@ -9,7 +9,13 @@
   --input-border: rgb(28, 36, 44);
   --input-color: rgb(14, 18, 22);
   --input-hover: rgb(8, 12, 16);
-  --input-icon: rgb(126, 136, 146);
+  --input-icon: rgb(232, 238, 244);
+}
+[data-theme="slate"] :host {
+  --input-border: rgb(36, 40, 58);
+  --input-color: rgb(22, 26, 40);
+  --input-hover: rgb(14, 16, 26);
+  --input-icon: rgb(232, 238, 244);
 }
 
 /* Input container. */

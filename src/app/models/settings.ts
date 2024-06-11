@@ -5,7 +5,7 @@ import { WritableSignal } from '@angular/core';
 export type SettingsCategories = 'FFMPEG' | 'GENERAL';
 
 // Settings themes.
-export type SettingsThemes = 'light' | 'dark';
+export type SettingsThemes = 'light' | 'dark' | 'slate';
 
 // Settings options.
 export interface SettingsOptions {

@@ -5,6 +5,9 @@
 [data-theme="dark"] :host {
   --option-text: rgb(126, 136, 146);
 }
+[data-theme="slate"] :host {
+  --option-text: rgb(126, 136, 156);
+}
 
 /* Option group label. */
 .option-group-label {

@@ -5,6 +5,9 @@
 [data-theme="dark"] :host {
   --textarea-hover: rgb(14, 18, 22);
 }
+[data-theme="slate"] :host {
+  --textarea-hover: rgb(18, 22, 36);
+}
 
 /* Textarea element. */
 textarea {

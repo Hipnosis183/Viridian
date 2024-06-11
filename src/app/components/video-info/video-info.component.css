@@ -17,6 +17,15 @@
   --track-color: rgb(18, 24, 30);
   --track-hover: rgb(14, 18, 22);
 }
+[data-theme="slate"] :host {
+  --close-icon: rgb(232, 238, 244);
+  --data-color: rgb(14, 16, 26);
+  --data-key: rgb(34, 198, 94);
+  --data-value: rgb(60, 130, 246);
+  --track-border: rgb(60, 66, 84);
+  --track-color: rgb(22, 26, 40);
+  --track-hover: rgb(18, 22, 36);
+}
 
 /* Video file streams. */
 .info-streams {

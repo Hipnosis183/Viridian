@@ -9,6 +9,11 @@
   --checkbox-color: rgb(8, 12, 16);
   --checkbox-fill: rgb(222, 232, 242);
 }
+[data-theme="slate"] :host {
+  --checkbox-border: rgb(36, 40, 58);
+  --checkbox-color: rgb(14, 16, 26);
+  --checkbox-fill: rgb(222, 232, 242);
+}
 
 /* Checkbox container. */
 .checkbox-container {

@@ -1,4 +1,5 @@
 [
+  { "text": "Light", "value": "light", "color": "rgb(232, 238, 244)" },
   { "text": "Dark", "value": "dark", "color": "rgb(2, 6, 10)" },
-  { "text": "Light", "value": "light", "color": "rgb(232, 238, 244)" }
+  { "text": "Slate", "value": "slate", "color": "rgb(28, 34, 52)" }
 ]

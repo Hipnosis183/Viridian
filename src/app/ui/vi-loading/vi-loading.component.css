@@ -2,7 +2,8 @@
 [data-theme="light"] :host {
   --loading-color: rgb(22, 28, 34);
 }
-[data-theme="dark"] :host {
+[data-theme="dark"] :host,
+[data-theme="slate"] :host {
   --loading-color: rgb(232, 238, 244);
 }
 

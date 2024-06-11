@@ -7,6 +7,10 @@
   --modal-border: rgb(36, 42, 48);
   --modal-color: rgb(22, 28, 34);
 }
+[data-theme="slate"] :host {
+  --modal-border: rgb(36, 40, 58);
+  --modal-color: rgb(28, 36, 52);
+}
 
 /* Modal container. */
 :host {

@@ -5,6 +5,9 @@
 [data-theme="dark"] :host {
   --list-color: rgb(4, 8, 12);
 }
+[data-theme="slate"] :host {
+  --list-color: rgb(14, 16, 26);
+}
 
 /* Video clips list. */
 :host {

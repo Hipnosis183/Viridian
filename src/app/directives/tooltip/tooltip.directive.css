@@ -4,7 +4,8 @@
   --tooltip-color: rgb(14, 18, 22);
   --tooltip-text: rgb(232, 238, 244);
 }
-[data-theme="dark"] {
+[data-theme="dark"],
+[data-theme="slate"] {
   --tooltip-border: rgb(144, 164, 184);
   --tooltip-color: rgb(232, 238, 244);
   --tooltip-text: rgb(22, 28, 34);

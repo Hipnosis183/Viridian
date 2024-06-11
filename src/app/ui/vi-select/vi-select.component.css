@@ -13,6 +13,13 @@
   --select-input: rgb(14, 18, 22);
   --select-options: rgb(8, 12, 16);
 }
+[data-theme="slate"] :host {
+  --select-border: rgb(36, 40, 58);
+  --select-color: rgb(14, 16, 26);
+  --select-icon: rgb(232, 238, 244);
+  --select-input: rgb(22, 26, 40);
+  --select-options: rgb(14, 16, 26);
+}
 
 /* Select container. */
 :host {

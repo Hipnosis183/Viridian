@@ -13,6 +13,13 @@
   --container-title: rgb(18, 24, 30);
   --buttons-color: rgb(14, 18, 22);
 }
+[data-theme="slate"] :host {
+  --file-color: rgb(18, 22, 36);
+  --container-border: rgb(36, 40, 58);
+  --container-color: rgb(14, 16, 26);
+  --container-title: rgb(22, 26, 40);
+  --buttons-color: rgb(18, 22, 36);
+}
 :host {
   --clips-text: rgb(232, 238, 244);
 }

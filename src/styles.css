@@ -16,6 +16,7 @@
 
 /* Define colors palette. */
 palette {
+  /* Light/dark. */
   --: rgb(2, 6, 10);
   --: rgb(4, 8, 12);
   --: rgb(8, 12, 16);
@@ -35,6 +36,16 @@ palette {
   --: rgb(208, 218, 228);
   --: rgb(222, 232, 242);
   --: rgb(232, 238, 244);
+  /* Slate. */
+  --: rgb(8, 10, 20);
+  --: rgb(14, 16, 26);
+  --: rgb(18, 22, 36);
+  --: rgb(22, 26, 40);
+  --: rgb(28, 36, 52);
+  --: rgb(36, 40, 58);
+  --: rgb(60, 66, 84);
+  --: rgb(86, 96, 116);
+  --: rgb(126, 136, 156);
 }
 
 /* Define theme colors. */
@@ -47,6 +58,11 @@ palette {
   --color-body: rgb(22, 28, 34);
   --color-font: rgb(232, 238, 244);
   --color-scroll: rgb(36, 42, 48);
+}
+[data-theme="slate"] {
+  --color-body: rgb(28, 36, 52);
+  --color-font: rgb(232, 238, 244);
+  --color-scroll: rgb(36, 40, 58);
 }
 
 /* General styling. */

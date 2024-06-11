@@ -21,6 +21,17 @@
   --separator-dark: rgb(28, 36, 44);
   --volume-color: rgb(22, 28, 34);
 }
+[data-theme="slate"] :host {
+  --edit-border: rgb(36, 40, 58);
+  --extra-color: rgb(18, 22, 36);
+  --open-color: rgb(8, 10, 20);
+  --open-border: rgb(36, 40, 58);
+  --open-hover: rgb(18, 22, 36, 0.3);
+  --open-text: rgb(86, 96, 116);
+  --separator-color: rgb(60, 66, 84);
+  --separator-dark: rgb(36, 40, 58);
+  --volume-color: rgb(28, 36, 52);
+}
 :host {
   --edit-color: rgb(0, 0, 0);
   --loading-color: rgb(8, 12, 16);

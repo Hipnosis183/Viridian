@@ -1,13 +1,18 @@
 /* Define theme colors. */
 [data-theme="light"] :host {
-  --slider-color: rgb(192, 202, 212);
   --slider-border: rgb(144, 164, 184);
+  --slider-color: rgb(192, 202, 212);
   --slider-fill: rgb(160, 170, 180);
 }
 [data-theme="dark"] :host {
-  --slider-color: rgb(14, 18, 22);
   --slider-border: rgb(28, 36, 44);
+  --slider-color: rgb(14, 18, 22);
   --slider-fill: rgb(8, 12, 16);
+}
+[data-theme="slate"] :host {
+  --slider-border: rgb(36, 40, 58);
+  --slider-color: rgb(18, 22, 36);
+  --slider-fill: rgb(14, 16, 26);
 }
 :host {
   --slider-thumb: rgb(232, 238, 244);

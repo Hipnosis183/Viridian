@@ -17,6 +17,15 @@
   --button-icon: rgb(232, 238, 244);
   --button-text: rgb(232, 238, 244);
 }
+[data-theme="slate"] :host {
+  --button-border: rgb(36, 40, 58);
+  --button-color: rgb(18, 22, 36);
+  --button-color-dark: rgb(14, 16, 26);
+  --button-hover: rgb(14, 16, 26);
+  --button-hover-dark: rgb(8, 10, 20);
+  --button-icon: rgb(232, 238, 244);
+  --button-text: rgb(232, 238, 244);
+}
 
 /* Button container. */
 .button-container {

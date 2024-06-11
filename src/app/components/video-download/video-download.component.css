@@ -7,6 +7,10 @@
   --path-border: rgb(28, 36, 44);
   --path-color: rgb(14, 18, 22);
 }
+[data-theme="slate"] :host {
+  --path-border: rgb(36, 40, 58);
+  --path-color: rgb(18, 22, 36);
+}
 
 /* General styling. */
 :host ::ng-deep button {

@@ -15,6 +15,14 @@
   --recent-border: rgb(86, 96, 106);
   --recent-color: rgb(2, 6, 10);
 }
+[data-theme="slate"] :host {
+  --close-border: rgb(36, 40, 58);
+  --close-hover: rgb(22, 26, 40);
+  --list-border: rgb(22, 26, 40);
+  --list-hover: rgb(14, 16, 26);
+  --recent-border: rgb(86, 96, 116);
+  --recent-color: rgb(8, 10, 20);
+}
 :host {
   --close-color: rgb(86, 96, 106);
 }

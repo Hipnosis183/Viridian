@@ -9,6 +9,11 @@
   --groupbox-color: rgb(22, 28, 34);
   --groupbox-text: rgb(126, 136, 146);
 }
+[data-theme="slate"] :host {
+  --groupbox-border: rgb(60, 66, 84);
+  --groupbox-color: rgb(28, 36, 52);
+  --groupbox-text: rgb(126, 136, 156);
+}
 
 /* Groupbox container. */
 .groupbox-container {

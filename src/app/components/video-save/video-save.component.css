@@ -25,6 +25,19 @@
   --title-active: rgb(232, 238, 244);
   --title-color: rgb(126, 136, 146);
 }
+[data-theme="slate"] :host {
+  --command-border: rgb(22, 26, 40);
+  --command-color: rgb(18, 22, 36);
+  --commands-border: rgb(36, 40, 58);
+  --commands-color: rgb(14, 16, 26);
+  --saving-icon: rgb(232, 238, 244);
+  --separator-color: rgb(60, 66, 84);
+  --status-lossless: rgb(34, 198, 94);
+  --status-lossy: rgb(240, 68, 68);
+  --status-mixed: rgb(250, 204, 22);
+  --title-active: rgb(232, 238, 244);
+  --title-color: rgb(126, 136, 156);
+}
 
 /* Video save container. */
 .save-container {

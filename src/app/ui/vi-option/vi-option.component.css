@@ -5,6 +5,9 @@
 [data-theme="dark"] :host {
   --option-color: rgb(14, 18, 22);
 }
+[data-theme="slate"] :host {
+  --option-color: rgb(22, 26, 40);
+}
 
 /* Option container. */
 .option-container {
