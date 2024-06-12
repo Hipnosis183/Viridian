@@ -63,6 +63,8 @@ export class LoadService {
   private async filesLoadVideo(fileInfo: File | Partial<File>): Promise<void> {
     // Check if opened file is a valid video file.
     if (fileInfo.type!.indexOf('video') == -1) { return; }
+    // Check if file is already opened.
+    if (this.store.storeFiles().find((v) => v.filePath == fileInfo.path)) { return; }
     // Manage opened file in recent files list.
     if (!this.store.storeFiles().length) { this.recent.recentFileAdd(fileInfo); }
     // Update file load state to loading.
