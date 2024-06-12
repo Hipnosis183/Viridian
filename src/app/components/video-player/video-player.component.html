@@ -48,7 +48,7 @@
         @for (file of store.storeFiles(); track file) {
           <video
             [hidden]="load.filesLoadState() == 'loading' || $index != store.storeIndex()"
-            [muted]="true"
+            [muted]="false"
             [src]="'file://' + file.filePath"
             (loadedmetadata)="load.filesLoaded($event)"
             (timeupdate)="null"></video>
@@ -192,7 +192,7 @@
         [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate"
         (click)="player.playerStop()" />
       <vi-button
-        [buttonIcon]="store.storePlayer.playerVideo()[store.storeIndex()]?.muted || !store.storePlayer.playerVideo()[store.storeIndex()]?.volume ? 'mute' : 'volume'"
+        [buttonIcon]="store.storePlayer.playerVideo().length ? store.storePlayer.playerVideo()[store.storeIndex()].muted || !store.storePlayer.playerVideo()[store.storeIndex()].volume ? 'mute' : 'volume' : 'volume'"
         [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate"
         (click)="player.playerMute()" />
       <!-- Video player volume control. -->

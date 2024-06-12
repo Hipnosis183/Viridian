@@ -191,6 +191,9 @@ export class LoadService {
 
   // Manage remaining elements after video file load.
   public async filesLoaded(fileLoaded: Event): Promise<void> {
+    // Update video player state.
+    (fileLoaded.target as HTMLVideoElement).muted = JSON.parse(localStorage.getItem('player.muted') || 'false');
+    (fileLoaded.target as HTMLVideoElement).volume = JSON.parse(localStorage.getItem('player.volume') || '1');
     // Add video element to list.
     this.store.storePlayer.playerVideo.update((v) => [...v, fileLoaded.target as HTMLVideoElement]);
     // Update video index with newly opened file.

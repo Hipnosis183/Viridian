@@ -37,12 +37,19 @@ export class PlayerService {
 
   // Set player volume level state.
   public playerVolume(playerVolume: number): void {
-    this.store.storePlayer.playerVideo()[this.store.storeIndex()].volume = playerVolume;
+    // Update volume level state on all opened videos.
+    for (let video of this.store.storePlayer.playerVideo()) { video.volume = playerVolume; }
+    // Persist volume level state in settings.
+    localStorage.setItem('player.volume', playerVolume.toString());
   };
 
   // Toggle player muted state.
   public playerMute(): void {
-    this.store.storePlayer.playerVideo()[this.store.storeIndex()].muted = !this.store.storePlayer.playerVideo()[this.store.storeIndex()].muted;
+    // Update muted state on all opened videos.
+    const playerMuted: boolean = !this.store.storePlayer.playerVideo()[this.store.storeIndex()].muted;
+    for (let video of this.store.storePlayer.playerVideo()) { video.muted = playerMuted; }
+    // Persist muted state in settings.
+    localStorage.setItem('player.muted', playerMuted.toString());
   };
 
   // Update player time by single frames.
