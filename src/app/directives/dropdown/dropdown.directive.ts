@@ -28,6 +28,7 @@ export class DropdownDirective {
     // Create Tippy instance.
     tippy(this.elementRef.nativeElement, {
       animation: 'fade',
+      appendTo: () => document.body,
       content: this.dropdown(),
       delay: this.dropdownHover() ? this.dropdownDelay() : 0,
       duration: [200, 200],

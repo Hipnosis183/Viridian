@@ -16,9 +16,23 @@ export class RecentService {
   public recentOpen = signal<boolean>(false);
 
   // Clear recent files list.
-  public recentClear(): void {
+  public recentClearAll(): void {
     this.recentFiles.set([]);
     localStorage.setItem('app.recentFiles', '[]');
+  };
+
+  // Clear deleted files from recent list.
+  public async recentClearDeleted(): Promise<void> {
+    const recentFiles: Partial<File>[] = [];
+    // Check if selected recent file still exists.
+    for (let file of this.recentFiles()) {
+      if (await this.ipc.invoke('file-exists', file.path)) {
+        recentFiles.push(file);
+      }
+    }
+    // Update recent files list state.
+    this.recentFiles.set(recentFiles);
+    localStorage.setItem('app.recentFiles', JSON.stringify(recentFiles));
   };
 
   // Add opened file to recent files list.

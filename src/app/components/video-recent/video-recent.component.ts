@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { LoadService, RecentService, SettingsService } from '@app/services';
+import { DropdownDirective } from '@app/directives';
 
 // Import UI components.
 import { ViButton, ViModal } from '@app/ui';
@@ -14,7 +15,7 @@ import { ViButton, ViModal } from '@app/ui';
   styleUrl: './video-recent.component.css',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslateModule, ViButton, ViModal],
+  imports: [TranslateModule, DropdownDirective, ViButton, ViModal],
 })
 export class VideoRecentComponent {
   // Inject app services.

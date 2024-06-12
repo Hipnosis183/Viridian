@@ -18,11 +18,21 @@
     <div>
       <h1>{{ 'VIDEO_PLAYER.RECENT' | translate }}</h1>
       <!-- Clear recent files list. -->
-      <vi-button
-        [buttonIcon]="'close'"
-        [buttonIconClass]="'!h-6 my-0.5 !w-6'"
-        [buttonText]="'GENERAL.CLEAR' | translate"
-        (click)="recent.recentClear()" />
+      <div [class]="'recent-clear'">
+        <vi-button
+          [buttonIcon]="'close'"
+          [buttonIconClass]="'!h-6 my-0.5 !w-6'"
+          [buttonText]="'GENERAL.CLEAR' | translate"
+          (click)="recent.recentClearAll()" />
+        <vi-button [dropdown]="clipSplit" [dropdownOffset]="[0, 8]" [dropdownPlace]="'bottom-end'">
+          <div [class]="'recent-arrow'"></div>
+        </vi-button>
+      </div>
+      <div #clipSplit>
+        <button (click)="recent.recentClearAll()">{{ 'VIDEO_RECENT.CLEAR_ALL' | translate }}</button>
+        <span></span>
+        <button (click)="recent.recentClearDeleted()">{{ 'VIDEO_RECENT.CLEAR_DELETED' | translate }}</button>
+      </div>
       <!-- Recent files list. -->
       <div [class]="'recent-list'">
         @for (file of recent.recentFiles(); track file) {

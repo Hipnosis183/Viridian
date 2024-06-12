@@ -6,6 +6,7 @@
   --list-hover: rgb(192, 202, 212);
   --recent-border: rgb(144, 164, 184);
   --recent-color: rgb(208, 218, 228);
+  --recent-icon: rgb(86, 96, 106);
 }
 [data-theme="dark"] :host {
   --close-border: rgb(36, 42, 48);
@@ -14,6 +15,7 @@
   --list-hover: rgb(8, 12, 16);
   --recent-border: rgb(86, 96, 106);
   --recent-color: rgb(2, 6, 10);
+  --recent-icon: rgb(208, 218, 228);
 }
 [data-theme="slate"] :host {
   --close-border: rgb(36, 40, 58);
@@ -22,6 +24,7 @@
   --list-hover: rgb(14, 16, 26);
   --recent-border: rgb(86, 96, 116);
   --recent-color: rgb(8, 10, 20);
+  --recent-icon: rgb(208, 218, 228);
 }
 :host {
   --close-color: rgb(86, 96, 106);
@@ -44,8 +47,24 @@
   border-bottom: 1px solid var(--recent-border);
   transition: border-color 0.2s;
 }
-.recent-container > div > vi-button {
-  @apply absolute right-7 rounded -top-1;
+
+/* Clear recent files list. */
+.recent-clear {
+  @apply absolute flex right-7 -top-1;
+}
+:host ::ng-deep .recent-clear > vi-button:first-child > button {
+  @apply rounded-r-none;
+}
+:host ::ng-deep .recent-clear > vi-button:last-child > button {
+  border-left: none;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  padding: 12px 9px 11px 9px;
+}
+.recent-arrow {
+  @apply border-x-[5px] border-x-transparent;
+  border-top: 5px solid var(--recent-icon);
+  transition: border-color 0.2s;
 }
 
 /* Recent files list. */

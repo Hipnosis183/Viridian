@@ -48,6 +48,10 @@
     "SPLIT_MERGE": "Split | Merge",
     "STOP": "Stop"
   },
+  "VIDEO_RECENT": {
+    "CLEAR_ALL": "Clear All",
+    "CLEAR_DELETED": "Clear Deleted"
+  },
   "VIDEO_SAVE": {
     "CLIP_CUT": "Cut Mode",
     "CLIP_CONCAT": "Concatenation Mode",
