@@ -100,7 +100,7 @@
 
 /* Video player extra controls. */
 .player-extra {
-  @apply absolute bottom-[-51px] h-[50px] justify-end pt-[5px] px-[15px] w-[calc(100%+2px)];
+  @apply absolute bottom-[-51px] h-[50px] justify-end pt-[5px] pl-[17px] pr-[16px] w-[calc(100%+2px)];
   background-color: var(--extra-color);
   border-bottom: 1px solid var(--edit-border);
   transition: background-color 0.2s, border-color 0.2s;

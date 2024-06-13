@@ -167,6 +167,7 @@
       "PREV": "Previous Frame",
       "NEXT": "Next Frame"
     },
+    "PLAY_CLIP": "Play Current Clip",
     "SEGMENT_ADD": {
       "": "Add Files/Clip...",
       "CLIP": "Add Clip",

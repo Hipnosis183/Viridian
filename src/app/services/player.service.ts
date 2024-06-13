@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { CropCoordinate, HTMLTarget, PlayerFlip } from '@app/models/general';
+import { FileInfo } from '@app/models/store';
 import { FiltersService, StoreService } from '@app/services';
 
 @Injectable({
@@ -50,6 +51,16 @@ export class PlayerService {
     for (let video of this.store.storePlayer.playerVideo()) { video.muted = playerMuted; }
     // Persist muted state in settings.
     localStorage.setItem('player.muted', playerMuted.toString());
+  };
+
+  // Play currently selected clip.
+  public playerPlayCurrent(): void {
+    const videoFile: FileInfo = this.store.storeFiles()[this.store.storeIndex()];
+    const videoPlayer: HTMLVideoElement = this.store.storePlayer.playerVideo()[this.store.storeIndex()];
+    // Set clip start time as the current time.
+    videoPlayer.currentTime = videoFile.fileClips()[videoFile.fileClipIndex()].clipStart() / this.store.storeVideos()[this.store.storeIndex()].videoFrameRate;
+    // Start video playback.
+    videoPlayer.play();
   };
 
   // Update player time by single frames.

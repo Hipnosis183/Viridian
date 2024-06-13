@@ -24,11 +24,11 @@
           [buttonIconClass]="'!h-6 my-0.5 !w-6'"
           [buttonText]="'GENERAL.CLEAR' | translate"
           (click)="recent.recentClearAll()" />
-        <vi-button [dropdown]="clipSplit" [dropdownOffset]="[0, 8]" [dropdownPlace]="'bottom-end'">
+        <vi-button [dropdown]="recentClear" [dropdownOffset]="[0, 8]" [dropdownPlace]="'bottom-end'">
           <div [class]="'recent-arrow'"></div>
         </vi-button>
       </div>
-      <div #clipSplit>
+      <div #recentClear>
         <button (click)="recent.recentClearAll()">{{ 'VIDEO_RECENT.CLEAR_ALL' | translate }}</button>
         <span></span>
         <button (click)="recent.recentClearDeleted()">{{ 'VIDEO_RECENT.CLEAR_DELETED' | translate }}</button>

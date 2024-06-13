@@ -63,6 +63,11 @@
       <div [class]="'flex'">
         <vi-button
           [buttonColor]="'darker'"
+          [buttonIcon]="'play'"
+          [buttonTooltip]="'VIDEO_SEGMENTS.PLAY_CLIP' | translate"
+          (click)="player.playerPlayCurrent()" />
+        <vi-button
+          [buttonColor]="'darker'"
           [buttonIcon]="'next'"
           [buttonIconClass]="'-scale-x-100'"
           [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate"
