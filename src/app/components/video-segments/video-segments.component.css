@@ -22,6 +22,7 @@
 }
 :host {
   --clips-text: rgb(232, 238, 244);
+  --file-selected: rgb(240, 68, 68);
 }
 
 /* Video segments container. */
@@ -52,8 +53,18 @@
 .segments-file.selected {
   background-color: var(--file-color);
 }
+.segments-file.selected > div:first-child {
+  margin-right: 16px;
+}
 .segments-file > div:first-child {
-  @apply flex items-center overflow-hidden pointer-events-none space-x-2 [&>*]:whitespace-nowrap;
+  @apply flex items-center overflow-hidden space-x-2 [&>*:not(div)]:pointer-events-none [&>*]:whitespace-nowrap;
+}
+.segments-file > div:first-child > div {
+  @apply absolute p-2 pr-0 right-4;
+}
+.segments-file > div:first-child > div > span {
+  @apply block h-2 rounded-full w-2;
+  background-color: var(--file-selected);
 }
 .segments-file > div:last-child {
   @apply flex pointer-events-none space-x-4;

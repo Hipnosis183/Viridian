@@ -8,9 +8,12 @@
         <!-- Video file information. -->
         @if (info.videoStreams.length) {
           <div [class]="'segments-file'" [class.selected]="i == store.storeIndex()" (click)="segments.fileIndex(i)">
-            <div>
+            <div [title]="store.storeFiles()[i].fileName">
               <b>{{ i + 1 }} |</b>
               <p>{{ store.storeFiles()[i].fileName }}</p>
+              <div [hidden]="i != store.storeIndex()" [title]="'GENERAL.SELECTED' | translate">
+                <span></span>
+              </div>
             </div>
             <div>
               <img [src]="store.storeFiles()[i].fileThumb"/>

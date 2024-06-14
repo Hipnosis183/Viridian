@@ -7,7 +7,8 @@
     "DEFAULT": "Default",
     "DELETE": "Delete",
     "OK": "Ok",
-    "REMOVE": "Remove"
+    "REMOVE": "Remove",
+    "SELECTED": "Selected"
   },
   "VIDEO_DOWNLOAD": {
     "DOWNLOAD": "Download FFmpeg binaries?\n\nFFmpeg will be installed in",
