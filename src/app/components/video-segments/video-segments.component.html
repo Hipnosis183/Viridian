@@ -60,15 +60,20 @@
         <!-- Video file add/reset clip. -->
         <div [class]="'segments-extra'">
           <div
+            [title]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIPS' | translate"
+            (click)="segments.clipReset(i)">
+            <a [style.maskImage]="'url(assets/images/rotate.svg)'"></a>
+          </div>
+          <div
             [style.width]="'100%'"
             [title]="'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate"
             (click)="segments.clipAdd(undefined, undefined, i)">
             <a [style.maskImage]="'url(assets/images/add.svg)'"></a>
           </div>
           <div
-            [title]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIPS' | translate"
-            (click)="segments.clipReset(i)">
-            <a [style.maskImage]="'url(assets/images/rotate.svg)'"></a>
+            [title]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.FILE' | translate"
+            (click)="fileRemove(i)">
+            <a [style.maskImage]="'url(assets/images/close.svg)'"></a>
           </div>
         </div>
       </div>

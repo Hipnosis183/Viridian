@@ -29,10 +29,10 @@ export class VideoSegmentsComponent {
   public store = inject(StoreService);
 
   // Remove currently selected video file from the list.
-  public fileRemove(): void {
+  public fileRemove(fileIndex?: number): void {
     // Close entire set of files if only one is currently open.
     if (this.store.storeFiles().length == 1) {
       this.load.filesClose();
-    } else { this.segments.fileRemove(); }
+    } else { this.segments.fileRemove(fileIndex); }
   };
 };

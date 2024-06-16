@@ -91,8 +91,10 @@ export class SegmentsService {
   };
 
   // Remove currently selected video file from the list.
-  public fileRemove(): void {
+  public fileRemove(fileIndex?: number): void {
     if (this.store.storeFiles().length > 1) {
+      // Update current file index.
+      if (fileIndex != undefined) { this.fileIndex(fileIndex); }
       // Remove selected file from all places.
       this.filters.filterConcat.update((v) => v.filter((x) => x != this.store.storeFiles()[this.store.storeIndex()].filePath));
       this.store.storeFiles.update((v) => v.toSpliced(this.store.storeIndex(), 1));
