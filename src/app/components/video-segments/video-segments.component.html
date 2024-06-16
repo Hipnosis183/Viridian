@@ -27,7 +27,7 @@
         }
         <!-- Video file clips. -->
         @for (clip of store.storeFiles()[i].fileClips(); track clip; let k = $index) {
-          <div>
+          <div [style.position]="'relative'">
             <div [class]="'segments-clip'">
               <span
                 [class.unselected]="k != store.storeFiles()[i].fileClipIndex()"
@@ -40,8 +40,30 @@
               </div>
               <p>{{ 'VIDEO_SEGMENTS.TIME' | translate }}: {{ (clip.clipStart() / info.videoFrameRate) | duration: true }} - {{ (clip.clipEnd() / info.videoFrameRate) | duration: true }}</p>
             </div>
+            <div [class]="'segments-actions'">
+              <a
+                [style.maskImage]="'url(assets/images/close.svg)'"
+                [title]="'GENERAL.REMOVE' | translate"
+                (click)="segments.clipRemove(k, i)"></a>
+              <a
+                [style.maskImage]="'url(assets/images/move.svg)'"
+                [title]="'VIDEO_SEGMENTS.SEGMENT_MOVE.UP' | translate"
+                (click)="segments.clipUp(k, i)"></a>
+              <a
+                [style.maskImage]="'url(assets/images/move.svg)'"
+                [style.transform]="'rotate(180deg)'"
+                [title]="'VIDEO_SEGMENTS.SEGMENT_MOVE.DOWN' | translate"
+                (click)="segments.clipDown(k, i)"></a>
+            </div>
           </div>
         }
+        <!-- Video file add clip. -->
+        <div
+          [class]="'segments-add'"
+          [title]="'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate"
+          (click)="segments.clipAdd(undefined, undefined, i)">
+          <a [style.maskImage]="'url(assets/images/add.svg)'"></a>
+        </div>
       </div>
     }
   </div>

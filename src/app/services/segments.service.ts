@@ -108,7 +108,9 @@ export class SegmentsService {
   };
 
   // Add clip for the currently selected file.
-  public clipAdd(clipStart?: number, clipEnd?: number): void {
+  public clipAdd(clipStart?: number, clipEnd?: number, fileIndex?: number): void {
+    // Update current file index.
+    if (fileIndex != undefined) { this.fileIndex(fileIndex); }
     // Get current and total duration time in frames.
     const frameRate: number = this.store.storeVideos()[this.store.storeIndex()].videoFrameRate;
     const currentTime: number = this.store.storePlayer.playerVideo()[this.store.storeIndex()].currentTime * frameRate;
@@ -129,14 +131,16 @@ export class SegmentsService {
   };
 
   // Remove selected clip.
-  public clipRemove(): void {
+  public clipRemove(clipIndex?: number, fileIndex?: number): void {
+    // Update current file index.
+    if (fileIndex != undefined) { this.fileIndex(fileIndex); }
     // Don't remove if it's the only clip available.
     if (this.store.storeFiles()[this.store.storeIndex()].fileClips().length == 1) { return; }
     // Remove clip object from file state.
-    const clipIndex: number = this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
-    this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex, 1));
+    const clipIndex$: number = clipIndex ?? this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
+    this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex$, 1));
     // Fix selected clip index if it's the latest on the list.
-    if (clipIndex == this.store.storeFiles()[this.store.storeIndex()].fileClips().length) {
+    if (clipIndex$ == this.store.storeFiles()[this.store.storeIndex()].fileClips().length) {
       this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v - 1);
     }
   };
@@ -148,26 +152,30 @@ export class SegmentsService {
   };
 
   // Move currently selected clip up in the list.
-  public clipUp(): void {
+  public clipUp(clipIndex?: number, fileIndex?: number): void {
+    // Update current file index.
+    if (fileIndex != undefined) { this.fileIndex(fileIndex); }
     // Avoid moving clip if it's already at the top.
-    const clipIndex: number = this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
-    if (clipIndex > 0) {
+    const clipIndex$: number = clipIndex ?? this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
+    if (clipIndex$ > 0) {
       // Update selected clip position.
-      const clipInfo: ClipInfo = this.store.storeFiles()[this.store.storeIndex()].fileClips()[clipIndex];
-      this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex, 1).toSpliced(clipIndex - 1, 0, clipInfo));
+      const clipInfo: ClipInfo = this.store.storeFiles()[this.store.storeIndex()].fileClips()[clipIndex$];
+      this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex$, 1).toSpliced(clipIndex$ - 1, 0, clipInfo));
       // Update current clip index.
       this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v - 1);
     }
   };
 
   // Move currently selected clip down in the list.
-  public clipDown(): void {
+  public clipDown(clipIndex?: number, fileIndex?: number): void {
+    // Update current file index.
+    if (fileIndex != undefined) { this.fileIndex(fileIndex); }
     // Avoid moving clip if it's already at the bottom.
-    const clipIndex: number = this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
-    if ((clipIndex + 1) < this.store.storeFiles()[this.store.storeIndex()].fileClips().length) {
+    const clipIndex$: number = clipIndex ?? this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
+    if ((clipIndex$ + 1) < this.store.storeFiles()[this.store.storeIndex()].fileClips().length) {
       // Update selected clip position.
-      const clipInfo: ClipInfo = this.store.storeFiles()[this.store.storeIndex()].fileClips()[clipIndex];
-      this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex, 1).toSpliced(clipIndex + 1, 0, clipInfo));
+      const clipInfo: ClipInfo = this.store.storeFiles()[this.store.storeIndex()].fileClips()[clipIndex$];
+      this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex$, 1).toSpliced(clipIndex$ + 1, 0, clipInfo));
       // Update current clip index.
       this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v + 1);
     }

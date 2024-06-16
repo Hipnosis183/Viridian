@@ -1,27 +1,36 @@
 /* Define theme colors. */
 [data-theme="light"] :host {
-  --file-color: rgb(222, 232, 242);
+  --buttons-color: rgb(208, 218, 228);
+  --clip-color: rgb(222, 232, 242);
+  --clip-hover: rgb(208, 218, 228);
+  --clip-icon: rgb(86, 96, 106);
   --container-border: rgb(160, 170, 180);
   --container-color: rgb(192, 202, 212);
   --container-title: rgb(208, 218, 228);
-  --buttons-color: rgb(208, 218, 228);
+  --file-color: rgb(222, 232, 242);
 }
 [data-theme="dark"] :host {
-  --file-color: rgb(14, 18, 22);
+  --buttons-color: rgb(14, 18, 22);
+  --clip-color: rgb(14, 18, 22);
+  --clip-hover: rgb(18, 24, 30);
+  --clip-icon: rgb(208, 218, 228);
   --container-border: rgb(28, 36, 44);
   --container-color: rgb(8, 12, 16);
   --container-title: rgb(18, 24, 30);
-  --buttons-color: rgb(14, 18, 22);
+  --file-color: rgb(14, 18, 22);
 }
 [data-theme="slate"] :host {
-  --file-color: rgb(18, 22, 36);
+  --buttons-color: rgb(18, 22, 36);
+  --clip-color: rgb(18, 22, 36);
+  --clip-hover: rgb(22, 26, 40);
+  --clip-icon: rgb(208, 218, 228);
   --container-border: rgb(36, 40, 58);
   --container-color: rgb(14, 16, 26);
   --container-title: rgb(22, 26, 40);
-  --buttons-color: rgb(18, 22, 36);
+  --file-color: rgb(18, 22, 36);
 }
 :host {
-  --clips-text: rgb(232, 238, 244);
+  --clip-text: rgb(232, 238, 244);
   --file-selected: rgb(240, 68, 68);
 }
 
@@ -46,8 +55,12 @@
 
 /* Video file information. */
 .segments-file {
-  @apply cursor-pointer h-fit p-4 space-y-4 w-full;
+  @apply bg-transparent cursor-pointer h-fit p-4 relative space-y-4 w-full;
   transition: background-color 0.2s;
+}
+.segments-files > div:not(:first-child) > .segments-file {
+  border-top: 1px solid var(--container-border);
+  transition: border-color 0.2s;
 }
 .segments-file:hover,
 .segments-file.selected {
@@ -84,7 +97,7 @@
 }
 .segments-clip b,
 .segments-clip p {
-  color: var(--clips-text);
+  color: var(--clip-text);
 }
 .segments-clip > div {
   @apply flex items-center mb-2 overflow-hidden space-x-2 whitespace-nowrap;
@@ -103,6 +116,26 @@
   pointer-events: none;
   position: relative;
   z-index: 1;
+}
+.segments-actions {
+  @apply absolute right-2 top-2;
+}
+.segments-actions > a {
+  @apply bg-white block cursor-pointer h-5 w-5;
+}
+.segments-add {
+  @apply cursor-pointer flex justify-center m-2 rounded;
+  background-color: var(--clip-color);
+  border: 1px solid var(--container-border);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.segments-add:hover {
+  background-color: var(--clip-hover);
+}
+.segments-add > a {
+  @apply block h-6 w-6;
+  background-color: var(--clip-icon);
+  transition: background-color 0.2s;
 }
 
 /* Video segments buttons. */
