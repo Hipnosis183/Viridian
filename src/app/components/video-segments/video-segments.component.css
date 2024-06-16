@@ -123,6 +123,27 @@
 .segments-actions > a {
   @apply bg-white block cursor-pointer h-5 w-5;
 }
+.segments-extra {
+  @apply flex p-2;
+}
+.segments-extra > div {
+  @apply cursor-pointer flex justify-center rounded;
+  background-color: var(--clip-color);
+  border: 1px solid var(--container-border);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.segments-extra > div:hover {
+  background-color: var(--clip-hover);
+}
+.segments-extra > div:not(:first-child) {
+  margin-left: 8px;
+}
+.segments-extra > div > a {
+  @apply block h-6 w-6;
+  background-color: var(--clip-icon);
+  transition: background-color 0.2s;
+}
+/*
 .segments-add {
   @apply cursor-pointer flex justify-center m-2 rounded;
   background-color: var(--clip-color);
@@ -136,7 +157,7 @@
   @apply block h-6 w-6;
   background-color: var(--clip-icon);
   transition: background-color 0.2s;
-}
+}*/
 
 /* Video segments buttons. */
 .segments-buttons {

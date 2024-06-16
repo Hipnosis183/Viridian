@@ -57,12 +57,19 @@
             </div>
           </div>
         }
-        <!-- Video file add clip. -->
-        <div
-          [class]="'segments-add'"
-          [title]="'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate"
-          (click)="segments.clipAdd(undefined, undefined, i)">
-          <a [style.maskImage]="'url(assets/images/add.svg)'"></a>
+        <!-- Video file add/reset clip. -->
+        <div [class]="'segments-extra'">
+          <div
+            [style.width]="'100%'"
+            [title]="'VIDEO_SEGMENTS.SEGMENT_ADD.CLIP' | translate"
+            (click)="segments.clipAdd(undefined, undefined, i)">
+            <a [style.maskImage]="'url(assets/images/add.svg)'"></a>
+          </div>
+          <div
+            [title]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIPS' | translate"
+            (click)="segments.clipReset(i)">
+            <a [style.maskImage]="'url(assets/images/rotate.svg)'"></a>
+          </div>
         </div>
       </div>
     }
@@ -85,10 +92,11 @@
         [buttonIcon]="'remove'"
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_REMOVE.' | translate"
         [dropdown]="segmentRemove" />
-      <div #segmentRemove>
+      <div #segmentRemove [style.display]="'grid'">
         <button (click)="fileRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.FILE' | translate }}</button>
         <span></span>
         <button (click)="segments.clipRemove()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIP' | translate }}</button>
+        <button (click)="segments.clipReset()">{{ 'VIDEO_SEGMENTS.SEGMENT_REMOVE.CLIPS' | translate }}</button>
       </div>
     </div>
     <div>

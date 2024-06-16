@@ -191,7 +191,8 @@
     "SEGMENT_REMOVE": {
       "": "Remove File/Clip...",
       "FILE": "Remove File",
-      "CLIP": "Remove Clip"
+      "CLIP": "Remove Clip",
+      "CLIPS": "Reset Clips"
     },
     "TIME": "Time"
   },

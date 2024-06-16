@@ -145,6 +145,19 @@ export class SegmentsService {
     }
   };
 
+  // Reset file(s) clips.
+  public clipReset(fileIndex?: number): void {
+    // Update current file index.
+    if (fileIndex != undefined) { this.fileIndex(fileIndex); }
+    // Reset file clips.
+    this.store.storeFiles()[this.store.storeIndex()].fileClips.set([]);
+    // Reset current clip index.
+    this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.set(-1);
+    this.store.storeFiles()[this.store.storeIndex()].fileColor.set(0);
+    // Create default clip segment.
+    this.clipAdd(0);
+  };
+
   // Update selected clip index.
   public clipIndex(fileIndex: number, clipIndex: number): void {
     this.store.storeIndex.set(fileIndex);
