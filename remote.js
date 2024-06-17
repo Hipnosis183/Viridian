@@ -1,6 +1,6 @@
 // Import Node and Electron elements.
 const { ipcMain } = require('electron');
-const { appendFile, chmod, createWriteStream, existsSync, mkdir, readdir, rm, unlink, writeFile } = require('fs');
+const { appendFile, chmod, createReadStream, createWriteStream, existsSync, mkdir, readdir, rm, unlink, writeFile } = require('fs');
 
 // Manage dialogs display.
 const { dialog } = require('electron');
@@ -85,6 +85,17 @@ ipcMain.handle('file-download', (e, ...a) => {
 // Check if a file exists.
 ipcMain.handle('file-exists', (e, ...a) => {
   return existsSync(a[0]);
+});
+
+// Calculate file hash.
+const { createHash } = require('crypto');
+ipcMain.handle('file-hash', (e, ...a) => {
+  return new Promise((resolve) => {
+    const fileStream = createReadStream(a[0]);
+    const fileHash = createHash('sha256', { encoding: 'hex' });
+    fileHash.on('finish', () => { fileStream.close(); resolve(fileHash.read().toUpperCase()); });
+    fileStream.pipe(fileHash);
+  });
 });
 
 // Unpack/extract compressed file.

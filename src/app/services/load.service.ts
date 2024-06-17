@@ -82,7 +82,7 @@ export class LoadService {
         this.fileCompat.update((v) => [...v, 'lossyConcat']);
       }
       // Define file data.
-      const fileTemp: string = await this.filesLoadTemp(fileInfo.name!);
+      const fileTemp: string = await this.filesLoadTemp(fileInfo.path!);
       const fileInterval: number = this.filesLoadInterval(fileStreams);
       const fileThumbs: string[] = await this.filesLoadThumbs(fileStreams, fileInterval, fileInfo.path!, fileTemp);
       const fileInfo$: FileInfo = {
@@ -125,9 +125,9 @@ export class LoadService {
   };
 
   // Manage directory for temporal storage.
-  private async filesLoadTemp(fileName: string): Promise<string> {
+  private async filesLoadTemp(filePath: string): Promise<string> {
     // Create cache directory for the file.
-    const fileTemp: string = process.cwd() + '/temp/' + fileName.replace(/(\.[\w\d_-]+)$/i, '/');
+    const fileTemp: string = process.cwd() + '/temp/' + await this.ipc.invoke('file-hash', filePath) + '/';
     await this.ipc.invoke('dir-create', `${fileTemp}thumbs`); return fileTemp;
   };
 
