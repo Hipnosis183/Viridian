@@ -74,7 +74,7 @@
   @apply -mx-[9px] -my-[5px];
 }
 .progress-tooltip > img {
-  @apply object-cover rounded-t-sm w-[120px];
+  @apply max-h-[68px] object-cover rounded-t-sm w-[120px];
 }
 .progress-tooltip > p {
   @apply my-2 px-3 text-center;

@@ -171,7 +171,7 @@ export class LoadService {
       }
     }
     // Generate small video thumbnails.
-    if (this.settings.options.general.createThumbs()) {
+    if (this.settings.options.general.createThumbs() && !fileThumbs$.length) {
       const thumbsCommand: string = `ffmpeg -v error -y ${fileInputs.join(' ')} ${fileOutputs.join(' ')}`;
       await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + thumbsCommand, null);
     }
