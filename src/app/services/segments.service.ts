@@ -141,10 +141,8 @@ export class SegmentsService {
     // Remove clip object from file state.
     const clipIndex$: number = clipIndex ?? this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
     this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex$, 1));
-    // Fix selected clip index if it's the latest on the list.
-    if (clipIndex$ == this.store.storeFiles()[this.store.storeIndex()].fileClips().length) {
-      this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v - 1);
-    }
+    // Update current clip index.
+    this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v - 1);
   };
 
   // Reset file(s) clips.
