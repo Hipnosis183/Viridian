@@ -9,7 +9,7 @@
         <b
           [class]="'save-status'"
           [class.lossy]="(save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()"
-          [class.mixed]="save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'smart'">
+          [class.mixed]="save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'smart' && !save.saveReencode()">
           @if ((save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()) {
             {{ 'VIDEO_SAVE.LOSSY' | translate }}
           } @else { {{ 'VIDEO_SAVE.LOSSLESS' | translate }} }
