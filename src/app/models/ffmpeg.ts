@@ -7,6 +7,10 @@ export interface VideoFrames {
     key_frame: number,
     pts_time: number,
   }[],
+  packets: {
+    flags: string,
+    pts_time: number,
+  }[],
 };
 
 // Video file.

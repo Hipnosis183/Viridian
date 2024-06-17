@@ -133,10 +133,10 @@ export class LoadService {
 
   // Get video stream key/i-frames.
   private async filesLoadFrames(filePath: string): Promise<number[]> {
-    const fileCommand: string = `ffprobe -v error -select_streams v:0 -skip_frame nokey -show_entries frame=key_frame,pts_time -of json -i "${filePath}"`;
+    const fileCommand: string = `ffprobe -v error -select_streams v:0 -show_entries packet=pts_time,flags -of json -i "${filePath}"`;
     const fileFrames: VideoFrames = JSON.parse(await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null));
     // Filter key/i-frames time values only.
-    const fileFrames$: number[] = fileFrames.frames.filter((v) => v.key_frame == 1).map((v) => v.pts_time);
+    const fileFrames$: number[] = fileFrames.packets.filter((v) => v.flags[0] == 'K').map((v) => v.pts_time);
     // Sort keyframes to ensure they are in order.
     return fileFrames$.sort((a, b) => { return a - b; });
   };
