@@ -143,7 +143,7 @@ export class LoadService {
 
   // Get seek intervals for thumbnail generation.
   private filesLoadInterval(fileStreams: any[]): number {
-    return (fileStreams[1].duration < 30) ? 2 : (fileStreams[1].duration < 60) ? 4 : (fileStreams[1].duration < 60 * 5) ? 10 : (fileStreams[1].duration < 60 * 10) ? 20 : (fileStreams[1].duration < 60 * 30) ? 30 : (fileStreams[1].duration < 60 * 60) ? 60 : 120;
+    return (fileStreams[0].duration < 30) ? 2 : (fileStreams[0].duration < 60) ? 4 : (fileStreams[0].duration < 60 * 5) ? 10 : (fileStreams[0].duration < 60 * 10) ? 20 : (fileStreams[0].duration < 60 * 30) ? 30 : (fileStreams[0].duration < 60 * 60) ? 60 : 120;
   };
 
   // Manage video thumbnails creation.
@@ -159,9 +159,9 @@ export class LoadService {
     const fileThumbs: string[] = [], fileInputs: string[] = [], fileOutputs: string[] = [];
     const fileThumbs$: string[] = await this.ipc.invoke('dir-read', `${fileTemp}thumbs`);
     if (this.settings.options.general.createThumbs() || fileThumbs$.length) {
-      for (let i = 0; i < Math.floor(fileStreams[1].duration / fileInterval) + 1; i++) {
+      for (let i = 0; i < Math.floor(fileStreams[0].duration / fileInterval) + 1; i++) {
         // Take a second from last seek to avoid frames not being extracted.
-        const thumbInterval: number = i == Math.floor(fileStreams[1].duration / fileInterval) ? fileInterval * i - 1 : fileInterval * i;
+        const thumbInterval: number = i == Math.floor(fileStreams[0].duration / fileInterval) ? fileInterval * i - 1 : fileInterval * i;
         // Add thumbnail path to files list.
         const thumbPath: string = `${fileTemp}thumbs/${i.toString().padStart(4, '0')}.jpg`;
         fileThumbs.push(`file://${thumbPath}`);
