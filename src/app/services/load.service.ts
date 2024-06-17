@@ -222,7 +222,7 @@ export class LoadService {
     this.segments.clipAdd();
     // Open split/merge panel if multiple files are open.
     if (this.store.storeFiles().length > 1) {
-      setTimeout(() => { this.segments.segmentsOpen.set(true); });
+      setTimeout(() => { this.segments.segmentsUpdateOpen(true); });
     }
     // Load next file in the list.
     this.filesLoadNext();

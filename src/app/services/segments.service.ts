@@ -325,16 +325,16 @@ export class SegmentsService {
   // Update clip element state.
   public clipUpdate(updateAll?: boolean): void {
     const playerClips: HTMLElement = document.querySelector('#playerClips')!;
-    // Get total duration time in frames.
-    const frameRate: number = this.store.storeVideos()[this.store.storeIndex()].videoFrameRate;
-    const totalDuration: number = this.store.storePlayer.playerVideo()[this.store.storeIndex()].duration * frameRate;
     // Update clips for all files.
     if (updateAll) {
-      for (let file of this.store.storeFiles()) {
+      for (let [i, file] of this.store.storeFiles().entries()) {
         for (let clip of file.fileClips()) {
+          // Get total duration time in frames.
+          const frameRate: number = this.store.storeVideos()[i].videoFrameRate;
+          const totalDuration: number = this.store.storePlayer.playerVideo()[i].duration * frameRate;
+          // Update clip element position and dimensions.
           const clipStart: number = clip.clipStart() * playerClips.offsetWidth / totalDuration;
           const clipEnd: number = clip.clipEnd() * playerClips.offsetWidth / totalDuration;
-          // Update clip element position and dimensions.
           clip.clipElement()!.style.transform = `translate3d(${clipStart}px, 0px, 0px)`;
           clip.clipElement()!.style.width = `${clipEnd - clipStart}px`;
         }
@@ -342,9 +342,12 @@ export class SegmentsService {
     } else {
       // Update clips for current file.
       for (let clip of this.store.storeFiles()[this.store.storeIndex()].fileClips()) {
+        // Get total duration time in frames.
+        const frameRate: number = this.store.storeVideos()[this.store.storeIndex()].videoFrameRate;
+        const totalDuration: number = this.store.storePlayer.playerVideo()[this.store.storeIndex()].duration * frameRate;
+        // Update clip element position and dimensions.
         const clipStart: number = clip.clipStart() * playerClips.offsetWidth / totalDuration;
         const clipEnd: number = clip.clipEnd() * playerClips.offsetWidth / totalDuration;
-        // Update clip element position and dimensions.
         clip.clipElement()!.style.transform = `translate3d(${clipStart}px, 0px, 0px)`;
         clip.clipElement()!.style.width = `${clipEnd - clipStart}px`;
       }
