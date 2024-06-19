@@ -31,8 +31,8 @@
             <div [class]="'segments-clip'">
               <span
                 [class.unselected]="k != store.storeFiles()[i].fileClipIndex()"
-                [style.backgroundColor]="store.storeColors[clip.clipColor()][600]"
-                [style.borderColor]="store.storeColors[clip.clipColor()][700]"
+                [style.backgroundColor]="store.storeColors[clip.clipColor()][0]"
+                [style.borderColor]="store.storeColors[clip.clipColor()][1]"
                 (click)="segments.clipIndex(i, k)"></span>
               <div>
                 <b>{{ k + 1 }} |</b>
@@ -118,7 +118,7 @@
       <vi-button
         [buttonColor]="'darker'"
         [buttonIcon]="'move'"
-        [buttonIconClass]="'-scale-y-100'"
+        [buttonIconStyle]="'transform:scaleY(-1);'"
         [buttonTooltip]="'VIDEO_SEGMENTS.SEGMENT_MOVE_DOWN.' | translate"
         [dropdown]="segmentMoveDown" />
       <div #segmentMoveDown>

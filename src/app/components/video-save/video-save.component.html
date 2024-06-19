@@ -233,6 +233,7 @@
                 (inputUpdated)="save.saveUpdateHeight($event)" />
               <vi-button
                 [buttonIcon]="save.saveSettings.saveLock() ? 'lock' : 'unlock'"
+                [buttonIconStyle]="'margin:-1px 0;'"
                 [buttonToggle]="!save.saveSettings.saveLock()"
                 (click)="save.saveUpdateLock()" />
             </div>
@@ -382,11 +383,11 @@
       <!-- Manual editing commands contents. -->
       <div [class]="'save-contents'">
         @for (command of save.saveInfo.saveCommands(); track $index) {
-          <div [style.borderLeftColor]="store.storeColors[$index][600]" (click)="save.saveCommandSelect($index)">
+          <div [style.borderLeftColor]="store.storeColors[$index][0]" (click)="save.saveCommandSelect($index)">
             <div
               [class.selected]="save.saveCommandIndex() == $index"
-              [style.backgroundColor]="save.saveCommandIndex() == $index ? store.storeColors[$index][600] : ''">
-              {{ command.full }}
+              [style.backgroundColor]="save.saveCommandIndex() == $index ? store.storeColors[$index][0] : ''">
+              <p>{{ command.full }}</p>
             </div>
             <vi-textarea
               [class.selected]="save.saveCommandIndex() == $index"

@@ -44,10 +44,7 @@
     "@electron-forge/plugin-vite": "^7.4.0",
     "@electron/fuses": "^1.8.0",
     "@types/node": "^20.12.13",
-    "autoprefixer": "^10.4.19",
     "electron": "30.0.8",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
     "typescript": "~5.4.5",
     "vite": "^5.2.12"
   }

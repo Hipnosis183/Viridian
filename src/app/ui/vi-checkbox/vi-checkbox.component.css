@@ -17,19 +17,32 @@
 
 /* Checkbox container. */
 .checkbox-container {
-  @apply cursor-pointer;
+  cursor: pointer;
+}
+.checkbox-container > input {
+  display: none;
 }
 
 /* Checkbox box. */
 .checkbox-box {
-  @apply hover:brightness-90 flex h-5 items-center justify-center rounded w-5;
+  align-items: center;
   background-color: var(--checkbox-color);
   border: 1px solid var(--checkbox-border);
+  border-radius: 4px;
+  display: flex;
+  height: 20px;
+  justify-content: center;
   transition: background-color 0.2s, border-color 0.2s, filter 0.2s;
+  width: 20px;
+}
+.checkbox-box:hover {
+  filter: brightness(0.9);
 }
 .checkbox-box > div {
-  @apply h-[10px] rounded-sm w-[10px];
+  border-radius: 2px;
+  height: 10px;
   transition: background-color 0.2s;
+  width: 10px;
 }
 .checkbox-box > div.checked {
   background-color: var(--checkbox-fill);

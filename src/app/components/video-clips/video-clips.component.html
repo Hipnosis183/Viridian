@@ -10,8 +10,8 @@
               rendered
               [class]="'clips-container'"
               [class.selected]="k == file.fileClipIndex()"
-              [style.backgroundColor]="store.storeColors[clip.clipColor()][600]"
-              [style.borderColor]="store.storeColors[clip.clipColor()][700]"
+              [style.backgroundColor]="store.storeColors[clip.clipColor()][0]"
+              [style.borderColor]="store.storeColors[clip.clipColor()][1]"
               [tooltip]="clipInfo"
               [tooltipFollow]="'horizontal'"
               [tooltipKeep]="true"
@@ -38,8 +38,8 @@
               </div>
               <div>
                 <a
-                  [class]="'rotate-180'"
                   [style.maskImage]="'url(assets/images/clip-h-set.svg)'"
+                  [style.transform]="'rotate(180deg)'"
                   [title]="'VIDEO_SEGMENTS.CLIP_MANUAL.END' | translate"></a>
                 <input
                   [ngModel]="clip.clipEnd() / store.storeVideos()[i].videoFrameRate | duration: true"

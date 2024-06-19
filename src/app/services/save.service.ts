@@ -319,7 +319,7 @@ export class SaveService {
   private saveCommandAdd(commandName: string, commandFull: string, commandText: string): void {
     // Add command to list.
     this.saveInfo.saveCommands.update((v) => [...v, {
-      color: this.store.storeColors[this.saveCommandColor][600],
+      color: this.store.storeColors[this.saveCommandColor][0],
       full: `${this.saveInfo.saveCommands().length}: ${commandFull}`,
       name: commandName,
       text: signal<string>((this.settings.options.ffmpeg.filesPath() + commandText).replace(/\s\s+/g, ' ')),

@@ -1,10 +1,7 @@
 <!-- Checkbox container. -->
 <div [class]="'checkbox-container'" (click)="checkboxUpdateValue()">
   <!-- Checkbox input. -->
-  <input
-    [class]="'hidden'"
-    [ngModel]="checkboxValue"
-    [type]="'checkbox'" />
+  <input [ngModel]="checkboxValue" [type]="'checkbox'" />
   <!-- Checkbox box. -->
   <div [class]="'checkbox-box'">
     <div [class.checked]="checkboxValue()"></div>

@@ -3,12 +3,13 @@
   [class]="['button-container', buttonColor()]"
   [class.active]="buttonToggle()"
   [class.disabled]="buttonDisabled()"
+  [class.icon]="buttonText() && buttonIcon()"
+  [class.text]="buttonText() && !buttonIcon()"
   [disabled]="buttonDisabled()"
-  [class.text]="buttonText() && buttonIcon()"
   [tooltip]="buttonTooltip()">
   <!-- Button icon. -->
   @if (buttonIcon()) {
-    <a [class]="buttonIconClass()" [style.maskImage]="'url(assets/images/' + buttonIcon() + '.svg)'"></a>
+    <a [style]="buttonIconStyle()" [style.maskImage]="'url(assets/images/' + buttonIcon() + '.svg)'"></a>
   }
   <!-- Button label. -->
   <ng-content>

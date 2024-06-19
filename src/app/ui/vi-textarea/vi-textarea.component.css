@@ -11,8 +11,14 @@
 
 /* Textarea element. */
 textarea {
-  @apply align-top bg-transparent break-all overflow-hidden p-3 resize-none w-full;
+  background-color: transparent;
+  overflow: hidden;
+  padding: 12px;
+  resize: none;
   transition: background-color 0.2s;
+  vertical-align: top;
+  width: 100%;
+  word-break: break-all;
 }
 textarea:hover {
   background-color: var(--textarea-hover);

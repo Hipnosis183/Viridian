@@ -29,19 +29,30 @@
 
 /* Button container. */
 .button-container {
-  @apply cursor-pointer rounded;
+  border-radius: 4px;
+  cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
 .button-container.disabled {
-  @apply cursor-no-drop;
+  cursor: no-drop;
+}
+.button-container.icon,
+.button-container.text {
+  align-items: center;
+  display: flex;
+}
+.button-container.icon {
+  padding: 0 16px 0 4px;
 }
 .button-container.text {
-  @apply flex items-center pl-1 pr-4;
+  padding: 5px 16px;
 }
 .button-container > a {
-  @apply block h-9 w-9;
   background-color: var(--button-icon);
+  display: block;
+  height: 36px;
   transition: background-color 0.2s;
+  width: 36px;
 }
 .button-container > div {
   transition: color 0.2s;
@@ -72,10 +83,12 @@ button.darker.active {
 
 /* Button primary colors. */
 button.primary {
-  @apply bg-blue-600 hover:bg-blue-700 border-none;
+  background-color: rgb(38, 100, 236);
+  border-style: none;
 }
+button.primary:hover,
 button.primary.active {
-  @apply bg-blue-700;
+  background-color: rgb(28, 78, 216);
 }
 button.primary > a {
   background-color: rgb(232, 238, 244);
@@ -86,10 +99,12 @@ button.primary > div {
 
 /* Button secondary colors. */
 button.secondary {
-  @apply bg-slate-600 hover:bg-slate-700 border-none;
+  background-color: rgb(70, 86, 106);
+  border-style: none;
 }
+button.secondary:hover,
 button.secondary.active {
-  @apply bg-slate-700;
+  background-color: rgb(52, 66, 86);
 }
 button.secondary > a {
   background-color: rgb(232, 238, 244);
@@ -100,10 +115,12 @@ button.secondary > div {
 
 /* Button success colors. */
 button.success {
-  @apply bg-green-600 hover:bg-green-700 border-none;
+  background-color: rgb(22, 164, 74);
+  border-style: none;
 }
+button.success:hover,
 button.success.active {
-  @apply bg-green-700;
+  background-color: rgb(22, 128, 62);
 }
 button.success > a {
   background-color: rgb(232, 238, 244);
@@ -114,10 +131,12 @@ button.success > div {
 
 /* Button danger colors. */
 button.danger {
-  @apply bg-red-600 hover:bg-red-700 border-none;
+  background-color: rgb(220, 38, 38);
+  border-style: none;
 }
+button.danger:hover,
 button.danger.active {
-  @apply bg-red-700;
+  background-color: rgb(186, 28, 28);
 }
 button.danger > a {
   background-color: rgb(232, 238, 244);
@@ -128,10 +147,12 @@ button.danger > div {
 
 /* Button warning colors. */
 button.warning {
-  @apply bg-amber-400 hover:bg-amber-500 border-none;
+  background-color: rgb(252, 192, 36);
+  border-style: none;
 }
+button.warning:hover,
 button.warning.active {
-  @apply bg-amber-500;
+  background-color: rgb(246, 158, 12);
 }
 button.warning > a {
   background-color: rgb(14, 18, 22);

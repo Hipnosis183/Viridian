@@ -42,7 +42,7 @@
 <div [class]="'player-container'">
   <div id="playerEdit" [class]="'player-edit'" [class.segments]="segments.segmentsOpen()">
     <!-- Video player contents. -->
-    <div id="playerContents" [class]="['player-contents', load.filesLoadState() != 'loaded' ? 'hidden' : 'flex']">
+    <div id="playerContents" [class]="'player-contents'" [style.display]="load.filesLoadState() != 'loaded' ? 'none' : 'flex'">
       <!-- Video player video player. -->
       <div id="playerVideo" [class]="'player-video'">
         @for (file of store.storeFiles(); track file) {
@@ -58,9 +58,9 @@
       <video-crop id="playerCrop" />
     </div>
     <!-- Video player extra controls. -->
-    <div [class]="['player-extra', segments.segmentsOpen() ? 'flex' : 'hidden']">
+    <div [class]="'player-extra'" [style.display]="segments.segmentsOpen() ? 'flex' : 'none'">
       <!-- Player extra controls. -->
-      <div [class]="'flex'">
+      <div [style.display]="'flex'">
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'play'"
@@ -69,7 +69,7 @@
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'next'"
-          [buttonIconClass]="'-scale-x-100'"
+          [buttonIconStyle]="'transform:scaleX(-1);'"
           [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate"
           (click)="player.playerFrameAdvance(false)" />
         <vi-button
@@ -109,7 +109,7 @@
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'clip-set'"
-          [buttonIconClass]="'-scale-x-100'"
+          [buttonIconStyle]="'transform:scaleX(-1);'"
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate"
           (click)="segments.clipSet(false)" />
         <div [class]="['player-separator', 'dark']"></div>
@@ -126,7 +126,7 @@
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'clip-nav'"
-          [buttonIconClass]="'-scale-x-100'"
+          [buttonIconStyle]="'transform:scaleX(-1);'"
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
           [dropdown]="clipNavEnd" />
         <div #clipNavEnd>
@@ -147,7 +147,7 @@
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'clip-snap'"
-          [buttonIconClass]="'-scale-x-100'"
+          [buttonIconStyle]="'transform:scaleX(-1);'"
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate"
           [dropdown]="clipSnapEnd" />
         <div #clipSnapEnd>
@@ -159,14 +159,14 @@
     </div>
     @if (!store.storeFiles().length && !load.filesLoadState()) {
       <!-- Video player open/add files. -->
-      <div [class]="['player-open', 'group', recent.recentFiles().length && settings.options.general.recentFiles() ? 'w-1/2' : 'w-full']">
-        <div [class]="load.filesLoadState() == 'loading' ? 'hidden' : 'flex'">
+      <div [class]="'player-open'" [style.width]="recent.recentFiles().length && settings.options.general.recentFiles() ? '50%' : '100%'">
+        <div [style.display]="load.filesLoadState() == 'loading' ? 'none' : 'flex'">
           <a [style.maskImage]="'url(assets/images/open-file.svg)'"></a>
           @if (!recent.recentFiles().length || !settings.options.general.recentFiles()) {
             <h1>{{ 'VIDEO_PLAYER.FILE_OPEN.TITLE' | translate }}</h1>
             <p>{{ 'VIDEO_PLAYER.FILE_OPEN.SUB' | translate }}</p>
           }
-          <span [class]="'group-hover:bg-[var(--open-hover)]'"></span>
+          <span></span>
         </div>
         <!-- Open/drag and drop input. -->
         <input
@@ -216,7 +216,7 @@
       <vi-button
         [buttonIcon]="'settings'"
         [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate"
-        [class]="'pointer-events-auto'"
+        [style.pointerEvents]="'auto'"
         (click)="settings.settingsUpdateOpen()" />
       <div [class]="'player-separator'"></div>
       <vi-button
@@ -235,7 +235,7 @@
       <div [class]="'player-separator'"></div>
       <vi-button
         [buttonIcon]="'rotate'"
-        [buttonIconClass]="'-scale-x-100'"
+        [buttonIconStyle]="'transform:scaleX(-1);'"
         [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate"
         (click)="player.playerFilterRotate(false)" />
       <vi-button
@@ -244,7 +244,7 @@
         (click)="player.playerFilterRotate(true)" />
       <vi-button
         [buttonIcon]="'flip'"
-        [buttonIconClass]="'rotate-90'"
+        [buttonIconStyle]="'transform:rotate(90deg);'"
         [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate"
         (click)="player.playerFilterFlip(true)" />
       <vi-button

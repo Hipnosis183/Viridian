@@ -9,10 +9,12 @@
 
 /* Loading spinning ring. */
 .loading-ring {
-  @apply h-14 rounded-[50%] w-14;
   animation: spin 1s linear infinite;
   border: 4px solid var(--loading-color);
+  border-radius: 50%;
   border-top-color: transparent;
+  height: 56px;
+  width: 56px;
 }
 .loading-ring.dark {
   border: 4px solid rgb(22, 28, 34);

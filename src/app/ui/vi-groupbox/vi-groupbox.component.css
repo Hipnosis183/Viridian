@@ -17,19 +17,23 @@
 
 /* Groupbox container. */
 .groupbox-container {
-  @apply p-3 relative rounded;
   border: 1px solid var(--groupbox-border);
+  border-radius: 4px;
+  padding: 12px;
+  position: relative;
   transition: border-color 0.2s;
 }
 
 /* Groupbox label. */
 .groupbox-label {
-  @apply flex mb-2;
+  display: flex;
+  margin-bottom: 8px;
 }
 .groupbox-label > label {
-  @apply absolute px-2;
   background-color: var(--groupbox-color);
   color: var(--groupbox-text);
+  padding: 0 8px;
+  position: absolute;
   top: -12px;
   transition: background-color 0.2s, color 0.2s;
 }

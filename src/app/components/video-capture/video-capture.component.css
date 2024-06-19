@@ -1,32 +1,40 @@
 /* Video frame capture container. */
 .capture-container {
-  @apply flex items-center space-x-4;
+  align-items: center;
+  display: flex;
 }
 
 /* Video frame capture buttons. */
 .capture-buttons {
-  @apply flex flex-col space-y-4 w-[110px];
+  display: flex;
+  flex-direction: column;
+  width: 110px;
+}
+.capture-buttons > *:not(:first-child) {
+  margin-top: 16px;
 }
 :host ::ng-deep .capture-buttons button {
-  @apply w-full;
+  width: 100%;
 }
 
 /* Video frame capture output box. */
 .capture-output {
-  @apply flex space-x-2;
+  display: flex;
 }
 :host ::ng-deep vi-groupbox:has(.capture-output) {
-  @apply mt-1;
+  margin: 4px 0 0 16px;
 }
 :host ::ng-deep .capture-output vi-button {
-  @apply flex items-end pb-2;
+  align-items: flex-end;
+  display: flex;
+  margin-left: 8px;
+  padding-bottom: 8px;
 }
 :host ::ng-deep .capture-output vi-button a {
   height: 18px !important;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin: 0 3px;
   width: 18px !important;
 }
 :host ::ng-deep .capture-output vi-input {
-  @apply w-[500px];
+  width: 500px;
 }

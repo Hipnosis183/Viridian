@@ -11,7 +11,12 @@
 
 /* Option container. */
 .option-container {
-  @apply cursor-pointer flex h-10 items-center overflow-hidden px-3;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  overflow: hidden;
+  padding: 0 12px;
   transition: background-color 0.2s;
 }
 .option-container:hover,
@@ -21,8 +26,8 @@
 
 /* Option label. */
 .option-label {
-  @apply pointer-events-none;
+  pointer-events: none;
 }
 .option-label > p {
-  @apply whitespace-nowrap;
+  white-space: nowrap;
 }

@@ -46,7 +46,6 @@
               <div>
                 <div
                   [class]="'settings-option'"
-                  [style.height]="'42px'"
                   [tooltip]="'VIDEO_SETTINGS.GENERAL.APP_THEME.TEXT' | translate"
                   [tooltipDelay]="[400, 0]"
                   [tooltipPlace]="'bottom'">
@@ -107,8 +106,6 @@
                   <p>{{ 'VIDEO_SETTINGS.GENERAL.CLEAR_CACHE.NAME' | translate }}</p>
                   <vi-button
                     [buttonDisabled]="!!store.storeFiles().length"
-                    [buttonIcon]="'close'"
-                    [buttonIconClass]="'-ml-[24px] opacity-0'"
                     [buttonText]="'GENERAL.DELETE' | translate"
                     (click)="settings.settingsClearCache()" />
                 </div>
@@ -119,6 +116,7 @@
               <div>
                 <div
                   [class]="'settings-option'"
+                  [style.height]="'88px'"
                   [tooltip]="'VIDEO_SETTINGS.FFMPEG.FILES_PATH.TEXT' | translate"
                   [tooltipDelay]="[400, 0]"
                   [tooltipPlace]="'bottom'">
@@ -131,14 +129,12 @@
                     [class]="'more'"
                     (click)="settings.settingsUpdatePath()" />
                 </div>
-                <div [class]="'settings-option'" [style.height]="'57px'">
+                <div [class]="'settings-option'">
                   <p>{{ 'VIDEO_SETTINGS.FFMPEG.VERSION' | translate }}</p>
                   @if (settings.settingsVersion().length) {
                     <p [class]="'text-sm'">{{ settings.settingsVersion() }}</p>
                   } @else {
                     <vi-button
-                      [buttonIcon]="'done'"
-                      [buttonIconClass]="'-ml-[24px] opacity-0'"
                       [buttonText]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.NAME' | translate"
                       [tooltip]="'VIDEO_SETTINGS.FFMPEG.DOWNLOAD.TEXT' | translate"
                       [tooltipDelay]="[400, 0]"

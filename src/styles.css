@@ -3,11 +3,6 @@
 @import 'app/directives/dropdown/dropdown.directive.css';
 @import 'app/directives/tooltip/tooltip.directive.css';
 
-/* Setup Tailwind. */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 /* Define fonts. */
 @font-face {
   font-family: 'Inter';
@@ -66,31 +61,59 @@ palette {
 }
 
 /* General styling. */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 *:focus {
   outline: none;
+}
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+b, p {
+  cursor: default;
+  white-space: pre-wrap;
 }
 body {
   background-color: var(--color-body);
   font-family: 'Inter';
+  line-height: 1.5;
   transition: background-color 0.2s;
+}
+button {
+  background-color: transparent;
+  cursor: pointer;
+}
+button, input, select, textarea {
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
 }
 div, h1, p, span {
   color: var(--color-font);
   transition: color 0.2s;
 }
-p, b {
-  cursor: default;
-  white-space: pre-wrap;
+video {
+  display: block;
 }
 
 /* Scrollbars styling. */
 ::-webkit-scrollbar {
-  @apply bg-transparent h-3 w-3 !important;
+  background-color: transparent;
+  height: 12px;
+  width: 12px;
 }
 ::-webkit-scrollbar-corner {
-  @apply bg-transparent !important;
+  background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-clip-content border-4 border-solid border-transparent rounded-full !important;
+  background-clip: content-box;
   background-color: var(--color-scroll);
+  border: 4px solid transparent;
+  border-radius: 16px;
 }

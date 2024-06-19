@@ -20,7 +20,7 @@ export class ViButton {
   public buttonColor = input<ButtonColor>('');
   public buttonDisabled = input<boolean>(false);
   public buttonIcon = input<string>('');
-  public buttonIconClass = input<string>('');
+  public buttonIconStyle = input<string>('');
   public buttonText = input<string>('');
   public buttonToggle = input<boolean>(false);
   public buttonTooltip = input<string>('');

@@ -20,23 +20,33 @@
 
 /* Input container. */
 .input-container.disabled {
-  @apply opacity-50 pointer-events-none;
+  opacity: 0.5;
+  pointer-events: none;
 }
 .input-container > div {
-  @apply flex items-center relative;
+  align-items: center;
+  display: flex;
+  position: relative;
 }
 
 /* Input label. */
 .input-container > label {
-  @apply flex mb-1 ml-1 text-[15px];
+  display: flex;
+  font-size: 15px;
+  margin: 0 0 4px 4px;
 }
 
 /* Input element. */
 .input-element > input {
-  @apply cursor-text flex h-9 px-3 rounded w-full;
   background-color: var(--input-color);
   border: 1px solid var(--input-border);
+  border-radius: 4px;
+  cursor: text;
+  display: flex;
+  height: 36px;
+  padding: 0 12px;
   transition: background-color 0.2s, border-color 0.2s;
+  width: 100%;
 }
 .input-element > input:hover {
   background-color: var(--input-hover);
@@ -48,23 +58,40 @@
 
 /* Input arrows. */
 .input-arrows {
-  @apply absolute cursor-pointer flex flex-col right-[1px];
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 1px;
 }
 .input-arrows > div {
-  @apply flex h-[17px] items-center justify-center w-6;
+  align-items: center;
+  display: flex;
+  height: 17px;
+  justify-content: center;
   transition: background-color 0.2s;
+  width: 24px;
 }
 .input-arrows > div:hover {
   background-color: var(--input-hover);
 }
 .input-arrows > div:first-child {
-  @apply rounded-tr [&>div]:mt-0.5 [&>div]:rotate-180;
+  border-top-right-radius: 4px;
+}
+.input-arrows > div:first-child > div {
+  margin-top: 2px;
+  transform: rotate(180deg);
 }
 .input-arrows > div:last-child {
-  @apply rounded-br [&>div]:mb-0.5;
+  border-bottom-right-radius: 4px;
+}
+.input-arrows > div:last-child > div {
+  margin-bottom: 2px;
 }
 .input-arrows > div > div {
-  @apply absolute border-x-[4px] border-x-transparent;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
   border-top: 4px solid var(--input-icon);
+  position: absolute;
   transition: border-color 0.2s;
 }

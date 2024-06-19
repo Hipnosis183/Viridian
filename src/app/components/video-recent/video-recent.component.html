@@ -2,7 +2,7 @@
 @if (recent.recentOpen()) {
   <vi-modal>
     <div [class]="'recent-error'">
-      <img [src]="'assets/images/save-error.svg'" />
+      <a [style.maskImage]="'url(assets/images/save-error.svg)'"></a>
       <p>{{ 'VIDEO_PLAYER.FILE_ERROR' | translate }}</p>
       <vi-button
         [buttonColor]="'danger'"
@@ -21,7 +21,7 @@
       <div [class]="'recent-clear'">
         <vi-button
           [buttonIcon]="'close'"
-          [buttonIconClass]="'!h-6 my-0.5 !w-6'"
+          [buttonIconStyle]="'height:24px; margin:2px 0; width:24px;'"
           [buttonText]="'GENERAL.CLEAR' | translate"
           (click)="recent.recentClearAll()" />
         <vi-button [dropdown]="recentClear" [dropdownOffset]="[0, 8]" [dropdownPlace]="'bottom-end'">
@@ -36,12 +36,12 @@
       <!-- Recent files list. -->
       <div [class]="'recent-list'">
         @for (file of recent.recentFiles(); track file) {
-          <div [class]="'group'" (click)="recentFileOpen(file)">
+          <div (click)="recentFileOpen(file)">
             <div>
               <p>{{ file.name }}</p>
               <p>{{ file.path!.slice(0, -file.name!.length - 1) }}</p>
             </div>
-            <div [class]="'group-hover:block hidden'">
+            <div>
               <a [style.maskImage]="'url(assets/images/close.svg)'"
                 (click)="recent.recentFileRemove(file.path!); $event.stopPropagation();"></a>
             </div>

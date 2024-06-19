@@ -26,23 +26,37 @@
 
 /* Settings container. */
 .settings-container {
-  @apply flex h-[450px] space-x-4;
+  display: flex;
+  height: 450px;
 }
 
 /* Settings categories. */
 .settings-categories {
-  @apply flex flex-col items-center space-y-4 w-[150px];
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+}
+.settings-categories > *:not(:first-child) {
+  margin-top: 16px;
 }
 .settings-category {
-  @apply h-full overflow-hidden rounded w-full;
   background-color: var(--category-color);
   border: 1px solid var(--category-border);
+  border-radius: 4px;
+  height: 100%;
+  overflow: hidden;
   transition: background-color 0.2s, border-color 0.2s;
+  width: 100%;
 }
 .settings-category > div {
-  @apply cursor-pointer flex items-center p-2 space-x-1 w-full;
+  align-items: center;
   border-bottom: 1px solid var(--category-border);
+  cursor: pointer;
+  display: flex;
+  padding: 8px;
   transition: background-color 0.2s, border-color 0.2s;
+  width: 100%;
 }
 .settings-category > div:hover {
   background-color: var(--category-hover);
@@ -51,60 +65,84 @@
   background-color: var(--category-hover);
 }
 .settings-category a {
-  @apply block h-9 w-9;
   background-color: var(--category-icon);
+  display: block;
+  height: 36px;
   transition: background-color 0.2s;
+  width: 36px;
 }
 .settings-category p {
-  @apply pointer-events-none;
+  margin-left: 4px;
+  pointer-events: none;
 }
 .settings-separator {
-  @apply h-px w-11/12;
   background-color: var(--options-border);
+  height: 1px;
   transition: background-color 0.2s;
+  width: 90%;
 }
 .settings-buttons {
-  @apply flex flex-col space-y-2 w-[116px];
+  display: flex;
+  flex-direction: column;
+  width: 116px;
+}
+.settings-buttons > *:not(:first-child) {
+  margin-top: 8px;
 }
 :host ::ng-deep .settings-buttons > vi-button > button {
-  @apply w-full;
+  width: 100%;
 }
 
 /* Settings contents. */
 .settings-contents {
-  @apply w-[400px];
+  margin-left: 16px;
+  width: 400px;
 }
 .settings-title {
-  @apply px-2;
+  padding: 0 8px;
 }
 .settings-title > p {
-  @apply mb-5 mt-2 pb-3 text-2xl;
   border-bottom: 1px solid var(--title-border);
+  font-size: 24px;
+  line-height: 32px;
+  margin: 8px 0 20px 0;
+  padding-bottom: 12px;
   transition: border-color 0.2s;
 }
 
 /* Settings options. */
 .settings-options {
-  @apply h-[calc(100%-74px)] py-4 rounded;
   border: 1px solid var(--options-border);
+  border-radius: 4px;
+  height: calc(100% - 74px);
   transition: border-color 0.2s;
 }
 .settings-option {
-  @apply flex items-center justify-between min-h-[36px] pb-4 [&:not(:first-child)]:pt-4 px-4 space-x-2 [&>p]:whitespace-nowrap;
+  align-items: center;
   border-bottom: 1px solid var(--options-border);
+  display: flex;
+  height: 58px;
+  justify-content: space-between;
+  padding: 0 16px;
   transition: border-color 0.2s;
 }
+.settings-option > *:not(:first-child) {
+  margin-left: 8px;
+}
+.settings-option > p {
+  white-space: nowrap;
+}
 :host ::ng-deep .settings-option vi-button.more {
-  @apply flex pb-2 self-end;
+  display: flex;
+  margin-top: 26px;
 }
 :host ::ng-deep .settings-option vi-button.more a {
   height: 18px;
-  margin-left: 3px;
-  margin-right: 3px;
+  margin: 0 3px;
   width: 18px;
 }
 :host ::ng-deep .settings-option vi-input {
-  @apply w-full;
+  width: 100%;
 }
 
 /* Settings theme. */

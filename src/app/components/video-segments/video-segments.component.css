@@ -36,27 +36,40 @@
 
 /* Video segments container. */
 .segments-container {
-  @apply absolute h-[calc(100%-136px)] right-0 w-[316px];
   background-color: var(--container-color);
   border-left: 1px solid var(--container-border);
+  height: calc(100% - 136px);
+  position: absolute;
+  right: 0;
   transition: background-color 0.2s, border-color 0.2s;
+  width: 316px;
 }
 .segments-container > p {
-  @apply p-2 text-center;
   background-color: var(--container-title);
   border-bottom: 1px solid var(--container-border);
+  padding: 8px;
+  text-align: center;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
 /* Video segments files. */
 .segments-files {
-  @apply max-h-[calc(100%-92px)] overflow-y-auto;
+  max-height: calc(100% - 92px);
+  overflow-y: auto;
 }
 
 /* Video file information. */
 .segments-file {
-  @apply bg-transparent cursor-pointer h-fit p-4 relative space-y-4 w-full;
+  background-color: transparent;
+  cursor: pointer;
+  height: fit-content;
+  padding: 16px;
+  position: relative;
   transition: background-color 0.2s;
+  width: 100%;
+}
+.segments-file > *:not(:first-child) {
+  margin-top: 16px;
 }
 .segments-files > div:not(:first-child) > .segments-file {
   border-top: 1px solid var(--container-border);
@@ -70,41 +83,87 @@
   margin-right: 16px;
 }
 .segments-file > div:first-child {
-  @apply flex items-center overflow-hidden space-x-2 [&>*:not(div)]:pointer-events-none [&>*]:whitespace-nowrap;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+}
+.segments-file > div:first-child > * {
+  white-space: nowrap;
+}
+.segments-file > div:first-child > *:not(:first-child) {
+  margin-left: 8px;
+}
+.segments-file > div:first-child > *:not(div) {
+  pointer-events: none;
 }
 .segments-file > div:first-child > div {
-  @apply absolute p-2 pr-0 right-4;
+  padding: 8px;
+  padding-right: 0;
+  position: absolute;
+  right: 16px;
 }
 .segments-file > div:first-child > div > span {
-  @apply block h-2 rounded-full w-2;
   background-color: var(--file-selected);
+  border-radius: 8px;
+  display: block;
+  height: 8px;
+  width: 8px;
 }
 .segments-file > div:last-child {
-  @apply flex pointer-events-none space-x-4;
+  display: flex;
+  pointer-events: none;
+}
+.segments-file > div:last-child > *:not(:first-child) {
+  margin-left: 16px;
 }
 .segments-file > div:last-child > div {
-  @apply text-sm whitespace-nowrap;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
 }
 .segments-file > div:last-child > img {
-  @apply h-[54px] object-cover w-[96px];
   border: 1px solid var(--container-border);
+  height: 54px;
+  object-fit: cover;
   transition: border-color 0.2s;
+  width: 96px;
 }
 
 /* Video file clips. */
 .segments-clip {
-  @apply cursor-pointer h-fit px-4 py-3 relative rounded-sm w-full [&>p]:text-sm;
+  border-radius: 2px;
+  cursor: pointer;
+  height: fit-content;
+  padding: 12px 16px;
+  position: relative;
+  width: 100%;
+}
+.segments-clip > p {
+  font-size: 14px;
+  line-height: 20px;
 }
 .segments-clip b,
 .segments-clip p {
   color: var(--clip-text);
 }
 .segments-clip > div {
-  @apply flex items-center mb-2 overflow-hidden space-x-2 whitespace-nowrap;
+  align-items: center;
+  display: flex;
+  margin-bottom: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.segments-clip > div > *:not(:first-child) {
+  margin-left: 8px;
 }
 .segments-clip > span {
-  @apply absolute border-4 h-full left-0 top-0 w-full;
+  border: 4px solid;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
   transition: opacity 0.2s;
+  width: 100%;
 }
 .segments-clip > span.unselected {
   opacity: 0.8;
@@ -118,18 +177,28 @@
   z-index: 1;
 }
 .segments-actions {
-  @apply absolute right-2 top-2;
+  position: absolute;
+  right: 8px;
+  top: 8px;
 }
 .segments-actions > a {
-  @apply bg-white block cursor-pointer h-5 w-5;
+  background-color: rgb(255, 255, 255);
+  cursor: pointer;
+  display: block;
+  height: 20px;
+  width: 20px;
 }
 .segments-extra {
-  @apply flex p-2;
+  display: flex;
+  padding: 8px;
 }
 .segments-extra > div {
-  @apply cursor-pointer flex justify-center rounded;
   background-color: var(--clip-color);
   border: 1px solid var(--container-border);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
   transition: background-color 0.2s, border-color 0.2s;
 }
 .segments-extra > div:hover {
@@ -139,34 +208,27 @@
   margin-left: 8px;
 }
 .segments-extra > div > a {
-  @apply block h-6 w-6;
   background-color: var(--clip-icon);
+  display: block;
+  height: 24px;
   transition: background-color 0.2s;
+  width: 24px;
 }
-/*
-.segments-add {
-  @apply cursor-pointer flex justify-center m-2 rounded;
-  background-color: var(--clip-color);
-  border: 1px solid var(--container-border);
-  transition: background-color 0.2s, border-color 0.2s;
-}
-.segments-add:hover {
-  background-color: var(--clip-hover);
-}
-.segments-add > a {
-  @apply block h-6 w-6;
-  background-color: var(--clip-icon);
-  transition: background-color 0.2s;
-}*/
 
 /* Video segments buttons. */
 .segments-buttons {
-  @apply absolute bottom-0 flex h-[51px] justify-between pt-[5px] px-4 w-full;
   background-color: var(--buttons-color);
   border-bottom: 1px solid var(--container-border);
   border-top: 1px solid var(--container-border);
+  bottom: 0;
+  display: flex;
+  height: 51px;
+  justify-content: space-between;
+  padding: 5px 16px 0 16px;
+  position: absolute;
   transition: background-color 0.2s, border-color 0.2s;
+  width: 100%;
 }
-.segments-buttons > div {
-  @apply space-x-2;
+.segments-buttons > div > *:not(:first-child) {
+  margin-left: 8px;
 }
