@@ -34,7 +34,7 @@ export class SaveService {
   public saveConcat = signal<OutputConcat[]>(Outputs.concat);
   public saveCut = signal<OutputCut[]>(Outputs.cut);
   public saveEditing = signal<boolean>(false);
-  public saveEncoder = signal<Encoder>(Encoders[0]);
+  public saveEncoder = signal<Encoder | null>(Encoders[0]);
   public saveErrorText = signal<string>('');
   public saveErrorOpen = signal<boolean>(false);
   public saveFormats = signal<Format[]>(Formats);
@@ -114,9 +114,9 @@ export class SaveService {
   };
 
   // Update save settings encoder state.
-  public saveUpdateEncoder(encoderCode: string): void {
+  public saveUpdateEncoder(encoderCode: string | null): void {
     // Set default encoder for the selected codec.
-    const saveEncoder: Encoder = Encoders.find((v) => v.codes.includes(encoderCode))!;
+    const saveEncoder: Encoder | null = Encoders.find((v) => v.codes.includes(encoderCode || '')) ?? null;
     this.saveEncoder.set(saveEncoder);
     if (saveEncoder) {
       // Update encoding parameters lists.
@@ -273,8 +273,8 @@ export class SaveService {
     this.saveUpdateCodec();
     if (this.saveInfo.saveFilters$().length == 0) {
       this.saveSettings.saveEncoder.set(null);
-      this.saveReencode.set(false);
     }
+    this.saveUpdateEncoder(this.saveSettings.saveEncoder());
   };
 
   // Export video to output file.
@@ -633,11 +633,11 @@ export class SaveService {
     const videoStreams: VideoContainer[] = this.store.storeVideos()[0].videoStreams;
     if ((this.saveInfo.saveFilters$().length || this.saveReencode()) && this.saveEncoder()) {
       // Get encoding speed and compression ratio preset.
-      const savePreset: string = this.saveEncoder().presets[Object.keys(this.saveEncoder().presets)[0]].replaceAll('$level', this.saveSettings.savePreset());
+      const savePreset: string = this.saveEncoder()!.presets[Object.keys(this.saveEncoder()!.presets)[0]].replaceAll('$level', this.saveSettings.savePreset());
       // Get control rate quality and calculate bitrate.
-      const saveQuality: number = this.saveSettings.saveQuality() || this.saveEncoder().quality[0];
+      const saveQuality: number = this.saveSettings.saveQuality() || this.saveEncoder()!.quality[0];
       const saveBitrate: number = +this.saveSettings.saveBitrate() || Math.round(+videoStreams[1].bit_rate / 1000) || Math.round(+videoStreams[0].bit_rate / 1000);
-      const saveRate: string = this.saveEncoder().rates[this.saveSettings.saveRate()].replaceAll('$crf', saveQuality.toString()).replaceAll('$bit', saveBitrate.toString());
+      const saveRate: string = this.saveEncoder()!.rates[this.saveSettings.saveRate()].replaceAll('$crf', saveQuality.toString()).replaceAll('$bit', saveBitrate.toString());
       // Update encoding output command.
       this.saveInfo.saveEncoding = `${savePreset} ${saveRate}`;
     } else {

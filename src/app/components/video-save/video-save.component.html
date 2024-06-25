@@ -181,13 +181,13 @@
             <!-- Quality and bitrate selection. -->
             <div>
               <vi-input
-                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder().rates[save.saveSettings.saveRate()].includes('$crf')"
+                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder()?.rates![save.saveSettings.saveRate()].includes('$crf')"
                 [inputLabel]="'VIDEO_SAVE.ENCODING.QUALITY' | translate: { max: (save.saveEncoder()?.quality![1] ?? 0) }"
                 [inputMax]="save.saveEncoder()?.quality![1] ?? 0"
                 [inputType]="'number'"
                 [(inputValue)]="save.saveSettings.saveQuality" />
               <vi-input
-                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder().rates[save.saveSettings.saveRate()].includes('$bit')"
+                [inputDisabled]="!save.saveReencode() || !save.saveSettings.saveRate() || !save.saveEncoder()?.rates![save.saveSettings.saveRate()].includes('$bit')"
                 [inputLabel]="'VIDEO_SAVE.ENCODING.BITRATE' | translate"
                 [inputPlaceholder]="'GENERAL.DEFAULT' | translate"
                 [inputType]="'number'"

@@ -74,7 +74,7 @@ export class ViSelect {
   private selectUpdateService(selectValue: any): void {
     untracked(() => {
       // Update component select value if the service one has changed.
-      if ((selectValue != undefined) && (this.selectValue() != selectValue)) {
+      if ((selectValue !== undefined) && (this.selectValue() != selectValue)) {
         this.selectValue.set(selectValue);
         this.selectUpdate.emit(selectValue);
         if (this.select.selectClick()) { this.selectClick.emit(selectValue); }
