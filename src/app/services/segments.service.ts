@@ -142,7 +142,7 @@ export class SegmentsService {
     const clipIndex$: number = clipIndex ?? this.store.storeFiles()[this.store.storeIndex()].fileClipIndex();
     this.store.storeFiles()[this.store.storeIndex()].fileClips.update((v) => v.toSpliced(clipIndex$, 1));
     // Update current clip index.
-    this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v - 1);
+    this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v > 0 ? v - 1 : v);
   };
 
   // Reset file(s) clips.
