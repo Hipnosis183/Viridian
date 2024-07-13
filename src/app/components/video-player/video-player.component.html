@@ -42,7 +42,7 @@
 <div [class]="'player-container'">
   <div id="playerEdit" [class]="'player-edit'" [class.segments]="segments.segmentsOpen()">
     <!-- Video player contents. -->
-    <div id="playerContents" [class]="'player-contents'" [style.display]="load.filesLoadState() != 'loaded' ? 'none' : 'flex'">
+    <div id="playerContents" [class]="'player-contents'" [class.loaded]="load.filesLoadState() == 'loaded'">
       <!-- Video player video player. -->
       <div id="playerVideo" [class]="'player-video'">
         @for (file of store.storeFiles(); track file) {

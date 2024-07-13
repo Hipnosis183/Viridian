@@ -126,8 +126,12 @@
 
 /* Video player contents. */
 .player-contents {
+  display: none;
   overflow: hidden;
   position: relative;
+}
+.player-contents.loaded {
+  display: flex;
 }
 
 /* Video player video player. */
