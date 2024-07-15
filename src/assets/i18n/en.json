@@ -31,6 +31,11 @@
     "CROP": "Crop Video",
     "DONE": "Export Video",
     "FILE_ERROR": "The file you tried to open doesn't exist.",
+    "FILE_MESSAGE": {
+      "NOT_VALID": "The opened file is not a valid video container.",
+      "NOT_SUPPORTED": "The opened video file is not natively supported by Electron/Chromium's video player.",
+      "HEVC": "Your system does not support Electron/Chromium's HEVC video hardware decoding."
+    },
     "FILE_OPEN": {
       "TITLE": "Select video file(s)",
       "SUB": "or drag and drop here"

@@ -29,6 +29,9 @@ export class StoreService {
     this.storePlayer.playerWidth.set(0);
   };
 
+  // Define natively compatible codecs.
+  public storeCodecs = ['h264', 'hevc', 'vp8', 'vp9', 'av1'];
+
   // Define colors list for general usage.
   public storeColors: [string, string][] = [
     ['rgb(38, 100, 236)', 'rgb(28, 78, 216)'],  // Blue

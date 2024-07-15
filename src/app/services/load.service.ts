@@ -1,5 +1,6 @@
 // Import Angular elements.
 import { inject, Injectable, signal } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { VideoFrames, VideoStream } from '@app/models/ffmpeg';
@@ -11,6 +12,11 @@ import { DownloadService, FiltersService, InfoService, IpcService, PlayerService
   providedIn: 'root',
 })
 export class LoadService {
+  constructor(
+    // Initialize Angular elements.
+    private translate: TranslateService,
+  ) {};
+
   // Inject app services.
   private download = inject(DownloadService);
   private filters = inject(FiltersService);
@@ -28,12 +34,8 @@ export class LoadService {
   public fileCompat = signal<FileCompat[]>([]);
   public filesLoadList = signal<Partial<File>[]>([]);
   public filesLoadState = signal<FileLoad>(null);
+  public filesLoadText = signal<string>('');
   public filesLoadTotal = signal<number>(0);
-
-  // Update load compatibility state.
-  public fileUpdateCompat(): void {
-    this.fileCompat.set([]);
-  };
 
   // Close all open video files.
   public filesClose(): void {
@@ -61,19 +63,34 @@ export class LoadService {
 
   // Load file/video data into the app state.
   private async filesLoadVideo(fileInfo: File | Partial<File>): Promise<void> {
+    // Get video file stream data.
+    const fileCommand: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${fileInfo.path!}"`;
+    const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null);
+    const videoStream: VideoStream = this.store.storeVideos()[0]?.videoStreams[1];
     // Check if opened file is a valid video file.
-    if (fileInfo.type!.indexOf('video') == -1) { return; }
+    try { JSON.parse(fileData); } catch { this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID')); return; }
+    // Manage video/audio streams.
+    const fileStreams: any[] = [JSON.parse(fileData).format];
+    const streamVideo: VideoStream | undefined = JSON.parse(fileData).streams.find((v: VideoStream) => v.codec_type == 'video');
+    if (streamVideo) { fileStreams.push(streamVideo); }
+    const streamAudio: VideoStream | undefined = JSON.parse(fileData).streams.find((v: VideoStream) => v.codec_type == 'audio');
+    if (streamAudio) { fileStreams.push(streamAudio); }
+    // Check if video file codec is compatible.
+    if (!this.store.storeCodecs.includes(fileStreams[1].codec_name)) {
+      this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED')); return;
+    }
+    // Check if HEVC codec is supported by the user's system.
+    if (fileStreams[1].codec_name == 'hevc') {
+      if (!document.createElement('video').canPlayType('video/mp4; codecs="hvc1.1.6.L93.B0"')) {
+        this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.HEVC')); return;
+      }
+    }
     // Check if file is already opened.
     if (this.store.storeFiles().find((v) => v.filePath == fileInfo.path)) { return; }
     // Manage opened file in recent files list.
     if (!this.store.storeFiles().length) { this.recent.recentFileAdd(fileInfo); }
     // Update file load state to loading.
     this.filesLoadState.set('loading');
-    // Get video file stream data.
-    const fileCommand: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${fileInfo.path!}"`;
-    const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null);
-    const fileStreams: any[] = [JSON.parse(fileData).format].concat(JSON.parse(fileData).streams);
-    const videoStream: VideoStream = this.store.storeVideos()[0]?.videoStreams[1];
     // Add file if the width and height are the same as the default video.
     if (!this.store.storeVideos().length || ((videoStream.height == fileStreams[1].height) && (videoStream.width == fileStreams[1].width))) {
       // Define concat mode to use (demuxer/filter) depending on the codec and timebase.

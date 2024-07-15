@@ -12,6 +12,21 @@
     </div>
   </vi-modal>
 }
+<!-- Video player message dialog. -->
+@if (load.filesLoadText()) {
+  <vi-modal>
+    <div [class]="'player-compatibility'">
+      <div>
+        <p>{{ load.filesLoadText() }}</p>
+      </div>
+      <vi-button
+        [buttonColor]="'success'"
+        [buttonIcon]="'done'"
+        [buttonText]="'GENERAL.OK' | translate"
+        (click)="load.filesLoadText.set('')" />
+    </div>
+  </vi-modal>
+}
 <!-- Video file compatibility dialog. -->
 @if (load.filesLoadState() == 'loaded' && load.fileCompat().length) {
   <vi-modal>
@@ -34,7 +49,7 @@
         [buttonColor]="'success'"
         [buttonIcon]="'done'"
         [buttonText]="'GENERAL.OK' | translate"
-        (click)="load.fileUpdateCompat()" />
+        (click)="load.fileCompat.set([])" />
     </div>
   </vi-modal>
 }
