@@ -5,17 +5,7 @@
     "codecs": ["mpeg4","h264","hevc","vp9","mpeg1video","mpeg2video"]
   },
   {
-    "name": "Raw H.264 Video",
-    "extensions": ["h264","264"],
-    "codecs": ["h264"]
-  },
-  {
-    "name": "Raw H.265 / HVEC Video",
-    "extensions": ["hevc","h265","265"],
-    "codecs": ["hevc"]
-  },
-  {
-    "name": "Raw MPEG-4 Video",
+    "name": "MPEG-4 Video",
     "extensions": ["m4v"],
     "codecs": ["mpeg4"]
   },
