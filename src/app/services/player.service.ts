@@ -233,7 +233,7 @@ export class PlayerService {
         this.playerVideo.style.height = '100%';
         for (let i = 0; i < playerLength; i++) {
           this.store.storePlayer.playerVideo()[i].style.height = 'fit-content';
-          this.store.storePlayer.playerVideo()[i].style.width = (this.playerEdit.offsetHeight - 2) + 'px';
+          this.store.storePlayer.playerVideo()[i].style.width = (this.playerEdit.offsetHeight - 1) + 'px';
         }
         // Check if video element clips horizontally with parent container.
         if (playerVideo.getBoundingClientRect().width > this.playerEdit.offsetWidth) {
@@ -248,6 +248,9 @@ export class PlayerService {
           this.playerVideo.style.height = playerVideo.offsetWidth + 'px';
         } else {
           // Fit video element vertically on parent.
+          for (let i = 0; i < playerLength; i++) {
+            this.store.storePlayer.playerVideo()[i].style.height = playerVideo.offsetHeight + 'px';
+          }
           this.playerContents.style.width = playerVideo.offsetHeight + 'px';
           this.playerCrop.style.width = this.playerContents.style.width;
           this.playerVideo.style.width = playerVideo.offsetHeight + 'px';
