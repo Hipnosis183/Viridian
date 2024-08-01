@@ -98,9 +98,6 @@ div, h1, p, span {
   color: var(--color-font);
   transition: color 0.2s;
 }
-video {
-  display: block;
-}
 
 /* Scrollbars styling. */
 ::-webkit-scrollbar {
