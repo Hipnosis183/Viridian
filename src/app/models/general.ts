@@ -8,7 +8,7 @@ export type CropCoordinate = 'h' | 'w' | 'x' | 'y';
 export type FileCompat = 'lossyConcat' | 'noConcat';
 
 // File load state.
-export type FileLoad = 'loading' | 'loaded' | null;
+export type FileLoad = 'converting' | 'loading' | 'loaded' | null;
 
 // HTML element target.
 export type HTMLTarget = { value: string };

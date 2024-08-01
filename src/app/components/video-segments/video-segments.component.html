@@ -19,8 +19,8 @@
               <img [src]="store.storeFiles()[i].fileThumb"/>
               <div>
                 <p>{{ info.videoStreams[0].duration | duration }} - {{ info.videoStreams[0].size | fileSize }}</p>
-                <p>{{ info.videoStreams[1].coded_width }}x{{ info.videoStreams[1].coded_height }} {{'@'}}{{ info.videoStreams[1].r_frame_rate | frameRate }}fps</p>
-                <p>{{ store.storeFiles()[i].fileType }} ({{ info.videoStreams[1].codec_name + (info.videoStreams[1].codec_tag_string != '[0][0][0][0]' ? '/' + info.videoStreams[1].codec_tag_string : '') }})</p>
+                <p>{{ info.videoStreams[1].coded_width || info.videoStreams[1].width }}x{{ info.videoStreams[1].coded_height || info.videoStreams[1].height }} {{'@'}}{{ info.videoStreams[1].r_frame_rate | frameRate }}fps</p>
+                <p>{{ store.storeFiles()[i].fileType || 'video/' + store.storeFiles()[i].fileExtension }} ({{ (info.videoStreams[1].codec_name + (!info.videoStreams[1].codec_tag_string.startsWith('[') ? '/' + info.videoStreams[1].codec_tag_string : '')) | lowercase }})</p>
               </div>
             </div>
           </div>

@@ -69,6 +69,23 @@
   z-index: 10;
 }
 
+/* Video player message dialog. */
+.player-message {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+.player-message > div {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 24px;
+  width: 100%;
+}
+.player-message > p {
+  text-align: center;
+}
+
 /* Video file compatibility dialog. */
 .player-compatibility {
   align-items: center;

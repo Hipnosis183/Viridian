@@ -1,5 +1,5 @@
 // Import Angular elements.
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
@@ -31,6 +31,7 @@ export class SaveService {
   public saveCodecs = signal<Codec[]>(Codecs);
   private saveCommandColor: number = 0;
   public saveCommandIndex = signal<number>(0);
+  public saveCompatible = computed(() => this.store.storeCodecs.includes(this.store.storeVideos()[0].videoStreams[1].codec_name));
   public saveConcat = signal<OutputConcat[]>(Outputs.concat);
   public saveCut = signal<OutputCut[]>(Outputs.cut);
   public saveEditing = signal<boolean>(false);
@@ -46,12 +47,13 @@ export class SaveService {
   public saveState = signal<SaveState>(null);
   public saveSettings: SaveSettings = {
     saveBitrate: signal<string>(''),
-    saveCodec: signal<Codec>(Codecs[0]),
+    saveCodec: signal<Codec | null>(null),
     saveConcat: signal<SaveConcat>('merge'),
     saveCut: signal<SaveCut>('smart'),
     saveEncoder: signal<string | null>(null),
+    saveExtension: computed(() => this.saveSettings.saveFormat()?.extensions[0] ?? this.store.storeFiles()[0].fileExtension),
     saveLock: signal<boolean>(true),
-    saveFormat: signal<Format>(Formats[0]),
+    saveFormat: signal<Format | null>(null),
     savePreset: signal<string>(''),
     saveQuality: signal<number>(0),
     saveRate: signal<string>(''),
@@ -77,28 +79,36 @@ export class SaveService {
   // Update save state after file loading.
   public saveLoaded(): void {
     // Update default formats list based on file extension.
-    const saveFormat = Formats.filter((v) => v.extensions.includes(this.store.storeFiles()[0].fileExtension))[0];
-    const saveFormats = Formats.filter((v) => !v.extensions.includes(this.store.storeFiles()[0].fileExtension));
+    const saveExtension: string = Formats.find((v) => v.extensions.includes(this.store.storeFiles()[0].fileExtension)) ? this.saveCompatible() ? this.store.storeFiles()[0].fileExtension : 'mp4' : 'mp4';
+    const saveFormat: Format = Formats.filter((v) => v.extensions.includes(saveExtension))[0];
+    const saveFormats: Format[] = Formats.filter((v) => !v.extensions.includes(saveExtension));
     saveFormats.unshift(saveFormat);
     this.saveFormats.set(saveFormats);
   };
 
   // Update save settings format state.
-  public saveUpdateFormat(saveFormat: Format): void {
+  public saveUpdateFormat(saveFormat: Format | null): void {
     const videoStream: VideoStream = this.store.storeVideos()[0].videoStreams[1];
     // Update default codec and all codecs list based on format.
-    let saveCodec: Codec = Codecs.filter((v) => saveFormat.codecs.includes(v.code) && v.code == videoStream.codec_name)[0];
-    let saveCodecs: Codec[] = Codecs.filter((v) => saveFormat.codecs.includes(v.code) && v.code != videoStream.codec_name);
-    if (!saveCodec) {
-      saveCodec = Codecs.filter((v) => v.code == saveFormat.codecs[0])[0];
-      saveCodecs = saveCodecs.filter((v) => v.code != saveCodec.code);
+    if (saveFormat) {
+      const videoCodec: string = this.saveCompatible() ? videoStream.codec_name : 'h264';
+      let saveCodec: Codec = Codecs.filter((v) => saveFormat.codecs.includes(v.code) && v.code == videoCodec)[0];
+      let saveCodecs: Codec[] = Codecs.filter((v) => saveFormat.codecs.includes(v.code) && v.code != videoCodec);
+      if (!saveCodec) {
+        saveCodec = Codecs.filter((v) => v.code == saveFormat.codecs[0])[0];
+        saveCodecs = saveCodecs.filter((v) => v.code != saveCodec.code);
+      }
+      saveCodecs.unshift(saveCodec);
+      this.saveCodecs.set(saveCodecs);
+      this.saveSettings.saveCodec.set(saveCodec);
+      this.saveSettings.saveEncoder.set(saveCodec.encoders[0]);
+    } else {
+      this.saveCodecs.set(Codecs);
+      this.saveSettings.saveCodec.set(null);
+      this.saveSettings.saveEncoder.set(null);
     }
-    saveCodecs.unshift(saveCodec);
-    this.saveCodecs.set(saveCodecs);
-    this.saveSettings.saveCodec.set(saveCodec);
-    this.saveSettings.saveEncoder.set(saveCodec.encoders[0]);
     // Update output path file extension.
-    this.saveInfo.saveOutput.update((v) => v.replace(/(\.[\w\d_-]+)$/i, '.' + saveFormat.extensions[0]));
+    this.saveInfo.saveOutput.update((v) => v.replace(/(\.[\w\d_-]+)$/i, '.' + this.saveSettings.saveExtension()));
     // Update save reencoding state.
     this.saveUpdateReencode();
   };
@@ -106,7 +116,7 @@ export class SaveService {
   // Update save settings codec state.
   public saveUpdateCodec(): void {
     // Fallback to default value when not reencoding.
-    if (!this.saveSettings.saveCodec().encoders.includes(this.saveSettings.saveEncoder()!)) {
+    if (!this.saveSettings.saveCodec() || !this.saveSettings.saveCodec()!.encoders.includes(this.saveSettings.saveEncoder()!)) {
       this.saveSettings.saveEncoder.set(null);
     }
     // Update save reencoding state.
@@ -264,12 +274,18 @@ export class SaveService {
     this.filters.filterWidth.set(this.filters.filterCropW());
     // Define output values.
     this.saveSettings.saveCut.set(Outputs.cut[0].code as SaveCut);
-    this.saveInfo.saveOutput.set((this.store.storeFiles()[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.saveSettings.saveFormat().extensions[0])));
+    this.saveInfo.saveOutput.set((this.store.storeFiles()[0].filePath.replace(/(\.[\w\d_-]+)$/i, '_out.' + this.saveSettings.saveExtension())));
     // Reset format and encoding values.
     this.saveLoaded();
-    this.saveSettings.saveFormat.set(this.saveFormats()[0]);
-    this.saveUpdateFormat(this.saveFormats()[0]);
-    this.saveSettings.saveCodec.set(this.saveCodecs()[0]);
+    if (this.saveCompatible() || this.saveInfo.saveFilters$().length) {
+      this.saveSettings.saveFormat.set(this.saveFormats()[0]);
+      this.saveUpdateFormat(this.saveFormats()[0]);
+      this.saveSettings.saveCodec.set(this.saveCodecs()[0]);
+    } else {
+      this.saveSettings.saveFormat.set(null);
+      this.saveUpdateFormat(null);
+      this.saveSettings.saveCodec.set(null);
+    }
     this.saveUpdateCodec();
     if (this.saveInfo.saveFilters$().length == 0) {
       this.saveSettings.saveEncoder.set(null);
@@ -423,7 +439,7 @@ export class SaveService {
         let clipStart: number = file.fileClips()[k].clipStart() / frameRate;
         const clipEnd: number = file.fileClips()[k].clipEnd() / frameRate;
         const clipInput: string = file.fileTemp + `clip_${k}.txt`;
-        const clipOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_clip_${k}.` + this.saveSettings.saveFormat().extensions[0]);
+        const clipOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_clip_${k}.` + this.saveSettings.saveExtension());
         // Smart cut mode.
         if (this.saveSettings.saveCut() == 'smart') {
           let clipConcat: string = '', clipCutpoint: number = 0, clipSplits: SaveSplit[] = [];
@@ -449,7 +465,7 @@ export class SaveService {
           }
           for (let [l, clip] of clipSplits.entries()) {
             // Add clip creation command to list.
-            const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.saveSettings.saveFormat().extensions[0]);
+            const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.saveSettings.saveExtension());
             this.saveCommandAdd(
               this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.NAME', { i: i + 1, k: k + 1, l: l + 1 }),
               this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.FULL', { i: `${i + 1}/${this.store.storeFiles().length}`, k: `${k + 1}/${file.fileClips().length}`, l: `${l + 1}/${clipSplits.length}` }),
@@ -533,7 +549,7 @@ export class SaveService {
             }
             for (let [l, clip] of clipSplits.entries()) {
               // Add clip creation command to list.
-              const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.saveSettings.saveFormat().extensions[0]);
+              const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}_${l}.` + this.saveSettings.saveExtension());
               this.saveCommandAdd(
                 this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.NAME', { i: i + 1, k: k + 1, l: l + 1 }),
                 this.translate.instant('VIDEO_SAVE.EDIT.SPLIT.FULL', { i: `${i + 1}/${this.store.storeFiles().length}`, k: `${k + 1}/${file.fileClips().length}`, l: `${l + 1}/${clipSplits.length}` }),
@@ -559,7 +575,7 @@ export class SaveService {
               }
             }
             // Add clip creation command to list.
-            const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}.` + this.saveSettings.saveFormat().extensions[0]);
+            const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_tmp_${k}.` + this.saveSettings.saveExtension());
             this.saveCommandAdd(
               this.translate.instant('VIDEO_SAVE.EDIT.CLIP.NAME', { i: i + 1, k: k + 1 }),
               this.translate.instant('VIDEO_SAVE.EDIT.CLIP.FULL', { i: `${i + 1}/${this.store.storeFiles().length}`, k: `${k + 1}/${file.fileClips().length}` }),
@@ -573,7 +589,7 @@ export class SaveService {
         }
         // Add clip concatenation command to list.
         const fileInput: string = file.fileClip;
-        const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.saveSettings.saveFormat().extensions[0]);
+        const fileOutput: string = file.filePath.replace(/(\.[\w\d_-]+)$/i, `_concat.` + this.saveSettings.saveExtension());
         this.saveCommandAdd(
           this.translate.instant('VIDEO_SAVE.EDIT.CONCAT.NAME', { i: i + 1 }),
           this.translate.instant('VIDEO_SAVE.EDIT.CONCAT.FULL', { i: `${i + 1}/${this.store.storeFiles().length}`, k: `${file.fileClips().length}` }),

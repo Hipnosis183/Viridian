@@ -7,6 +7,7 @@
     "DEFAULT": "Default",
     "DELETE": "Delete",
     "OK": "Ok",
+    "PROCEED": "Proceed",
     "REMOVE": "Remove",
     "SELECTED": "Selected"
   },
@@ -18,6 +19,7 @@
   },
   "VIDEO_INFO": {
     "BITRATE": "Bitrate",
+    "CHANNEL": "Channel",
     "CHANNELS": "Channels",
     "FILE": "File",
     "INFORMATION": "Information",
@@ -28,13 +30,14 @@
     "CAPTURE": "Capture Frame",
     "CLEAR": "Clear Metadata",
     "CLOSE": "Close File",
+    "CONVERTING": "Converting File... ({{ current }}/{{ total }})",
     "CROP": "Crop Video",
     "DONE": "Export Video",
     "FILE_ERROR": "The file you tried to open doesn't exist.",
     "FILE_MESSAGE": {
       "NOT_VALID": "The opened file is not a valid video container.",
-      "NOT_SUPPORTED": "The opened video file is not natively supported by Electron/Chromium's video player.",
-      "HEVC": "Your system does not support Electron/Chromium's HEVC video hardware decoding."
+      "NOT_SUPPORTED": "The opened video file is not natively supported by Electron/Chromium's video player.\n\nA temporary, compatible version of the video can be created to allow its usage in Viridian. All operations will use the original input file as the source. This process could take several minutes.\n\nNote that depending on the container and/or codec, some features (filters, cut/concat, etc.) might not work properly, and output settings could be limited.",
+      "HEVC": "Your system does not support Electron/Chromium's HEVC video hardware decoding.\n\nA temporary, compatible version of the video can be created to allow its usage in Viridian. All operations will use the original input file as the source. This process could take several minutes."
     },
     "FILE_OPEN": {
       "TITLE": "Select video file(s)",
@@ -100,6 +103,7 @@
       "ENCODERS": "All Encoders",
       "FORMAT": "Format",
       "FORMATCODEC": "Format and Codec",
+      "INHERIT": "Inherit (Same as Input)",
       "NONE": "None (Copy Stream)"
     },
     "LOSSY": "Lossy",

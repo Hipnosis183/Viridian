@@ -1,5 +1,5 @@
 // Import Angular elements.
-import { TitleCasePipe, UpperCasePipe } from '@angular/common';
+import { LowerCasePipe, TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ import { ViModal } from '@app/ui';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    TranslateModule, TitleCasePipe, UpperCasePipe,
+    TranslateModule, LowerCasePipe, TitleCasePipe,
     RenderedDirective, DurationPipe, FileSizePipe, FrameRatePipe,
     ViModal,
   ],

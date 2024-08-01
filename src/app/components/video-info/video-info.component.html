@@ -21,17 +21,17 @@
               @if ($first) {
                 <td></td>
                 <td>{{ 'VIDEO_INFO.FILE' | translate }}</td>
-                <td>{{ store.storeFiles()[store.storeIndex()].fileType }}</td>
+                <td>{{ store.storeFiles()[store.storeIndex()].fileType || 'video/' + store.storeFiles()[store.storeIndex()].fileExtension }}</td>
                 <td>{{ stream.bit_rate / 1000 }} kb/s</td>
                 <td>{{ stream.duration | duration }} - {{ stream.size | fileSize }}</td>
               } @else {
                 <td>{{ stream.index }}</td>
                 <td>{{ stream.codec_type | titlecase }}</td>
-                <td>{{ stream.codec_name | uppercase }}{{ (stream.codec_tag_string != '[0][0][0][0]' ? '/' + stream.codec_tag_string : '') | uppercase }}</td>
+                <td>{{ stream.codec_name | lowercase }}{{ (!stream.codec_tag_string.startsWith('[') ? '/' + stream.codec_tag_string : '') | lowercase }}</td>
                 <td>{{ stream.bit_rate ? stream.bit_rate / 1000 + ' kb/s' : '-' }}</td>
                 @switch (stream.codec_type) {
-                  @case ('video') { <td>{{ stream.coded_width }}x{{ stream.coded_height }} {{ '@' }}{{ stream.r_frame_rate | frameRate }}fps</td> }
-                  @case ('audio') { <td>{{ stream.channels }} {{ 'VIDEO_INFO.CHANNELS' | translate }} ({{ stream.channel_layout | titlecase }})</td> }
+                  @case ('video') { <td>{{ stream.coded_width || stream.width }}x{{ stream.coded_height || stream.height }} {{ '@' }}{{ stream.r_frame_rate | frameRate }}fps</td> }
+                  @case ('audio') { <td>{{ stream.channels }} {{ (stream.channels == 1 ? 'VIDEO_INFO.CHANNEL' : 'VIDEO_INFO.CHANNELS') | translate }} {{ stream.channel_layout ? '(' + (stream.channel_layout | titlecase) + ')' : '' }}</td> }
                 }
               }
             </tr>

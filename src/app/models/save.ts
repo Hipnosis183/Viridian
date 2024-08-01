@@ -1,5 +1,5 @@
 // Import Angular elements.
-import { WritableSignal } from '@angular/core';
+import { Signal, WritableSignal } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { Codec, Format } from '@app/models/listas';
@@ -41,12 +41,13 @@ export interface SaveInfo {
 // Video save settings.
 export interface SaveSettings {
   saveBitrate: WritableSignal<string>,
-  saveCodec: WritableSignal<Codec>,
+  saveCodec: WritableSignal<Codec | null>,
   saveConcat: WritableSignal<SaveConcat>,
   saveCut: WritableSignal<SaveCut>,
   saveEncoder: WritableSignal<string | null>,
+  saveExtension: Signal<string>,
   saveLock: WritableSignal<boolean>,
-  saveFormat: WritableSignal<Format>,
+  saveFormat: WritableSignal<Format | null>,
   savePreset: WritableSignal<string>,
   saveQuality: WritableSignal<number>,
   saveRate: WritableSignal<string>,

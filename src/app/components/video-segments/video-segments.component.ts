@@ -1,5 +1,5 @@
 // Import Angular elements.
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, LowerCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,7 +18,7 @@ import { ViButton } from '@app/ui';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    TranslateModule, DecimalPipe,
+    TranslateModule, DecimalPipe, LowerCasePipe,
     DropdownDirective, DurationPipe, FrameRatePipe, FileSizePipe, ViButton,
   ],
 })

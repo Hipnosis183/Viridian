@@ -65,19 +65,24 @@
               [(selectValue)]="save.saveSettings.saveFormat"
               (selectUpdate)="save.saveUpdateFormat($event)">
               <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
-                @for (format of save.saveFormats(); track format) {
-                  @if ($first) {
-                    <vi-option
-                      [optionLabel]="format.extensions[0] + ' | ' + format.name"
-                      [optionSelected]="true"
-                      [optionValue]="format" />
-                  }
+                @if (save.saveCompatible() || save.saveInfo.saveFilters$().length) {
+                  <vi-option
+                    [optionLabel]="save.saveFormats()[0].extensions[0] + ' | ' + save.saveFormats()[0].name"
+                    [optionSelected]="true"
+                    [optionValue]="save.saveFormats()[0]" />
+                } @else {
+                  <vi-option
+                    [optionLabel]="'VIDEO_SAVE.FORMAT.INHERIT' | translate"
+                    [optionSelected]="true"
+                    [optionValue]="null" />
                 }
               </vi-option-group>
               @if (save.saveFormats().length > 1) {
                 <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.CONTAINERS' | translate">
                   @for (format of save.saveFormats(); track format) {
-                    @if (!$first) {
+                    @if ((save.saveCompatible() && !$first)
+                      || (!save.saveCompatible() && !save.saveInfo.saveFilters$().length)
+                      || (!save.saveCompatible() && !$first && save.saveInfo.saveFilters$().length)) {
                       <vi-option
                         [optionLabel]="format.extensions[0] + ' | ' + format.name"
                         [optionValue]="format" />
@@ -87,71 +92,73 @@
               }
             </vi-select>
             <!-- Codec selection. -->
-            @if (save.saveSettings.saveFormat()) {
-              <vi-select
-                [selectLabel]="'GENERAL.CODEC' | translate"
-                [(selectValue)]="save.saveSettings.saveCodec"
-                (selectUpdate)="save.saveUpdateCodec()">
-                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
+            <vi-select
+              [selectLabel]="'GENERAL.CODEC' | translate"
+              [(selectValue)]="save.saveSettings.saveCodec"
+              (selectUpdate)="save.saveUpdateCodec()">
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DETECTED' | translate">
+                @if (save.saveCompatible() || save.saveInfo.saveFilters$().length) {
+                  <vi-option
+                    [optionLabel]="save.saveCodecs()[0].code + ' | ' + save.saveCodecs()[0].name"
+                    [optionSelected]="true"
+                    [optionValue]="save.saveCodecs()[0]" />
+                } @else {
+                  <vi-option
+                    [optionLabel]="'VIDEO_SAVE.FORMAT.INHERIT' | translate"
+                    [optionSelected]="true"
+                    [optionValue]="null" />
+                }
+              </vi-option-group>
+              @if (save.saveSettings.saveFormat() && save.saveCodecs().length > 1) {
+                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.CODECS' | translate">
                   @for (codec of save.saveCodecs(); track codec) {
-                    @if ($first) {
+                    @if ((save.saveCompatible() && !$first)
+                      || (!save.saveCompatible() && !save.saveInfo.saveFilters$().length)
+                      || (!save.saveCompatible() && !$first && save.saveInfo.saveFilters$().length)) {
                       <vi-option
                         [optionLabel]="codec.code + ' | ' + codec.name"
-                        [optionSelected]="true"
                         [optionValue]="codec" />
                     }
                   }
                 </vi-option-group>
-                @if (save.saveCodecs().length > 1) {
-                  <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.CODECS' | translate">
-                    @for (codec of save.saveCodecs(); track codec) {
-                      @if (!$first) {
-                        <vi-option
-                          [optionLabel]="codec.code + ' | ' + codec.name"
-                          [optionValue]="codec" />
-                      }
-                    }
-                  </vi-option-group>
-                }
-              </vi-select>
-            }
+              }
+            </vi-select>
             <!-- Encoder selection. -->
-            @if (save.saveSettings.saveCodec()) {
-              <vi-select
-                [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
-                [(selectValue)]="save.saveSettings.saveEncoder"
-                (selectUpdate)="save.saveUpdateEncoder($event)">
-                <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
-                  @if ((!save.saveInfo.saveFilters$().length && !filters.filterConcat().length)
-                    && save.saveSettings.saveCodec().code == store.storeVideos()[0].videoStreams[1].codec_name) {
-                    <vi-option
-                      [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate"
-                      [optionSelected]="true"
-                      [optionValue]="null" />
-                  }
-                  @if ((save.saveInfo.saveFilters$().length || filters.filterConcat().length)
-                    || save.saveSettings.saveCodec().code != store.storeVideos()[0].videoStreams[1].codec_name) {
-                    <vi-option
-                      [optionLabel]="save.saveSettings.saveCodec().encoders[0]"
-                      [optionSelected]="!save.saveSettings.saveEncoder()"
-                      [optionValue]="save.saveSettings.saveCodec().encoders[0]" />
-                  }
-                </vi-option-group>
+            <vi-select
+              [selectLabel]="'VIDEO_SAVE.FORMAT.ENCODER' | translate"
+              [(selectValue)]="save.saveSettings.saveEncoder"
+              (selectUpdate)="save.saveUpdateEncoder($event)">
+              <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.DEFAULT' | translate">
+                @if (!save.saveSettings.saveCodec() || (!save.saveInfo.saveFilters$().length && !filters.filterConcat().length)
+                  && save.saveSettings.saveCodec()!.code == store.storeVideos()[0].videoStreams[1].codec_name) {
+                  <vi-option
+                    [optionLabel]="'VIDEO_SAVE.FORMAT.NONE' | translate"
+                    [optionSelected]="true"
+                    [optionValue]="null" />
+                }
+                @else {
+                  <vi-option
+                    [optionLabel]="save.saveSettings.saveCodec()!.encoders[0]"
+                    [optionSelected]="true"
+                    [optionValue]="save.saveSettings.saveCodec()!.encoders[0]" />
+                }
+              </vi-option-group>
+              @if (save.saveSettings.saveCodec()) {
                 @if (((save.saveInfo.saveFilters$().length || filters.filterConcat().length)
-                  || save.saveSettings.saveCodec().code != store.storeVideos()[0].videoStreams[1].codec_name)
-                  && save.saveSettings.saveCodec().encoders.length == 1 ? false : true) {
+                  || save.saveSettings.saveCodec()!.code != store.storeVideos()[0].videoStreams[1].codec_name)
+                  && save.saveSettings.saveCodec()!.encoders.length == 1 ? false : true) {
                   <vi-option-group [optionLabel]="'VIDEO_SAVE.FORMAT.ENCODERS' | translate">
-                    @for (encoder of save.saveSettings.saveCodec().encoders; track encoder) {
+                    @for (encoder of save.saveSettings.saveCodec()!.encoders; track encoder) {
                       @if (((!save.saveInfo.saveFilters$().length && !filters.filterConcat().length)
-                        && save.saveSettings.saveCodec().code == store.storeVideos()[0].videoStreams[1].codec_name)
-                        || (save.saveSettings.saveCodec().encoders.length && !$first)) {
+                        && save.saveSettings.saveCodec()!.code == store.storeVideos()[0].videoStreams[1].codec_name)
+                        || (save.saveSettings.saveCodec()!.encoders.length && !$first)) {
                         <vi-option [optionLabel]="encoder" [optionValue]="encoder" />
                       }
                     }
                   </vi-option-group>
                 }
-              </vi-select>
-            }
+              }
+            </vi-select>
           </div>
         </vi-groupbox>
         <!-- Encoding section. -->

@@ -62,7 +62,7 @@ export class LoadService {
   };
 
   // Load file/video data into the app state.
-  private async filesLoadVideo(fileInfo: File | Partial<File>): Promise<void> {
+  private async filesLoadVideo(fileInfo: File | Partial<File>, fileConverted?: boolean): Promise<void> {
     // Get video file stream data.
     const fileCommand: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${fileInfo.path!}"`;
     const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null);
@@ -75,14 +75,21 @@ export class LoadService {
     if (streamVideo) { fileStreams.push(streamVideo); }
     const streamAudio: VideoStream | undefined = JSON.parse(fileData).streams.find((v: VideoStream) => v.codec_type == 'audio');
     if (streamAudio) { fileStreams.push(streamAudio); }
-    // Check if video file codec is compatible.
-    if (!this.store.storeCodecs.includes(fileStreams[1].codec_name)) {
-      this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED')); return;
-    }
-    // Check if HEVC codec is supported by the user's system.
-    if (fileStreams[1].codec_name == 'hevc') {
-      if (!document.createElement('video').canPlayType('video/mp4; codecs="hvc1.1.6.L93.B0"')) {
-        this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.HEVC')); return;
+    // Check if incompatible file has been converted already.
+    if (!fileConverted) {
+      // Check if video file codec is compatible.
+      if (!this.store.storeCodecs.includes(fileStreams[1].codec_name)) {
+        this.filesLoadInfo = fileInfo;
+        this.filesLoadStream = fileStreams[1];
+        this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED')); return;
+      }
+      // Check if HEVC codec is supported by the user's system.
+      if (fileStreams[1].codec_name == 'hevc') {
+        if (!document.createElement('video').canPlayType('video/mp4; codecs="hvc1.1.6.L93.B0"')) {
+          this.filesLoadInfo = fileInfo;
+          this.filesLoadStream = fileStreams[1];
+          this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.HEVC')); return;
+        }
       }
     }
     // Check if file is already opened.
@@ -99,7 +106,7 @@ export class LoadService {
         this.fileCompat.update((v) => [...v, 'lossyConcat']);
       }
       // Define file data.
-      const fileTemp: string = await this.filesLoadTemp(fileInfo.path!);
+      const fileTemp: string = await this.filesLoadTemp(fileInfo.path!, true);
       const fileInterval: number = this.filesLoadInterval(fileStreams);
       const fileThumbs: string[] = await this.filesLoadThumbs(fileStreams, fileInterval, fileInfo.path!, fileTemp);
       const fileInfo$: FileInfo = {
@@ -109,7 +116,7 @@ export class LoadService {
         fileClips: signal<ClipInfo[]>([]),
         fileConcat: `${fileTemp}concat.txt`,
         fileConcatClip: `${fileTemp}concat_clip.txt`,
-        fileExtension: fileInfo.path!.split('.').pop()!,
+        fileExtension: fileInfo.path!.split('.').pop()!.toLowerCase(),
         fileInterval: fileInterval,
         fileName: fileInfo.name!,
         filePath: fileInfo.path!,
@@ -141,11 +148,41 @@ export class LoadService {
     }
   };
 
+  // Convert incompatible video files.
+  private filesLoadInfo: File | Partial<File> | null = null;
+  private filesLoadStream: VideoStream | null = null;
+  public async filesLoadConvert(): Promise<void> {
+    if (this.filesLoadInfo && this.filesLoadStream) {
+      // Update file load state to converting.
+      this.filesLoadText.set('');
+      // Check if temporal compatible video has already been generated.
+      const fileTemp: string = `${await this.filesLoadTemp(this.filesLoadInfo.path!)}video.mp4`;
+      const fileExists: boolean = await this.ipc.invoke('file-exists', fileTemp);
+      if (!fileExists) {
+        // Update file load state to converting.
+        this.filesLoadState.set('converting');
+        // Convert input file to a compatible video container.
+        const convertScale: string = this.filesLoadStream.width > this.filesLoadStream.height ? '240:-2' : '-2:240';
+        const convertCommand: string = `ffmpeg -v error -y -noautorotate -i "${this.filesLoadInfo.path}" -c:v libx264 -crf 23 -preset ultrafast -lavfi "scale=${convertScale}" -c:a aac "${fileTemp}"`;
+        await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + convertCommand, null);
+      }
+      // Continue file loading process.
+      this.filesLoadVideo(this.filesLoadInfo, true);
+    }
+  };
+
   // Manage directory for temporal storage.
-  private async filesLoadTemp(filePath: string): Promise<string> {
+  private async filesLoadTemp(filePath: string, fileDummy?: boolean): Promise<string> {
     // Create cache directory for the file.
     const fileTemp: string = process.cwd() + '/temp/' + await this.ipc.invoke('file-hash', filePath) + '/';
-    await this.ipc.invoke('dir-create', `${fileTemp}thumbs`); return fileTemp;
+    await this.ipc.invoke('dir-create', `${fileTemp}thumbs`);
+    // Create dummy video source fallback file.
+    if (fileDummy) {
+      const fileExists: boolean = await this.ipc.invoke('file-exists', `${fileTemp}video.mp4`);
+      if (!fileExists) {
+        await this.ipc.invoke('file-create', `${fileTemp}video.mp4`, '/');
+      }
+    } return fileTemp;
   };
 
   // Get video stream key/i-frames.
@@ -197,11 +234,11 @@ export class LoadService {
   };
 
   // Load any remaining files in the list.
-  private filesLoadNext(): void {
+  public filesLoadNext(): void {
     if (this.filesLoadList().length) {
       // Process the next video file.
       this.filesLoadVideo(this.filesLoadList().shift()!);
-    } else {
+    } else if (this.store.storeFiles().length) {
       // Update load and save states after all videos are fully loaded.
       this.filesLoadState.set('loaded');
       this.save.saveLoaded();

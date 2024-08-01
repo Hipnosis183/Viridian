@@ -1,5 +1,5 @@
 <!-- Video player loading dialog. -->
-@if (load.filesLoadState() == 'loading') {
+@if (load.filesLoadState() == 'converting' || load.filesLoadState() == 'loading') {
   <vi-modal>
     <div [class]="'player-loading'">
       <div>
@@ -8,22 +8,35 @@
           <img [src]="store.storeFiles()[store.storeFiles().length - 1].fileThumb" />
         }
       </div>
-      <p>{{ 'VIDEO_PLAYER.LOADING' | translate: { current: this.load.filesLoadTotal() - this.load.filesLoadList().length, total: this.load.filesLoadTotal() } }}</p>
+      <p>{{ (load.filesLoadState() == 'converting' ? 'VIDEO_PLAYER.CONVERTING' : 'VIDEO_PLAYER.LOADING') | translate: { current: this.load.filesLoadTotal() - this.load.filesLoadList().length, total: this.load.filesLoadTotal() } }}</p>
     </div>
   </vi-modal>
 }
 <!-- Video player message dialog. -->
 @if (load.filesLoadText()) {
   <vi-modal>
-    <div [class]="'player-compatibility'">
+    <div [class]="'player-message'">
+      <p>{{ load.filesLoadText() }}</p>
       <div>
-        <p>{{ load.filesLoadText() }}</p>
+        @if (load.filesLoadText() == ('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID' | translate)) {
+          <vi-button
+            [buttonColor]="'danger'"
+            [buttonIcon]="'close'"
+            [buttonText]="'GENERAL.CLOSE' | translate"
+            (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
+        } @else {
+          <vi-button
+            [buttonColor]="'secondary'"
+            [buttonIcon]="'close'"
+            [buttonText]="'GENERAL.CANCEL' | translate"
+            (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
+          <vi-button
+            [buttonColor]="'success'"
+            [buttonIcon]="'done'"
+            [buttonText]="'GENERAL.PROCEED' | translate"
+            (click)="load.filesLoadConvert()" />
+        }
       </div>
-      <vi-button
-        [buttonColor]="'success'"
-        [buttonIcon]="'done'"
-        [buttonText]="'GENERAL.OK' | translate"
-        (click)="load.filesLoadText.set('')" />
     </div>
   </vi-modal>
 }
@@ -64,9 +77,11 @@
           <video
             [hidden]="load.filesLoadState() == 'loading' || $index != store.storeIndex()"
             [muted]="false"
-            [src]="'file://' + file.filePath"
             (loadedmetadata)="load.filesLoaded($event)"
-            (timeupdate)="null"></video>
+            (timeupdate)="null">
+            <source [src]="'file://' + file.fileTemp + 'video.mp4'" />
+            <source [src]="'file://' + file.filePath" />
+          </video>
         }
       </div>
       <!-- Video player crop tool. -->
