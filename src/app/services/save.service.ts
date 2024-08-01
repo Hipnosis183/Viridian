@@ -45,6 +45,7 @@ export class SaveService {
   public saveReencode = signal<boolean>(false);
   public saveScaler: Scaling = Scaler;
   public saveState = signal<SaveState>(null);
+  public saveSupport = signal<string>('');
   public saveSettings: SaveSettings = {
     saveBitrate: signal<string>(''),
     saveCodec: signal<Codec | null>(null),
@@ -230,7 +231,13 @@ export class SaveService {
   };
 
   // Update save open state.
-  public saveUpdateOpen(): void {
+  public async saveUpdateOpen(): Promise<void> {
+    // Update video encoding/decoding support.
+    if (!this.saveSupport()) {
+      const codecsCommand: string = this.settings.options.ffmpeg.filesPath() + 'ffmpeg -v error -codecs';
+      const codecsInfo: string = await this.ipc.invoke('process-exec', codecsCommand, null);
+      this.saveSupport.set(codecsInfo.match(new RegExp(`^.*(${this.store.storeVideos()[0].videoStreams[1].codec_name}).*$`, 'gm'))![0].slice(1, 7));
+    }
     // Initialize values for the scale filter and video export.
     if (!this.saveOpen()) { this.filters.filtersInit(); }
     // Reset filter output values.

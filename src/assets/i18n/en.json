@@ -127,7 +127,11 @@
       "SCALING": "Scaling",
       "WIDTH": "Width"
     },
-    "STATUS": "Status"
+    "STATUS": "Status",
+    "SUPPORT": {
+      "NAME": "Support",
+      "TEXT": "Reference:\n\nD..... = Decoding supported\n.E.... = Encoding supported\n..V... = Video codec\n...I.. = Intra frame-only codec\n....L. = Lossy compression\n.....S = Lossless compression"
+    }
   },
   "VIDEO_SEGMENTS": {
     "CLIP_MANUAL": {

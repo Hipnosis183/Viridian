@@ -4,17 +4,29 @@
   <div [class]="'save-container'">
     <!-- Video save side panel. -->
     <div [class]="'save-side'">
-      <!-- Video save status. -->
-      <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.STATUS' | translate">
-        <b
-          [class]="'save-status'"
-          [class.lossy]="(save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()"
-          [class.mixed]="save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'smart' && !save.saveReencode()">
-          @if ((save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()) {
-            {{ 'VIDEO_SAVE.LOSSY' | translate }}
-          } @else { {{ 'VIDEO_SAVE.LOSSLESS' | translate }} }
-        </b>
-      </vi-groupbox>
+      <span>
+        <!-- Video save status. -->
+        <vi-groupbox [groupboxLabel]="'VIDEO_SAVE.STATUS' | translate">
+          <b
+            [class]="'save-status'"
+            [class.lossy]="(save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()"
+            [class.mixed]="save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'smart' && !save.saveReencode()">
+            @if ((save.saveInfo.saveCut() && save.saveSettings.saveCut() == 'lossy') || save.saveReencode()) {
+              {{ 'VIDEO_SAVE.LOSSY' | translate }}
+            } @else { {{ 'VIDEO_SAVE.LOSSLESS' | translate }} }
+          </b>
+        </vi-groupbox>
+        <!-- Video save codec support. -->
+        <vi-groupbox
+          [groupboxLabel]="'VIDEO_SAVE.SUPPORT.NAME' | translate"
+          [title]="'VIDEO_SAVE.SUPPORT.TEXT' | translate">
+          <div [class]="'save-support'">
+            @for (letter of save.saveSupport(); track letter) {
+              <span>{{ letter }}</span>
+            }
+          </div>
+        </vi-groupbox>
+      </span>
       <!-- Video save buttons. -->
       <div>
         <span>

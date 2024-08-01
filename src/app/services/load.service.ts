@@ -44,6 +44,7 @@ export class LoadService {
     // Reset app state.
     this.store.storeReset();
     this.filters.filtersReset();
+    this.save.saveSupport.set('');
     this.segments.segmentsOpen.set(false);
   };
 

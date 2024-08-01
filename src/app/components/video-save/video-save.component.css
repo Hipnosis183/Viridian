@@ -69,6 +69,13 @@
 :host ::ng-deep .save-side > div > vi-button > button {
   width: 100%;
 }
+.save-side > span {
+  display: flex;
+  flex-direction: column;
+}
+:host ::ng-deep .save-side > span > *:not(:first-child) {
+  margin-top: 16px;
+}
 .save-separator {
   background-color: var(--separator-color);
   height: 1px;
@@ -85,6 +92,17 @@
 }
 .save-status.mixed {
   color: var(--status-mixed);
+}
+
+/* Video save codec support. */
+.save-support {
+  cursor: default;
+  display: flex;
+}
+.save-support > span {
+  font-weight: bold;
+  text-align: center;
+  width: 14px;
 }
 
 /* Video save options panel. */
