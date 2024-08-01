@@ -35,6 +35,7 @@
     "DONE": "Export Video",
     "FILE_ERROR": "The file you tried to open doesn't exist.",
     "FILE_MESSAGE": {
+      "KEYFRAMES": "The opened video file surpasses the limit of keyframes markers to be displayed in the segments/clips section of the video player.\n\nEverything is going to work normally, including keyframes navigation, but keyframes display will be disabled.",
       "NOT_VALID": "The opened file is not a valid video container.",
       "NOT_SUPPORTED": "The opened video file is not natively supported by Electron/Chromium's video player.\n\nA temporary, compatible version of the video can be created to allow its usage in Viridian. All operations will use the original input file as the source. This process could take several minutes.\n\nNote that depending on the container and/or codec, some features (filters, cut/concat, etc.) might not work properly, and output settings could be limited.",
       "HEVC": "Your system does not support Electron/Chromium's HEVC video hardware decoding.\n\nA temporary, compatible version of the video can be created to allow its usage in Viridian. All operations will use the original input file as the source. This process could take several minutes."

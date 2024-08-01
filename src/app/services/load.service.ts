@@ -191,9 +191,13 @@ export class LoadService {
     const fileCommand: string = `ffprobe -v error -select_streams v:0 -show_entries packet=pts_time,flags -of json -i "${filePath}"`;
     const fileFrames: VideoFrames = JSON.parse(await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand));
     // Filter key/i-frames time values only.
-    const fileFrames$: number[] = fileFrames.packets.filter((v) => v.flags[0] == 'K').map((v) => v.pts_time);
+    const fileKeyframes: number[] = fileFrames.packets.filter((v) => v.flags[0] == 'K').map((v) => v.pts_time);
+    // Check if number of keyframes surpasses the limit.
+    if (fileKeyframes.length > 1024) {
+      this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.KEYFRAMES'));
+    }
     // Sort keyframes to ensure they are in order.
-    return fileFrames$.sort((a, b) => { return a - b; });
+    return fileKeyframes.sort((a, b) => { return a - b; });
   };
 
   // Get seek intervals for thumbnail generation.

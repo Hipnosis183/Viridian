@@ -18,23 +18,33 @@
     <div [class]="'player-message'">
       <p>{{ load.filesLoadText() }}</p>
       <div>
-        @if (load.filesLoadText() == ('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID' | translate)) {
-          <vi-button
-            [buttonColor]="'danger'"
-            [buttonIcon]="'close'"
-            [buttonText]="'GENERAL.CLOSE' | translate"
-            (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
-        } @else {
-          <vi-button
-            [buttonColor]="'secondary'"
-            [buttonIcon]="'close'"
-            [buttonText]="'GENERAL.CANCEL' | translate"
-            (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
-          <vi-button
-            [buttonColor]="'success'"
-            [buttonIcon]="'done'"
-            [buttonText]="'GENERAL.PROCEED' | translate"
-            (click)="load.filesLoadConvert()" />
+        @switch (load.filesLoadText()) {
+          @case ('VIDEO_PLAYER.FILE_MESSAGE.KEYFRAMES' | translate) {
+            <vi-button
+              [buttonColor]="'success'"
+              [buttonIcon]="'done'"
+              [buttonText]="'GENERAL.OK' | translate"
+              (click)="load.filesLoadText.set('')" />
+          }
+          @case ('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID' | translate) {
+            <vi-button
+              [buttonColor]="'danger'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CLOSE' | translate"
+              (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
+          }
+          @default {
+            <vi-button
+              [buttonColor]="'secondary'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CANCEL' | translate"
+              (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
+            <vi-button
+              [buttonColor]="'success'"
+              [buttonIcon]="'done'"
+              [buttonText]="'GENERAL.PROCEED' | translate"
+              (click)="load.filesLoadConvert()" />
+          }
         }
       </div>
     </div>
@@ -302,7 +312,7 @@
     [progressDuration]="store.storePlayer.playerVideo()[store.storeIndex()]?.duration ?? 0"
     [progressExtend]="segments.segmentsOpen()"
     [progressFrames]="store.storeVideos()[store.storeIndex()]?.videoKeyframes ?? []"
-    [progressFramesHide]="!settings.options.general.keyFrames()"
+    [progressFramesHide]="(store.storeVideos()[store.storeIndex()]?.videoKeyframes ?? []).length > 1024 || !settings.options.general.keyFrames()"
     [progressHover]="store.storeFiles()[store.storeIndex()]?.fileThumbs ?? []"
     [progressInterval]="store.storeFiles()[store.storeIndex()]?.fileInterval ?? 0"
     [progressTime]="store.storePlayer.playerVideo()[store.storeIndex()]?.currentTime ?? 0"
