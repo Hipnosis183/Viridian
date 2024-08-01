@@ -66,7 +66,7 @@ export class VideoPlayerComponent {
   private playerUpdateDrop(e: DragEvent): void {
     e.preventDefault(); e.stopPropagation();
     // Disallow adding files if any dialog is open.
-    if (!this.load.filesLoadState() && !this.load.fileCompat().length) {
+    if ((!this.load.filesLoadState() || this.load.filesLoadState() == 'loaded') && !this.load.fileCompat().length) {
       // Hosts don't support signals yet, so can't check for opened dialogs.
       //&& !this.info.infoOpen() && !this.save.saveOpen() && !this.capture.captureOpen()) {
       this.load.filesLoadInit(e.dataTransfer!.files);
