@@ -29,7 +29,7 @@ export class CaptureService {
     const frameTime$: number = frameTime > 0 ? frameTime - 1 : frameTime;
     // Capture frame to output image file.
     const frameCommand: string = `ffmpeg -v error -y -ss ${frameTime$ / frameRate} -i "${this.store.storeFiles()[this.store.storeIndex()].filePath}" -map 0:v -vframes 1 "${this.captureOutput()}"`;
-    await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + frameCommand, null);
+    await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + frameCommand);
     // Close frame capture dialog.
     this.captureUpdateOpen();
   };

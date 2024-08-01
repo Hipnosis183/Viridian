@@ -66,7 +66,7 @@ export class LoadService {
   private async filesLoadVideo(fileInfo: File | Partial<File>, fileConverted?: boolean): Promise<void> {
     // Get video file stream data.
     const fileCommand: string = `ffprobe -v error -show_format -show_entries streams -of json -i "${fileInfo.path!}"`;
-    const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null);
+    const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand);
     const videoStream: VideoStream = this.store.storeVideos()[0]?.videoStreams[1];
     // Check if opened file is a valid video file.
     try { JSON.parse(fileData); } catch { this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID')); return; }
@@ -165,7 +165,7 @@ export class LoadService {
         // Convert input file to a compatible video container.
         const convertScale: string = this.filesLoadStream.width > this.filesLoadStream.height ? '240:-2' : '-2:240';
         const convertCommand: string = `ffmpeg -v error -y -noautorotate -i "${this.filesLoadInfo.path}" -c:v libx264 -crf 23 -preset ultrafast -lavfi "scale=${convertScale}" -c:a aac "${fileTemp}"`;
-        await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + convertCommand, null);
+        await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + convertCommand);
       }
       // Continue file loading process.
       this.filesLoadVideo(this.filesLoadInfo, true);
@@ -189,7 +189,7 @@ export class LoadService {
   // Get video stream key/i-frames.
   private async filesLoadFrames(filePath: string): Promise<number[]> {
     const fileCommand: string = `ffprobe -v error -select_streams v:0 -show_entries packet=pts_time,flags -of json -i "${filePath}"`;
-    const fileFrames: VideoFrames = JSON.parse(await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null));
+    const fileFrames: VideoFrames = JSON.parse(await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand));
     // Filter key/i-frames time values only.
     const fileFrames$: number[] = fileFrames.packets.filter((v) => v.flags[0] == 'K').map((v) => v.pts_time);
     // Sort keyframes to ensure they are in order.
@@ -208,7 +208,7 @@ export class LoadService {
     if (!fileExists) {
       // Generate main video thumbnail.
       const fileCommand: string = `ffmpeg -v error -y -i "${filePath}" -vf "select=eq(n\\,0),scale=200:-1" -vframes 1 -qmin 1 -q:v 1 "${fileTemp}thumb.jpg"`;
-      await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand, null);
+      await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand);
     }
     // Manage video thumbnails if were not generated already.
     const fileThumbs: string[] = [], fileInputs: string[] = [], fileOutputs: string[] = [];
@@ -228,7 +228,7 @@ export class LoadService {
     // Generate small video thumbnails.
     if (this.settings.options.general.createThumbs() && !fileThumbs$.length) {
       const thumbsCommand: string = `ffmpeg -v error -y ${fileInputs.join(' ')} ${fileOutputs.join(' ')}`;
-      await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + thumbsCommand, null);
+      await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + thumbsCommand);
     }
     // Return thumbnails files list.
     return fileThumbs;

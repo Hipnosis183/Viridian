@@ -235,7 +235,7 @@ export class SaveService {
     // Update video encoding/decoding support.
     if (!this.saveSupport()) {
       const codecsCommand: string = this.settings.options.ffmpeg.filesPath() + 'ffmpeg -v error -codecs';
-      const codecsInfo: string = await this.ipc.invoke('process-exec', codecsCommand, null);
+      const codecsInfo: string = await this.ipc.invoke('process-exec', codecsCommand);
       this.saveSupport.set(codecsInfo.match(new RegExp(`^.*(${this.store.storeVideos()[0].videoStreams[1].codec_name}).*$`, 'gm'))![0].slice(1, 7));
     }
     // Initialize values for the scale filter and video export.
@@ -406,7 +406,7 @@ export class SaveService {
     // Update save saving state.
     this.saveState.set('saving');
     // Execute final export command and handle errors.
-    const saveError: string = await this.ipc.invoke('process-spawn', saveCommand, null);
+    const saveError: string = await this.ipc.invoke('process-spawn', saveCommand);
     if (saveError) { this.saveErrorText.set(saveError); }
     // Delete temporal clip/concat files.
     for (let file of this.saveInfo.saveDelete) {

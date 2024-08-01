@@ -117,7 +117,7 @@ ipcMain.handle('file-unpack', (e, ...a) => {
 const { exec } = require('child_process');
 ipcMain.handle('process-exec', (e, ...a) => {
   return new Promise((resolve) => {
-    exec(a[0], a[1], (error, stdout) => {
+    exec(a[0], { maxBuffer: Infinity }, (error, stdout) => {
       resolve(error ? error : stdout);
     });
   });
@@ -128,7 +128,7 @@ const { spawn } = require('child_process');
 let spawnProcess;
 ipcMain.handle('process-spawn', (e, ...a) => {
   return new Promise((resolve) => {
-    spawnProcess = spawn(a[0], { detached: process.platform != 'win32', shell: true });
+    spawnProcess = spawn(a[0], { detached: process.platform != 'win32', maxBuffer: Infinity, shell: true });
     spawnProcess.stderr.on('data', (error) => { resolve(error.toString()); });
     spawnProcess.on('close', () => { resolve(''); });
   });

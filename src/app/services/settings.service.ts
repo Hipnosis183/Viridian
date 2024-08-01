@@ -93,7 +93,7 @@ export class SettingsService {
     const fileExists: boolean = await this.ipc.invoke('file-exists', filePath);
     if (!fileExists) { this.settingsVersion.set(''); return; }
     // Get FFmpeg version.
-    const fileVersion: string | null = await this.ipc.invoke('process-exec', `${filePath} -version`, null);
+    const fileVersion: string | null = await this.ipc.invoke('process-exec', `${filePath} -version`);
     this.settingsVersion.set(fileVersion?.match(/(?<=ffmpeg version )([^_\s]+)/g)![0] ?? '');
   };
 
