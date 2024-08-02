@@ -18,6 +18,12 @@
             <a [style.maskImage]="'url(assets/images/ffmpeg.svg)'"></a>
             <p>{{ 'VIDEO_SETTINGS.FFMPEG.NAME' | translate }}</p>
           </div>
+          <div
+            [class.selected]="settings.settingsIndex() == 'ABOUT'"
+            (click)="settings.settingsUpdateIndex('ABOUT')">
+            <a [style.maskImage]="'url(assets/images/about.svg)'"></a>
+            <p>{{ 'VIDEO_SETTINGS.ABOUT.NAME' | translate }}</p>
+          </div>
         </div>
         <div [class]="'settings-separator'"></div>
         <div [class]="'settings-buttons'">
@@ -36,7 +42,7 @@
       <!-- Settings contents. -->
       <div [class]="'settings-contents'">
         <div [class]="'settings-title'">
-          <p>{{ 'VIDEO_SETTINGS.TITLE' | translate: { title: 'VIDEO_SETTINGS.' + settings.settingsIndex() + '.NAME' | translate } }}</p>
+          <p>{{ 'VIDEO_SETTINGS.' + settings.settingsIndex() + '.TITLE' | translate }}</p>
         </div>
         <!-- Settings options. -->
         <div [class]="'settings-options'">
@@ -152,6 +158,26 @@
                     [(checkboxValue)]="settings.options.ffmpeg.commandsSave"
                     (click)="settings.settingsUpdate('ffmpeg', 'commandsSave')" />
                 </div>
+              </div>
+            }
+            <!-- About section. -->
+            @case ('ABOUT') {
+              <div [class]="'settings-logo'">
+                <img [src]="'assets/images/viridian-icon.svg'" />
+                <a [style.maskImage]="'url(assets/images/viridian-logo.svg)'"></a>
+              </div>
+              <div [class]="['settings-option', 'settings-author']">
+                <p>{{ 'VIDEO_SETTINGS.ABOUT.AUTHOR' | translate }}</p>
+                <b [style.cursor]="'pointer'"
+                  (click)="linkOpen('https://hipnosis183.github.io/')">https://hipnosis183.github.io/</b>
+              </div>
+              <div [class]="['settings-option', 'settings-links']">
+                <vi-button
+                  [buttonText]="'VIDEO_SETTINGS.ABOUT.LINKS.GITHUB' | translate"
+                  (click)="linkOpen('https://github.com/Hipnosis183/Viridian')" />
+                <vi-button
+                  [buttonText]="'VIDEO_SETTINGS.ABOUT.LINKS.DOCS' | translate"
+                  (click)="linkOpen('https://github.com/Hipnosis183/Viridian/wiki')" />
               </div>
             }
           }

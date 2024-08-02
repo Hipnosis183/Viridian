@@ -1,5 +1,5 @@
 // Import Node and Electron elements.
-const { ipcMain } = require('electron');
+const { ipcMain, shell } = require('electron');
 const { appendFile, chmod, createReadStream, createWriteStream, existsSync, mkdir, readdir, rm, unlink, writeFile } = require('fs');
 
 // Manage dialogs display.
@@ -23,7 +23,6 @@ ipcMain.handle('dir-create', (e, ...a) => {
 });
 
 // Display file in explorer.
-const { shell } = require('electron');
 ipcMain.handle('dir-open', (e, ...a) => {
   shell.showItemInFolder(a[0]);
 });
@@ -111,6 +110,11 @@ ipcMain.handle('file-unpack', (e, ...a) => {
       });
     });
   });
+});
+
+// Open external link in default system browser.
+ipcMain.handle('link-open', (e, ...a) => {
+  shell.openExternal(a[0]);
 });
 
 // Execute/create process.

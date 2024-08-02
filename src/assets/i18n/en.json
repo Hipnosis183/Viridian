@@ -211,8 +211,18 @@
     "TIME": "Time"
   },
   "VIDEO_SETTINGS": {
+    "ABOUT": {
+      "NAME": "About",
+      "TITLE": "About Viridian",
+      "AUTHOR": "by Renzo Pigliacampo",
+      "LINKS": {
+        "DOCS": "Documentation",
+        "GITHUB": "GitHub"
+      }
+    },
     "FFMPEG": {
       "NAME": "FFmpeg",
+      "TITLE": "FFmpeg Settings",
       "DOWNLOAD": {
         "NAME": "Download",
         "TEXT": "Get the latest compatible FFmpeg version."
@@ -229,6 +239,7 @@
     },
     "GENERAL": {
       "NAME": "General",
+      "TITLE": "General Settings",
       "APP_THEME": {
         "NAME": "Theme",
         "TEXT": "Change the app color theme."
@@ -250,7 +261,6 @@
         "TEXT": "Remove all temporary files created inside the 'temp' folder (thumbnails, text files, etc.)."
       }
     },
-    "RESTORE": "Restore",
-    "TITLE": "{{ title }} Settings"
+    "RESTORE": "Restore"
   }
 }

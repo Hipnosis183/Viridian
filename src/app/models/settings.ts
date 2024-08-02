@@ -2,7 +2,7 @@
 import { WritableSignal } from '@angular/core';
 
 // Settings categories.
-export type SettingsCategories = 'FFMPEG' | 'GENERAL';
+export type SettingsCategories = 'ABOUT' | 'FFMPEG' | 'GENERAL';
 
 // Settings themes.
 export type SettingsThemes = 'light' | 'dark' | 'slate';
