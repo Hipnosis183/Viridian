@@ -12,44 +12,6 @@
     </div>
   </vi-modal>
 }
-<!-- Video player message dialog. -->
-@if (load.filesLoadText()) {
-  <vi-modal>
-    <div [class]="'player-message'">
-      <p>{{ load.filesLoadText() }}</p>
-      <div>
-        @switch (load.filesLoadText()) {
-          @case ('VIDEO_PLAYER.FILE_MESSAGE.KEYFRAMES' | translate) {
-            <vi-button
-              [buttonColor]="'success'"
-              [buttonIcon]="'done'"
-              [buttonText]="'GENERAL.OK' | translate"
-              (click)="load.filesLoadText.set('')" />
-          }
-          @case ('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID' | translate) {
-            <vi-button
-              [buttonColor]="'danger'"
-              [buttonIcon]="'close'"
-              [buttonText]="'GENERAL.CLOSE' | translate"
-              (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
-          }
-          @default {
-            <vi-button
-              [buttonColor]="'secondary'"
-              [buttonIcon]="'close'"
-              [buttonText]="'GENERAL.CANCEL' | translate"
-              (click)="load.filesLoadText.set(''); load.filesLoadNext()" />
-            <vi-button
-              [buttonColor]="'success'"
-              [buttonIcon]="'done'"
-              [buttonText]="'GENERAL.PROCEED' | translate"
-              (click)="load.filesLoadConvert()" />
-          }
-        }
-      </div>
-    </div>
-  </vi-modal>
-}
 <!-- Video file compatibility dialog. -->
 @if (load.filesLoadState() == 'loaded' && load.fileCompat().length) {
   <vi-modal>
@@ -324,6 +286,8 @@
 <video-capture />
 <!-- Video information component. -->
 <video-info />
+<!-- Video message component. -->
+<video-message />
 <!-- Video save component. -->
 <video-save />
 <!-- App settings component. -->

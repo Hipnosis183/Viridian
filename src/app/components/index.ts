@@ -3,6 +3,7 @@ import { VideoClipsComponent } from './video-clips/video-clips.component';
 import { VideoCropComponent } from './video-crop/video-crop.component';
 import { VideoDownloadComponent } from './video-download/video-download.component';
 import { VideoInfoComponent } from './video-info/video-info.component';
+import { VideoMessageComponent } from './video-message/video-message.component';
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import { VideoRecentComponent } from './video-recent/video-recent.component';
 import { VideoSaveComponent } from './video-save/video-save.component';
@@ -15,6 +16,7 @@ export {
   VideoCropComponent,
   VideoDownloadComponent,
   VideoInfoComponent,
+  VideoMessageComponent,
   VideoPlayerComponent,
   VideoRecentComponent,
   VideoSaveComponent,

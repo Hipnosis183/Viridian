@@ -11,6 +11,7 @@ export class StoreService {
   // Define store state.
   public storeIndex = signal<number>(0);
   public storeFiles = signal<FileInfo[]>([]);
+  public storeMessage = signal<string>('');
   public storeVideos = signal<VideoInfo[]>([]);
   public storePlayer: PlayerInfo = {
     playerCrop: null,

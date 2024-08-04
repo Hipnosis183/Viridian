@@ -34,7 +34,6 @@ export class LoadService {
   public fileCompat = signal<FileCompat[]>([]);
   public filesLoadList = signal<Partial<File>[]>([]);
   public filesLoadState = signal<FileLoad>(null);
-  public filesLoadText = signal<string>('');
   public filesLoadTotal = signal<number>(0);
 
   // Close all open video files.
@@ -69,7 +68,7 @@ export class LoadService {
     const fileData: string = await this.ipc.invoke('process-exec', this.settings.options.ffmpeg.filesPath() + fileCommand);
     const videoStream: VideoStream = this.store.storeVideos()[0]?.videoStreams[1];
     // Check if opened file is a valid video file.
-    try { JSON.parse(fileData); } catch { this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID')); return; }
+    try { JSON.parse(fileData); } catch { this.store.storeMessage.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID')); return; }
     // Manage video/audio streams.
     const fileStreams: any[] = [JSON.parse(fileData).format];
     const streamVideo: VideoStream | undefined = JSON.parse(fileData).streams.find((v: VideoStream) => v.codec_type == 'video');
@@ -82,14 +81,14 @@ export class LoadService {
       if (!this.store.storeCodecs.includes(fileStreams[1].codec_name)) {
         this.filesLoadInfo = fileInfo;
         this.filesLoadStream = fileStreams[1];
-        this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED')); return;
+        this.store.storeMessage.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED')); return;
       }
       // Check if HEVC codec is supported by the user's system.
       if (fileStreams[1].codec_name == 'hevc') {
         if (!document.createElement('video').canPlayType('video/mp4; codecs="hvc1.1.6.L93.B0"')) {
           this.filesLoadInfo = fileInfo;
           this.filesLoadStream = fileStreams[1];
-          this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.HEVC')); return;
+          this.store.storeMessage.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.HEVC')); return;
         }
       }
     }
@@ -155,7 +154,7 @@ export class LoadService {
   public async filesLoadConvert(): Promise<void> {
     if (this.filesLoadInfo && this.filesLoadStream) {
       // Update file load state to converting.
-      this.filesLoadText.set('');
+      this.store.storeMessage.set('');
       // Check if temporal compatible video has already been generated.
       const fileTemp: string = `${await this.filesLoadTemp(this.filesLoadInfo.path!)}video.mp4`;
       const fileExists: boolean = await this.ipc.invoke('file-exists', fileTemp);
@@ -194,7 +193,7 @@ export class LoadService {
     const fileKeyframes: number[] = fileFrames.packets.filter((v) => v.flags[0] == 'K').map((v) => v.pts_time);
     // Check if number of keyframes surpasses the limit.
     if (fileKeyframes.length > 1024) {
-      this.filesLoadText.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.KEYFRAMES'));
+      this.store.storeMessage.set(this.translate.instant('VIDEO_PLAYER.FILE_MESSAGE.KEYFRAMES'));
     }
     // Sort keyframes to ensure they are in order.
     return fileKeyframes.sort((a, b) => { return a - b; });

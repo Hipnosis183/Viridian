@@ -1,0 +1,50 @@
+<!-- Video message dialog. -->
+@if (store.storeMessage()) {
+  <vi-modal>
+    <div [class]="'message-container'">
+      <p>{{ store.storeMessage() }}</p>
+      <div>
+        @switch (store.storeMessage()) {
+          @case ('VIDEO_PLAYER.FILE_MESSAGE.HEVC' | translate) {
+            <vi-button
+              [buttonColor]="'secondary'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CANCEL' | translate"
+              (click)="store.storeMessage.set(''); load.filesLoadNext()" />
+            <vi-button
+              [buttonColor]="'success'"
+              [buttonIcon]="'done'"
+              [buttonText]="'GENERAL.PROCEED' | translate"
+              (click)="load.filesLoadConvert()" />
+          }
+          @case ('VIDEO_PLAYER.FILE_MESSAGE.NOT_SUPPORTED' | translate) {
+            <vi-button
+              [buttonColor]="'secondary'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CANCEL' | translate"
+              (click)="store.storeMessage.set(''); load.filesLoadNext()" />
+            <vi-button
+              [buttonColor]="'success'"
+              [buttonIcon]="'done'"
+              [buttonText]="'GENERAL.PROCEED' | translate"
+              (click)="load.filesLoadConvert()" />
+          }
+          @case ('VIDEO_PLAYER.FILE_MESSAGE.NOT_VALID' | translate) {
+            <vi-button
+              [buttonColor]="'danger'"
+              [buttonIcon]="'close'"
+              [buttonText]="'GENERAL.CLOSE' | translate"
+              (click)="store.storeMessage.set(''); load.filesLoadNext()" />
+          }
+          @default {
+            <vi-button
+              [buttonColor]="'success'"
+              [buttonIcon]="'done'"
+              [buttonText]="'GENERAL.OK' | translate"
+              (click)="store.storeMessage.set('')" />
+          }
+        }
+      </div>
+    </div>
+  </vi-modal>
+}

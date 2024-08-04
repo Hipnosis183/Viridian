@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
-import { VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent } from '@app/components';
+import { VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoMessageComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent } from '@app/components';
 import { CaptureService, FiltersService, InfoService, LoadService, PlayerService, RecentService, SaveService, SegmentsService, SettingsService, StoreService } from '@app/services';
 import { DropdownDirective, RenderedDirective, TooltipDirective } from '@app/directives';
 import { DurationPipe, NumberInputPipe } from '@app/pipes';
@@ -21,7 +21,7 @@ import { ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider } from '@ap
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule, TranslateModule, DecimalPipe,
-    VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent,
+    VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoMessageComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent,
     DropdownDirective, RenderedDirective, TooltipDirective,
     DurationPipe, NumberInputPipe,
     ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider,
