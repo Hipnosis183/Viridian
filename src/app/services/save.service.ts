@@ -615,7 +615,7 @@ export class SaveService {
       // Build concatenation files list.
       let fileConcat: string = '';
       for (let i = 0; i < this.store.storeFiles().length; i++) {
-        fileConcat += 'file \'' + this.saveInfo.saveClips[i] || this.store.storeFiles()[i].filePath + '\'\n';
+        fileConcat += 'file \'' + (this.saveInfo.saveClips[i] || this.store.storeFiles()[i].filePath) + '\'\n';
       }
       // Create temporal text file for the concatenation process.
       await this.ipc.invoke('file-create', this.store.storeFiles()[0].fileConcatClip, fileConcat);
