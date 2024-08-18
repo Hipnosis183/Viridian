@@ -120,6 +120,7 @@ export class SegmentsService {
     // Create clip object and update file state.
     const clipInfo: ClipInfo = {
       clipColor: signal<number>(0),
+      clipExport: signal<boolean>(true),
       clipStart: signal<number>(clipStart ?? currentTime),
       clipEnd: signal<number>(clipEnd ?? totalDuration),
       clipElement: signal<HTMLElement | null>(null),
@@ -192,6 +193,12 @@ export class SegmentsService {
       // Update current clip index.
       this.store.storeFiles()[this.store.storeIndex()].fileClipIndex.update((v) => v + 1);
     }
+  };
+
+  // Toggle selected clip for export.
+  public clipSelect(clipIndex: number, fileIndex: number): void {
+    // Update clip export state value.
+    this.store.storeFiles()[fileIndex].fileClips()[clipIndex].clipExport.update((v) => !v);
   };
 
   // Split current clip into several.

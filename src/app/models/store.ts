@@ -4,6 +4,7 @@ import { WritableSignal } from '@angular/core';
 // Video file clip information.
 export interface ClipInfo {
   clipColor: WritableSignal<number>,
+  clipExport: WritableSignal<boolean>,
   clipStart: WritableSignal<number>,
   clipEnd: WritableSignal<number>,
   clipElement: WritableSignal<HTMLElement | null>,

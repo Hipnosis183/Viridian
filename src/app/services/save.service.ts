@@ -232,6 +232,10 @@ export class SaveService {
 
   // Update save open state.
   public async saveUpdateOpen(): Promise<void> {
+    // Check if there are clips selected for export.
+    if (this.store.storeFiles().some((v) => !v.fileClips().filter((v) => v.clipExport()).length)) {
+      this.store.storeMessage.set(this.translate.instant('VIDEO_SAVE.CLIPS_ERROR')); return;
+    }
     // Update video encoding/decoding support.
     if (!this.saveSupport()) {
       const codecsCommand: string = this.settings.options.ffmpeg.filesPath() + 'ffmpeg -v error -codecs';
@@ -443,6 +447,9 @@ export class SaveService {
       const totalDuration: number = this.store.storePlayer.playerVideo()[i].duration * frameRate;
       // Process all available clips for the selected file.
       for (let k = 0; k < file.fileClips().length; k++) {
+        // Skip clip processing if excluded for export.
+        if (!file.fileClips()[k].clipExport()) { continue; }
+        // Define clip data.
         let clipStart: number = file.fileClips()[k].clipStart() / frameRate;
         const clipEnd: number = file.fileClips()[k].clipEnd() / frameRate;
         const clipInput: string = file.fileTemp + `clip_${k}.txt`;
@@ -529,6 +536,9 @@ export class SaveService {
         let fileConcat: string = '';
         // Process all available clips for the selected file.
         for (let k = 0; k < file.fileClips().length; k++) {
+          // Skip clip processing if excluded for export.
+          if (!file.fileClips()[k].clipExport()) { continue; }
+          // Define clip data.
           let clipStart: number = file.fileClips()[k].clipStart() / frameRate;
           const clipEnd: number = file.fileClips()[k].clipEnd() / frameRate;
           // Smart cut mode.

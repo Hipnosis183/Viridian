@@ -65,6 +65,7 @@
   "VIDEO_SAVE": {
     "CLIP_CUT": "Cut Mode",
     "CLIP_CONCAT": "Concatenation Mode",
+    "CLIPS_ERROR": "There are no/not enough clips selected for export. Make sure that at least one is selected for each opened file in the segments/clips section.\n\nIf you are working with multiple files, you must open them alone, since that feature is meant to be used exclusively to concatenate files.",
     "EDIT": {
       "CLIP": {
         "NAME": "F:{{ i }} | Create C:{{ k }}",
