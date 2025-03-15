@@ -2,7 +2,7 @@
 import { WritableSignal } from '@angular/core';
 
 // Settings categories.
-export type SettingsCategories = 'ABOUT' | 'FFMPEG' | 'GENERAL';
+export type SettingsCategories = 'ABOUT' | 'FFMPEG' | 'GENERAL' | 'HOTKEYS';
 
 // Settings themes.
 export type SettingsThemes = 'light' | 'dark' | 'slate';
@@ -20,4 +20,16 @@ export interface SettingsOptions {
     createThumbs: WritableSignal<boolean>,
     keyFrames: WritableSignal<boolean>,
   },
+};
+
+// Settings hotkeys.
+export interface HotkeysKey {
+  key: string,
+  state: HotkeysState,
+};
+export interface HotkeysState {
+  code: string,
+  altKey: boolean,
+  ctrlKey: boolean,
+  shiftKey: boolean,
 };

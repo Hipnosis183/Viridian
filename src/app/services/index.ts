@@ -2,6 +2,7 @@ import { CaptureService } from './capture.service';
 import { DelayService } from './delay.service';
 import { DownloadService } from './download.service';
 import { FiltersService } from './filters.service';
+import { HotkeysService } from './hotkeys.service';
 import { InfoService } from './info.service';
 import { IpcService } from './ipc.service';
 import { LoadService } from './load.service';
@@ -18,6 +19,7 @@ export {
   DelayService,
   DownloadService,
   FiltersService,
+  HotkeysService,
   InfoService,
   IpcService,
   LoadService,

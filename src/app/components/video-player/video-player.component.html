@@ -66,19 +66,34 @@
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'play'"
-          [buttonTooltip]="'VIDEO_SEGMENTS.PLAY_CLIP' | translate"
+          [buttonTooltip]="playClipKeys"
           (click)="player.playerPlayCurrent()" />
+        <section #playClipKeys>
+          <vi-keys
+            [keysKeys]="hotkeys.hotkeysGet('PLAY_CLIP') | hotkeys"
+            [keysText]="'VIDEO_SEGMENTS.PLAY_CLIP' | translate" />
+        </section>
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'next'"
           [buttonIconStyle]="'transform:scaleX(-1);'"
-          [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate"
+          [buttonTooltip]="framePrevKeys"
           (click)="player.playerFrameAdvance(false)" />
+        <section #framePrevKeys>
+          <vi-keys
+            [keysKeys]="hotkeys.hotkeysGet('FRAME_PREV') | hotkeys"
+            [keysText]="'VIDEO_SEGMENTS.FRAME_ADVANCE.PREV' | translate" />
+        </section>
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'next'"
-          [buttonTooltip]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate"
+          [buttonTooltip]="frameNextKeys"
           (click)="player.playerFrameAdvance(true)" />
+        <section #frameNextKeys>
+          <vi-keys
+            [keysKeys]="hotkeys.hotkeysGet('FRAME_NEXT') | hotkeys"
+            [keysText]="'VIDEO_SEGMENTS.FRAME_ADVANCE.NEXT' | translate" />
+        </section>
         @if (load.filesLoadState() == 'loaded') {
           <p>{{ (store.storePlayer.playerVideo()[store.storeIndex()].currentTime * store.storeVideos()[store.storeIndex()].videoFrameRate) | number: '1.1-1' }} / {{ (store.storePlayer.playerVideo()[store.storeIndex()].duration * store.storeVideos()[store.storeIndex()].videoFrameRate) | number: '1.1-1' }}</p>
         }
@@ -100,20 +115,35 @@
           </div>
           <button (click)="segments.clipSplit(false)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.NUMBER' | translate: { number: segments.segmentsSplit() } }}</button>
           <span></span>
-          <button (click)="segments.clipSplit(true)">{{ 'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate }}</button>
+          <button (click)="segments.clipSplit(true)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_SPLIT_CURRENT') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_SPLIT.CURRENT' | translate" />
+          </button>
         </div>
         <div [class]="['player-separator', 'dark']"></div>
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'clip-set'"
-          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate"
+          [buttonTooltip]="clipSetStartKeys"
           (click)="segments.clipSet(true)" />
+        <section #clipSetStartKeys>
+          <vi-keys
+            [keysKeys]="hotkeys.hotkeysGet('CLIP_SET_START') | hotkeys"
+            [keysText]="'VIDEO_SEGMENTS.CLIP_SET.START' | translate" />
+        </section>
         <vi-button
           [buttonColor]="'darker'"
           [buttonIcon]="'clip-set'"
           [buttonIconStyle]="'transform:scaleX(-1);'"
-          [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate"
+          [buttonTooltip]="clipSetEndKeys"
           (click)="segments.clipSet(false)" />
+        <section #clipSetEndKeys>
+          <vi-keys
+            [keysKeys]="hotkeys.hotkeysGet('CLIP_SET_END') | hotkeys"
+            [keysText]="'VIDEO_SEGMENTS.CLIP_SET.END' | translate" />
+        </section>
         <div [class]="['player-separator', 'dark']"></div>
         <vi-button
           [buttonColor]="'darker'"
@@ -121,9 +151,19 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
           [dropdown]="clipNavStart" />
         <div #clipNavStart>
-          <button (click)="segments.clipNavigate(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate }}</button>
+          <button (click)="segments.clipNavigate(true, true)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_NAV_START_CLIP') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_NAV.START.CLIP' | translate" />
+          </button>
           <span></span>
-          <button (click)="segments.clipNavigate(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate }}</button>
+          <button (click)="segments.clipNavigate(true, false)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_NAV_START_KEY') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_NAV.START.KEYFRAME' | translate" />
+          </button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -132,9 +172,19 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_NAV.' | translate"
           [dropdown]="clipNavEnd" />
         <div #clipNavEnd>
-          <button (click)="segments.clipNavigate(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate }}</button>
+          <button (click)="segments.clipNavigate(false, true)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_NAV_END_CLIP') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_NAV.END.CLIP' | translate" />
+          </button>
           <span></span>
-          <button (click)="segments.clipNavigate(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate }}</button>
+          <button (click)="segments.clipNavigate(false, false)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_NAV_END_KEY') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_NAV.END.KEYFRAME' | translate" />
+          </button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -142,9 +192,19 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.START.' | translate"
           [dropdown]="clipSnapStart" />
         <div #clipSnapStart>
-          <button (click)="segments.clipSnap(true, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate }}</button>
+          <button (click)="segments.clipSnap(true, true)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_SNAP_START_CLIP') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_SNAP.START.CLIP' | translate" />
+          </button>
           <span></span>
-          <button (click)="segments.clipSnap(true, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate }}</button>
+          <button (click)="segments.clipSnap(true, false)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_SNAP_START_KEY') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_SNAP.START.KEYFRAME' | translate" />
+          </button>
         </div>
         <vi-button
           [buttonColor]="'darker'"
@@ -153,9 +213,19 @@
           [buttonTooltip]="'VIDEO_SEGMENTS.CLIP_SNAP.END.' | translate"
           [dropdown]="clipSnapEnd" />
         <div #clipSnapEnd>
-          <button (click)="segments.clipSnap(false, true)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate }}</button>
+          <button (click)="segments.clipSnap(false, true)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_SNAP_END_CLIP') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_SNAP.END.CLIP' | translate" />
+          </button>
           <span></span>
-          <button (click)="segments.clipSnap(false, false)">{{ 'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate }}</button>
+          <button (click)="segments.clipSnap(false, false)">
+            <vi-keys
+              [keysCenter]="true"
+              [keysKeys]="hotkeys.hotkeysGet('CLIP_SNAP_END_KEY') | hotkeys"
+              [keysText]="'VIDEO_SEGMENTS.CLIP_SNAP.END.KEYFRAME' | translate" />
+          </button>
         </div>
       </div>
     </div>
@@ -192,16 +262,31 @@
       <vi-button
         [buttonIcon]="(!store.storePlayer.playerVideo()[store.storeIndex()] || store.storePlayer.playerVideo()[store.storeIndex()].paused) || store.storePlayer.playerVideo()[store.storeIndex()]?.ended ? 'play' : 'pause'"
         [buttonToggle]="store.storePlayer.playerVideo()[store.storeIndex()] && !store.storePlayer.playerVideo()[store.storeIndex()].paused"
-        [buttonTooltip]="'VIDEO_PLAYER.PLAY_PAUSE' | translate"
+        [buttonTooltip]="playPauseKeys"
         (click)="player.playerPlayback()" />
+      <section #playPauseKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('PLAY_PAUSE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.PLAY_PAUSE' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'stop'"
-        [buttonTooltip]="'VIDEO_PLAYER.STOP' | translate"
+        [buttonTooltip]="stopKeys"
         (click)="player.playerStop()" />
+      <section #stopKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('STOP') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.STOP' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="store.storePlayer.playerVideo().length ? store.storePlayer.playerVideo()[store.storeIndex()].muted || !store.storePlayer.playerVideo()[store.storeIndex()].volume ? 'mute' : 'volume' : 'volume'"
-        [buttonTooltip]="'VIDEO_PLAYER.MUTE' | translate"
+        [buttonTooltip]="muteKeys"
         (click)="player.playerMute()" />
+      <section #muteKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('MUTE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.MUTE' | translate" />
+      </section>
       <!-- Video player volume control. -->
       <div [class]="'player-volume'">
         @if (store.storePlayer.playerVideo()[store.storeIndex()]) {
@@ -217,56 +302,111 @@
     <div>
       <vi-button
         [buttonIcon]="'settings'"
-        [buttonTooltip]="'VIDEO_PLAYER.SETTINGS' | translate"
+        [buttonTooltip]="settingsKeys"
         [style.pointerEvents]="'auto'"
         (click)="settings.settingsUpdateOpen()" />
+      <section #settingsKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('SETTINGS') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.SETTINGS' | translate" />
+      </section>
       <div [class]="'player-separator'"></div>
       <vi-button
         [buttonIcon]="'capture'"
-        [buttonTooltip]="'VIDEO_PLAYER.CAPTURE' | translate"
+        [buttonTooltip]="captureKeys"
         (click)="capture.captureUpdateOpen()" />
+      <section #captureKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('CAPTURE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.CAPTURE' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'segments'"
         [buttonToggle]="segments.segmentsOpen()"
-        [buttonTooltip]="'VIDEO_PLAYER.SPLIT_MERGE' | translate"
+        [buttonTooltip]="splitMergeKeys"
         (click)="segments.segmentsUpdateOpen()" />
+      <section #splitMergeKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('SPLIT_MERGE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.SPLIT_MERGE' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'list'"
-        [buttonTooltip]="'VIDEO_PLAYER.LIST' | translate"
+        [buttonTooltip]="infoKeys"
         (click)="info.infoUpdateOpen()" />
       <div [class]="'player-separator'"></div>
+      <section #infoKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('INFO') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.LIST' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'rotate'"
         [buttonIconStyle]="'transform:scaleX(-1);'"
-        [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CCW' | translate"
+        [buttonTooltip]="rotateCCWKeys"
         (click)="player.playerFilterRotate(false)" />
+      <section #rotateCCWKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('ROTATE_CCW') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.ROTATE_CCW' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'rotate'"
-        [buttonTooltip]="'VIDEO_PLAYER.ROTATE_CW' | translate"
+        [buttonTooltip]="rotateCWKeys"
         (click)="player.playerFilterRotate(true)" />
+      <section #rotateCWKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('ROTATE_CW') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.ROTATE_CW' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'flip'"
         [buttonIconStyle]="'transform:rotate(90deg);'"
-        [buttonTooltip]="'VIDEO_PLAYER.FLIP_V' | translate"
+        [buttonTooltip]="flipVKeys"
         (click)="player.playerFilterFlip(true)" />
+      <section #flipVKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('FLIP_V') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.FLIP_V' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'flip'"
-        [buttonTooltip]="'VIDEO_PLAYER.FLIP_H' | translate"
+        [buttonTooltip]="flipHKeys"
         (click)="player.playerFilterFlip(false)" />
+      <section #flipHKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('FLIP_H') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.FLIP_H' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'crop'"
         [buttonToggle]="filters.filterCrop()"
-        [buttonTooltip]="'VIDEO_PLAYER.CROP' | translate"
+        [buttonTooltip]="cropKeys"
         (click)="player.playerFilterCrop()" />
       <div [class]="'player-separator'"></div>
+      <section #cropKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('CROP') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.CROP' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'done'"
-        [buttonTooltip]="'VIDEO_PLAYER.DONE' | translate"
+        [buttonTooltip]="doneKeys"
         (click)="save.saveUpdateOpen()" />
+      <section #doneKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('DONE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.DONE' | translate" />
+      </section>
       <vi-button
         [buttonIcon]="'close'"
-        [buttonTooltip]="'VIDEO_PLAYER.CLOSE' | translate"
+        [buttonTooltip]="closeKeys"
         (click)="load.filesClose()" />
+      <section #closeKeys>
+        <vi-keys
+          [keysKeys]="hotkeys.hotkeysGet('CLOSE') | hotkeys"
+          [keysText]="'VIDEO_PLAYER.CLOSE' | translate" />
+      </section>
     </div>
   </div>
   <!-- Video player progress bar. -->
@@ -286,11 +426,11 @@
 <video-capture />
 <!-- Video information component. -->
 <video-info />
-<!-- Video message component. -->
-<video-message />
 <!-- Video save component. -->
 <video-save />
 <!-- App settings component. -->
 <video-settings />
 <!-- FFmpeg download component. -->
 <video-download />
+<!-- Video message component. -->
+<video-message />

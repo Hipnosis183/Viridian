@@ -5,6 +5,7 @@
   --category-color: rgb(208, 218, 228);
   --category-hover: rgb(192, 202, 212);
   --category-icon: rgb(14, 18, 22);
+  --hotkeys-color: rgb(222, 232, 242);
   --options-border: rgb(160, 170, 180);
   --title-border: rgb(176, 186, 196);
 }
@@ -14,6 +15,7 @@
   --category-color: rgb(8, 12, 16);
   --category-hover: rgb(14, 18, 22);
   --category-icon: rgb(232, 238, 244);
+  --hotkeys-color: rgb(22, 28, 34);
   --options-border: rgb(36, 42, 48);
   --title-border: rgb(160, 170, 180);
 }
@@ -23,6 +25,7 @@
   --category-color: rgb(14, 16, 26);
   --category-hover: rgb(18, 22, 36);
   --category-icon: rgb(232, 238, 244);
+  --hotkeys-color: rgb(28, 36, 52);
   --options-border: rgb(60, 66, 84);
   --title-border: rgb(160, 170, 180);
 }
@@ -118,6 +121,8 @@
   border: 1px solid var(--options-border);
   border-radius: 4px;
   height: calc(100% - 74px);
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: border-color 0.2s;
 }
 .settings-option {
@@ -128,6 +133,9 @@
   justify-content: space-between;
   padding: 0 16px;
   transition: border-color 0.2s;
+}
+.settings-option:last-child {
+  margin-bottom: 16px;
 }
 .settings-option > *:not(:first-child) {
   margin-left: 8px;
@@ -159,6 +167,56 @@
   height: 12px;
   margin-right: 8px;
   width: 12px;
+}
+
+/* Settings hotkeys section. */
+.settings-hotkeys {
+  font-size: 14px;
+  height: 40px;
+  padding: 0 12px;
+  position: relative;
+  transition: none;
+}
+.settings-hotkeys > div {
+  align-items: center;
+  background-color: var(--hotkeys-color);
+  display: flex;
+  padding: 0 8px;
+  position: absolute;
+  right: 0;
+}
+.settings-hotkeys > div > *:first-child {
+  border-right: 1px solid var(--options-border);
+  margin-right: 8px;
+  padding-right: 9px;
+}
+.settings-hotkeys > div > *:nth-child(n+3) {
+  margin-left: 4px;
+}
+:host ::ng-deep .settings-hotkeys vi-button.hotkey {
+  display: flex;
+}
+:host ::ng-deep .settings-hotkeys vi-button.hotkey a {
+  height: 17px;
+  width: 17px;
+}
+
+/* Global hotkeys actions. */
+.settings-global {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+}
+:host ::ng-deep .settings-global > vi-button:first-child > button {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+  padding: 0 2px;
+}
+:host ::ng-deep .settings-global > vi-button:last-child > button {
+  border-left: none;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  padding: 0 2px;
 }
 
 /* Settings about section. */

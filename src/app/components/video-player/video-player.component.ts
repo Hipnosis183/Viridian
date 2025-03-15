@@ -6,12 +6,12 @@ import { TranslateModule } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
 import { VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoMessageComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent } from '@app/components';
-import { CaptureService, FiltersService, InfoService, LoadService, PlayerService, RecentService, SaveService, SegmentsService, SettingsService, StoreService } from '@app/services';
+import { CaptureService, FiltersService, HotkeysService, InfoService, LoadService, PlayerService, RecentService, SaveService, SegmentsService, SettingsService, StoreService } from '@app/services';
 import { DropdownDirective, RenderedDirective, TooltipDirective } from '@app/directives';
-import { DurationPipe, NumberInputPipe } from '@app/pipes';
+import { DurationPipe, HotkeysPipe, NumberInputPipe } from '@app/pipes';
 
 // Import UI components.
-import { ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider } from '@app/ui';
+import { ViButton, ViInput, ViKeys, ViLoading, ViModal, ViProgress, ViSlider } from '@app/ui';
 
 @Component({
   selector: 'video-player',
@@ -23,8 +23,8 @@ import { ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider } from '@ap
     FormsModule, TranslateModule, DecimalPipe,
     VideoCaptureComponent, VideoClipsComponent, VideoCropComponent, VideoDownloadComponent, VideoInfoComponent, VideoMessageComponent, VideoRecentComponent, VideoSaveComponent, VideoSegmentsComponent, VideoSettingsComponent,
     DropdownDirective, RenderedDirective, TooltipDirective,
-    DurationPipe, NumberInputPipe,
-    ViButton, ViInput, ViLoading, ViModal, ViProgress, ViSlider,
+    DurationPipe, HotkeysPipe, NumberInputPipe,
+    ViButton, ViInput, ViKeys, ViLoading, ViModal, ViProgress, ViSlider,
   ],
   host: {
     '(dragover)': 'onDragOver($event)',
@@ -36,6 +36,7 @@ export class VideoPlayerComponent {
   // Inject app services.
   public capture = inject(CaptureService);
   public filters = inject(FiltersService);
+  public hotkeys = inject(HotkeysService);
   public info = inject(InfoService);
   public load = inject(LoadService);
   public player = inject(PlayerService);

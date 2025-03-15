@@ -19,6 +19,12 @@
             <p>{{ 'VIDEO_SETTINGS.FFMPEG.NAME' | translate }}</p>
           </div>
           <div
+            [class.selected]="settings.settingsIndex() == 'HOTKEYS'"
+            (click)="settings.settingsUpdateIndex('HOTKEYS')">
+            <a [style.maskImage]="'url(assets/images/hotkeys.svg)'"></a>
+            <p>{{ 'VIDEO_SETTINGS.HOTKEYS.NAME' | translate }}</p>
+          </div>
+          <div
             [class.selected]="settings.settingsIndex() == 'ABOUT'"
             (click)="settings.settingsUpdateIndex('ABOUT')">
             <a [style.maskImage]="'url(assets/images/about.svg)'"></a>
@@ -30,7 +36,9 @@
           <vi-button
             [buttonColor]="'danger'"
             [buttonIcon]="'rotate'"
-            [buttonText]="'VIDEO_SETTINGS.RESTORE' | translate"
+            [buttonText]="'VIDEO_SETTINGS.RESTORE.NAME' | translate"
+            [tooltip]="'VIDEO_SETTINGS.RESTORE.TEXT' | translate"
+            [tooltipDelay]="[400, 0]"
             (click)="settings.settingsRestore()" />
           <vi-button
             [buttonColor]="'secondary'"
@@ -158,6 +166,49 @@
                     [(checkboxValue)]="settings.options.ffmpeg.commandsSave"
                     (click)="settings.settingsUpdate('ffmpeg', 'commandsSave')" />
                 </div>
+              </div>
+            }
+            <!-- Hotkeys section. -->
+            @case ('HOTKEYS') {
+              <div>
+                @for (hotkey of hotkeys.hotkeysKeys(); track hotkey.key) {
+                  <div [class]="['settings-option', 'settings-hotkeys']">
+                    <p [title]="('VIDEO_SETTINGS.HOTKEYS.KEYS.' + hotkey.key) | translate">
+                      {{ ('VIDEO_SETTINGS.HOTKEYS.KEYS.' + hotkey.key) | translate }}
+                    </p>
+                    <div>
+                      <vi-keys [keysKeys]="hotkey | hotkeys" />
+                      <vi-button
+                        [buttonIcon]="'add'"
+                        [class]="'hotkey'"
+                        [title]="'GENERAL.ASSIGN' | translate"
+                        (click)="hotkeys.hotkeysAssign.set(hotkey.key)" />
+                      <vi-button
+                        [buttonIcon]="'rotate'"
+                        [class]="'hotkey'"
+                        [title]="'GENERAL.RESET' | translate"
+                        (click)="hotkeys.hotkeysReset(hotkey.key)" />
+                      <vi-button
+                        [buttonIcon]="'close'"
+                        [class]="'hotkey'"
+                        [title]="'GENERAL.CLEAR' | translate"
+                        (click)="hotkeys.hotkeysClear(hotkey.key)" />
+                    </div>
+                  </div>
+                }
+              </div>
+              <!-- Global hotkeys actions. -->
+              <div [class]="'settings-global'">
+                <vi-button
+                  [buttonIcon]="'rotate'"
+                  [buttonIconStyle]="'height:24px; margin:2px 0; width:24px;'"
+                  [title]="'VIDEO_SETTINGS.HOTKEYS.RESET_ALL' | translate"
+                  (click)="hotkeys.hotkeysResetAll()" />
+                <vi-button
+                  [buttonIcon]="'close'"
+                  [buttonIconStyle]="'height:24px; margin:2px 0; width:24px;'"
+                  [title]="'VIDEO_SETTINGS.HOTKEYS.CLEAR_ALL' | translate"
+                  (click)="hotkeys.hotkeysClearAll()" />
               </div>
             }
             <!-- About section. -->

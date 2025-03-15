@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 // Import components, services, directives, pipes, types and interfaces.
-import { LoadService, StoreService } from '@app/services';
+import { HotkeysService, LoadService, StoreService } from '@app/services';
 
 // Import UI components.
 import { ViButton, ViModal } from '@app/ui';
@@ -21,6 +21,7 @@ import { ViButton, ViModal } from '@app/ui';
 })
 export class VideoMessageComponent {
   // Inject app services.
+  public hotkeys = inject(HotkeysService);
   public load = inject(LoadService);
   public store = inject(StoreService);
 };

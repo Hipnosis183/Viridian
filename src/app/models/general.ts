@@ -1,3 +1,6 @@
+// Import Angular elements.
+import { Signal } from '@angular/core';
+
 // Clip update mode.
 export type ClipUpdate = 'start' | 'end' | 'position' | 'length';
 
@@ -15,6 +18,14 @@ export type HTMLTarget = { value: string };
 
 // Player flip state.
 export type PlayerFlip = 'horizontal' | 'vertical';
+
+// State of currently active modals/tools.
+export interface ActiveState {
+  modal: Signal<null | 'settings' | 'capture' | 'info' | 'save' | 'manual'>,
+  loaded: Signal<boolean>,
+  segments: Signal<boolean>,
+  crop: Signal<boolean>,
+}
 
 // Clip start/end times.
 export interface ClipTimes {

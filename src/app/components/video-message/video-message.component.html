@@ -48,3 +48,18 @@
     </div>
   </vi-modal>
 }
+<!-- Hotkey message dialog. -->
+@if (hotkeys.hotkeysAssign()) {
+  <vi-modal>
+    <div [class]="'message-container'" [style.width]="'auto'">
+      <p>Binding to '{{ ('VIDEO_SETTINGS.HOTKEYS.KEYS.' + hotkeys.hotkeysAssign()) | translate }}'...</p>
+      <div>
+        <vi-button
+          [buttonColor]="'secondary'"
+          [buttonIcon]="'close'"
+          [buttonText]="'GENERAL.CANCEL' | translate"
+          (click)="hotkeys.hotkeysAssign.set('')" />
+      </div>
+    </div>
+  </vi-modal>
+}

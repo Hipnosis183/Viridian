@@ -1,5 +1,6 @@
 {
   "GENERAL": {
+    "ASSIGN": "Assign",
     "CANCEL": "Cancel",
     "CLEAR": "Clear",
     "CLOSE": "Close",
@@ -9,6 +10,7 @@
     "OK": "Ok",
     "PROCEED": "Proceed",
     "REMOVE": "Remove",
+    "RESET": "Reset",
     "SELECTED": "Selected"
   },
   "VIDEO_DOWNLOAD": {
@@ -262,6 +264,59 @@
         "TEXT": "Remove all temporary files created inside the 'temp' folder (thumbnails, text files, etc.)."
       }
     },
-    "RESTORE": "Restore"
+    "HOTKEYS": {
+      "NAME": "Hotkeys",
+      "TITLE": "Hotkeys Settings",
+      "CLEAR_ALL": "Clear All Hotkeys",
+      "RESET_ALL": "Reset All Hotkeys",
+      "KEYS": {
+        "PLAY_PAUSE": "Play | Pause",
+        "PLAY_CLIP": "Play Clip",
+        "STOP": "Stop",
+        "JUMP_START": "Jump to Start",
+        "JUMP_END": "Jump to End",
+        "JUMP_FRONT": "Jump Forward",
+        "JUMP_BACK": "Jump Backwards",
+        "FRAME_NEXT": "Next Frame",
+        "FRAME_PREV": "Previous Frame",
+        "VOLUME_UP": "Volume Up",
+        "VOLUME_DOWN": "Volume Down",
+        "MUTE": "Mute",
+        "SETTINGS": "Settings",
+        "CAPTURE": "Capture Frame",
+        "SPLIT_MERGE": "Split | Merge",
+        "INFO": "File Tracks",
+        "ROTATE_CW": "Rotate 90º",
+        "ROTATE_CCW": "Rotate -90º",
+        "FLIP_H": "Flip Horizontally",
+        "FLIP_V": "Flip Vertically",
+        "CROP": "Crop Video",
+        "DONE": "Export Video",
+        "CLOSE": "Close File",
+        "CLIP_SPLIT_CURRENT": "Split at Current Time",
+        "CLIP_SET_START": "Set Clip Start",
+        "CLIP_SET_END": "Set Clip End",
+        "CLIP_NAV_START_CLIP": "Navigate to Nearest Clip End",
+        "CLIP_NAV_START_KEY": "Navigate to Nearest Keyframe",
+        "CLIP_NAV_END_CLIP": "Navigate to Nearest Clip Start",
+        "CLIP_NAV_END_KEY": "Navigate to Nearest Keyframe",
+        "CLIP_SNAP_START_CLIP": "Snap Start to Nearest Clip End",
+        "CLIP_SNAP_START_KEY": "Snap Start to Nearest Keyframe",
+        "CLIP_SNAP_END_CLIP": "Snap End to Nearest Clip Start",
+        "CLIP_SNAP_END_KEY": "Snap End to Nearest Keyframe",
+        "SEGMENT_NAV_UP": "Select Previous Clip",
+        "SEGMENT_NAV_DOWN": "Select Next Clip",
+        "SEGMENT_MOVE_UP": "Move Clip Up",
+        "SEGMENT_MOVE_DOWN": "Move Clip Down",
+        "SEGMENT_ADD": "Add Clip",
+        "SEGMENT_SELECT": "Select Clip for Export",
+        "SEGMENT_REMOVE": "Remove Clip",
+        "SEGMENT_RESET": "Reset Clips"
+      }
+    },
+    "RESTORE": {
+      "NAME": "Restore",
+      "TEXT": "Restore all settings to default (except hotkeys)."
+    }
   }
 }

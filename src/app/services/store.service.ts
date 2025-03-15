@@ -2,7 +2,7 @@
 import { Injectable, signal } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
-import { FileInfo, PlayerInfo, VideoInfo} from '@app/models/store';
+import { FileInfo, PlayerInfo, VideoInfo } from '@app/models/store';
 
 @Injectable({
   providedIn: 'root',
