@@ -2,7 +2,7 @@
 import { inject, Injectable } from '@angular/core';
 
 // Import components, services, directives, pipes, types and interfaces.
-import { CropCoordinate, HTMLTarget, PlayerFlip } from '@app/models/general';
+import { CropCoordinate, HTMLTarget, PlayerFlip, PlayerSpeed } from '@app/models/general';
 import { FileInfo } from '@app/models/store';
 import { FiltersService, StoreService } from '@app/services';
 
@@ -78,6 +78,26 @@ export class PlayerService {
     }
     // Update current time with new frame value.
     this.store.storePlayer.playerVideo()[this.store.storeIndex()].currentTime = currentTime$;
+  };
+
+  // Update player playback speed.
+  public playerSpeed(playerSpeed: PlayerSpeed): void {
+    const playerVideo: HTMLVideoElement = this.store.storePlayer.playerVideo()[this.store.storeIndex()];
+    const playbackSpeed: number = this.store.storePlayer.playerVideo()[this.store.storeIndex()].playbackRate;
+    switch (playerSpeed) {
+      case 'increase': {
+        playerVideo.playbackRate = playbackSpeed >= 1.0 ? Math.min(playbackSpeed + 0.5, 4.0) : playbackSpeed + 0.25;
+        break;
+      }
+      case 'decrease': {
+        playerVideo.playbackRate = playbackSpeed <= 1.0 ? Math.max(playbackSpeed - 0.25, 0.25) : playbackSpeed - 0.5;
+        break;
+      }
+      case 'reset': {
+        playerVideo.playbackRate = 1.0;
+        break;
+      }
+    }
   };
 
   // Toggle video crop filter state.

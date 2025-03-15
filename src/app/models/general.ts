@@ -19,6 +19,9 @@ export type HTMLTarget = { value: string };
 // Player flip state.
 export type PlayerFlip = 'horizontal' | 'vertical';
 
+// Player speed state.
+export type PlayerSpeed = 'increase' | 'decrease' | 'reset';
+
 // State of currently active modals/tools.
 export interface ActiveState {
   modal: Signal<null | 'settings' | 'capture' | 'info' | 'save' | 'manual'>,

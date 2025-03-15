@@ -158,6 +158,19 @@
   position: relative;
 }
 
+/* Video playback speed indicator. */
+.player-speed {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 2px;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  left: 16px;
+  padding: 0px 8px;
+  pointer-events: none;
+  position: absolute;
+  top: 16px;
+}
+
 /* Video player extra controls. */
 .player-extra {
   background-color: var(--extra-color);

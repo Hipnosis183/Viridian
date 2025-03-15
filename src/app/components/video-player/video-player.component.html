@@ -59,6 +59,10 @@
       <!-- Video player crop tool. -->
       <video-crop id="playerCrop" />
     </div>
+    <!-- Video playback speed indicator. -->
+    @if (load.filesLoadState() == 'loaded' && store.storePlayer.playerVideo()[store.storeIndex()].playbackRate != 1) {
+      <div [class]="'player-speed'">{{ store.storePlayer.playerVideo()[store.storeIndex()].playbackRate }}x</div>
+    }
     <!-- Video player extra controls. -->
     <div [class]="'player-extra'" [style.display]="segments.segmentsOpen() ? 'flex' : 'none'">
       <!-- Player extra controls. -->

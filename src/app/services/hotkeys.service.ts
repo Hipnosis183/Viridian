@@ -53,6 +53,9 @@ export class HotkeysService {
     { key: 'VOLUME_UP', state: { code: 'ArrowUp', altKey: false, ctrlKey: false, shiftKey: false } },
     { key: 'VOLUME_DOWN', state: { code: 'ArrowDown', altKey: false, ctrlKey: false, shiftKey: false } },
     { key: 'MUTE', state: { code: 'KeyM', altKey: false, ctrlKey: false, shiftKey: false } },
+    { key: 'SPEED_UP', state: { code: 'Period', altKey: false, ctrlKey: false, shiftKey: false } },
+    { key: 'SPEED_DOWN', state: { code: 'Comma', altKey: false, ctrlKey: false, shiftKey: false } },
+    { key: 'SPEED_RESET', state: { code: 'Slash', altKey: false, ctrlKey: false, shiftKey: false } },
     // Action/tool hotkeys.
     { key: 'SETTINGS', state: { code: 'F1', altKey: false, ctrlKey: false, shiftKey: false } },
     { key: 'CAPTURE', state: { code: 'KeyS', altKey: false, ctrlKey: false, shiftKey: false } },
@@ -197,6 +200,9 @@ export class HotkeysService {
           case 'VOLUME_UP': { this.player.playerVolume(Math.min(Math.max(this.store.storePlayer.playerVideo()[this.store.storeIndex()].volume + 0.1, 0), 1)); document.body.click(); return; }
           case 'VOLUME_DOWN': { this.player.playerVolume(Math.min(Math.max(this.store.storePlayer.playerVideo()[this.store.storeIndex()].volume - 0.1, 0), 1)); document.body.click(); return; }
           case 'MUTE': { this.player.playerMute(); document.body.click(); return; }
+          case 'SPEED_UP': { this.player.playerSpeed('increase'); document.body.click(); return; }
+          case 'SPEED_DOWN': { this.player.playerSpeed('decrease'); document.body.click(); return; }
+          case 'SPEED_RESET': { this.player.playerSpeed('reset'); document.body.click(); return; }
           case 'SETTINGS': { this.settings.settingsUpdateOpen(); return; }
           case 'CAPTURE': { this.capture.captureUpdateOpen(); return; }
           case 'SPLIT_MERGE': { this.segments.segmentsUpdateOpen(); return; }
