@@ -1,0 +1,53 @@
+/* Define theme colors. */
+[data-theme="light"] :host {
+  --keys-color: rgb(22, 28, 34);
+  --keys-text: rgb(232, 238, 244);
+}
+[data-theme="dark"] :host,
+[data-theme="slate"] :host {
+  --keys-color: rgb(232, 238, 244);
+  --keys-text: rgb(22, 28, 34);
+}
+
+/* Keys container. */
+.keys-container {
+  align-items: center;
+  display: flex;
+}
+.keys-container.center {
+  justify-content: center;
+}
+.keys-container p {
+  pointer-events: none;
+}
+
+/* Key elements. */
+.keys-keys {
+  align-items: center;
+  display: flex;
+}
+.keys-keys:has(> kbd) {
+  margin-left: 8px;
+}
+.keys-keys > *:not(:first-child) {
+  margin-left: 4px;
+}
+.keys-keys > kbd {
+  background-color: var(--keys-color);
+  border-radius: 2px;
+  color: var(--keys-text);
+  font-family: 'Inter';
+  font-size: 10px;
+  font-weight: bold;
+  padding: 1px 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.keys-keys > p:first-child {
+  margin-right: 4px;
+}
+.keys-keys > p:not(:first-child) {
+  font-size: 14px;
+  line-height: 0;
+  margin-bottom: 2px;
+}

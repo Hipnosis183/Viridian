@@ -1,0 +1,15 @@
+<!-- Keys container. -->
+<div [class]="'keys-container'" [class.center]="keysCenter()">
+  @if (keysText()) {
+    <p>{{ keysText() }}</p>
+  }
+  <!-- Key elements. -->
+  <div [class]="'keys-keys'" [title]="keysKeys().join(' + ')">
+    @for (key of keysKeys(); track $index) {
+      <kbd>{{ key | formatKey }}</kbd>
+      @if ($index != (keysKeys().length - 1)) {
+        <p>+</p>
+      }
+    }
+  </div>
+</div>

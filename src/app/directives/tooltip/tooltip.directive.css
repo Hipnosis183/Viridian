@@ -57,3 +57,9 @@
   padding: 4px;
   width: 80px;
 }
+
+/* Tooltip keys. */
+.tippy-box[data-theme='tooltip'] .tippy-content kbd {
+  background-color: var(--tooltip-text) !important;
+  color: var(--tooltip-color) !important;
+}

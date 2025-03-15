@@ -2,6 +2,7 @@ import { ViButton } from './vi-button/vi-button.component';
 import { ViCheckbox } from './vi-checkbox/vi-checkbox.component';
 import { ViGroupbox } from './vi-groupbox/vi-groupbox.component';
 import { ViInput } from './vi-input/vi-input.component';
+import { ViKeys } from './vi-keys/vi-keys.component';
 import { ViLoading } from './vi-loading/vi-loading.component';
 import { ViModal } from './vi-modal/vi-modal.component';
 import { ViOption } from './vi-option/vi-option.component';
@@ -16,6 +17,7 @@ export {
   ViCheckbox,
   ViGroupbox,
   ViInput,
+  ViKeys,
   ViLoading,
   ViModal,
   ViOption,
