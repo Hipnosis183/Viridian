@@ -23,5 +23,5 @@ export class ViButton {
   public buttonIconStyle = input<string>('');
   public buttonText = input<string>('');
   public buttonToggle = input<boolean>(false);
-  public buttonTooltip = input<string>('');
+  public buttonTooltip = input<string | HTMLElement>('');
 };
